@@ -45,6 +45,7 @@ class DetectingSurface(Shape):
         self.vec1 = edge_vec1
         self.vec2 = edge_vec2
         self.norm = normal
+        self.bounds = [(-1.0, 1.0), (-1.0, 1.0)]
 
     def get_num_integral_params(self):
         """Returns the number of parameters that will need to be integrated
@@ -56,7 +57,7 @@ class DetectingSurface(Shape):
             the number of parameters that will need to be integrated over to
             integrate over the volume of the object
         """
-        return 2
+        return len(self.bounds)
 
     def get_integral_bounds(self):
         """Returns the bounds of each of the parameters to be integrated over
@@ -68,17 +69,17 @@ class DetectingSurface(Shape):
             tuple with the upper and lower bounds of the parameter, each sub-
             list is one set of bounds
         """
-        return [(-1.0, 1.0), (-1.0, 1.0)]
+        return self.bounds
 
-    def get_position(self, a, b):
+    def get_position(self, scale1, scale2):
         """Given a set of parameter values (in the same order as the bounds
         array) this returns the x,y,z position corresponding to those bounds
 
         Parameters
         ----------
-        a : float
+        scale1 : float
             The v1 scaling factor
-        b : float
+        scale2 : float
             The v2 scaling factor
 
         Returns
@@ -86,7 +87,7 @@ class DetectingSurface(Shape):
         position : vector
             The position corresponding to those integration parameters
         """
-        return self.center + args[0]*self.vec1 + args[1]*self.vec2
+        return self.center + scale1*self.vec1 + scale2*self.vec2
 
 
 class Detector(object):
@@ -112,6 +113,18 @@ class Detector(object):
         self.surf = []
         for cent, vec, norm in zip(SURF_OFFSETS, SURF_VECTORS, SURF_NORMALS):
             self.surf.append(DetectingSurface(cent, vec[0], vec[1], norm))
+
+    def get_run_data(self):
+        """Returns the detector number and run number as a pair
+
+        Returns
+        -------
+        det_num : int
+            The detector number at this position
+        run_num : int
+            The run number for this position
+        """
+        return (self.dnum, self.rnum)
 
     def get_detecting_surfaces(self):
         """Returns the list of detecting surfaces for integration and for

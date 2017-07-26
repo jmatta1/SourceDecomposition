@@ -21,7 +21,7 @@ class Shape(object):
             the number of parameters that will need to be integrated over to
             integrate over the volume of the object
         """
-        return 1
+        raise NotImplementedError("Call to unimplemented base class")
 
     def get_integral_bounds(self):
         """Returns the bounds of each of the parameters to be integrated over
@@ -32,7 +32,7 @@ class Shape(object):
             for each parameter to be integrated across, this list contains a
             tuple with the upper and lower bounds of the parameter
         """
-        return [(-1.0, 1.0)]
+        raise NotImplementedError("Call to unimplemented base class")
 
     def get_position(self, *args):
         """Given a set of parameter values (in the same order as the bounds
@@ -49,7 +49,7 @@ class Shape(object):
         position : vector
             The position corresponding to those integration parameters
         """
-        return np.array([0.0, 0.0, 0.0])
+        raise NotImplementedError("Call to unimplemented base class")
 
 
 class Rotation(object):
