@@ -3,6 +3,10 @@ this library"""
 
 import numpy as np
 
+# the number of decimals to round the rotation matrices to, this is chosen such
+# that 90.0 in cosine gives 0 (instead of 6.7e-17)
+RMAT_DEC = 15
+
 class Shape(object):
     """Base class for 1D, 2D, and 3D shapes, provides several functions to be
     overloaded in derived classes, by pythons typing system this may be
@@ -28,7 +32,7 @@ class Shape(object):
             for each parameter to be integrated across, this list contains a
             tuple with the upper and lower bounds of the parameter
         """
-        return [(-1.0,1.0)]
+        return [(-1.0, 1.0)]
 
     def get_position(self, *args):
         """Given a set of parameter values (in the same order as the bounds
@@ -48,7 +52,7 @@ class Shape(object):
         return np.array([0.0, 0.0, 0.0])
 
 
-def Rotation(object):
+class Rotation(object):
     """This class contains the rotation matrix for describing a shapes
     orientation"""
     def __init__(self):
@@ -72,6 +76,7 @@ def Rotation(object):
                         [sin, cos, 0.0],
                         [0.0, 0.0, 1.0]])
         self.rmat = np.dot(rot, self.rmat)
+        np.round(self.rmat, RMAT_DEC, out=self.rmat)
 
     def add_y_rot(self, theta):
         """Multiplies a rotation by theta degrees about the Y axis onto the
@@ -88,6 +93,7 @@ def Rotation(object):
                         [0.0, 1.0, 0.0],
                         [-sin, 0.0, cos]])
         self.rmat = np.dot(rot, self.rmat)
+        np.round(self.rmat, RMAT_DEC, out=self.rmat)
 
     def add_x_rot(self, theta):
         """Multiplies a rotation by theta degrees about the X axis onto the
@@ -104,6 +110,7 @@ def Rotation(object):
                         [0.0, cos, -sin],
                         [0.0, sin, cos]])
         self.rmat = np.dot(rot, self.rmat)
+        np.round(self.rmat, RMAT_DEC, out=self.rmat)
 
     def add_unit_vec_rot(self, theta, unit_vector):
         """Multiplies a rotation by theta degrees about the given unit vector
@@ -125,3 +132,4 @@ def Rotation(object):
         term3 = (1.0-cos) * np.tensordot(unit_vector, unit_vector, axes=0)
         rot = term1 + term2 + term3
         self.rmat = np.dot(rot, self.rmat)
+        np.round(self.rmat, RMAT_DEC, out=self.rmat)
