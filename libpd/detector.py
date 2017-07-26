@@ -5,20 +5,30 @@ surface of one of the patches on the outer surface of AD1"""
 import numpy as np
 from libpd.geom_base import Shape
 
-SURF_OFFSETS = [2.54*np.array([1.125, 0.0, 0.0]), 2.54*np.array([-1.125, 0.0, 0.0]),
-                2.54*np.array([0.0, 2.125, 0.0]), 2.54*np.array([0.0, -2.125, 0.0]),
-                2.54*np.array([0.0, 0.0, 8.125]), 2.54*np.array([0.0, 0.0, -8.125])]
+SURF_OFFSETS = [2.54*np.array([1.125, 0.0, 0.0]),
+                2.54*np.array([-1.125, 0.0, 0.0]),
+                2.54*np.array([0.0, 2.125, 0.0]),
+                2.54*np.array([0.0, -2.125, 0.0]),
+                2.54*np.array([0.0, 0.0, 8.125]),
+                2.54*np.array([0.0, 0.0, -8.125])]
 
-SURF_VECTORS = [(2.54*np.array([0.0, 2.125, 0.0]), 2.54*np.array([0.0, 0.0, 8.125])),
-                (2.54*np.array([0.0, 2.125, 0.0]), 2.54*np.array([0.0, 0.0, 8.125])),
-                (2.54*np.array([0.0, 2.125, 0.0]), 2.54*np.array([1.125, 0.0, 0.0])),
-                (2.54*np.array([0.0, 2.125, 0.0]), 2.54*np.array([1.125, 0.0, 0.0])),
-                (2.54*np.array([1.125, 0.0, 0.0]), 2.54*np.array([0.0, 0.0, 8.125])),
-                (2.54*np.array([1.125, 0.0, 0.0]), 2.54*np.array([0.0, 0.0, 8.125]))]
+SURF_VECTORS = [(2.54*np.array([0.0, 2.125, 0.0]),
+                 2.54*np.array([0.0, 0.0, 8.125])),
+                (2.54*np.array([0.0, 2.125, 0.0]),
+                 2.54*np.array([0.0, 0.0, 8.125])),
+                (2.54*np.array([0.0, 2.125, 0.0]),
+                 2.54*np.array([1.125, 0.0, 0.0])),
+                (2.54*np.array([0.0, 2.125, 0.0]),
+                 2.54*np.array([1.125, 0.0, 0.0])),
+                (2.54*np.array([1.125, 0.0, 0.0]),
+                 2.54*np.array([0.0, 0.0, 8.125])),
+                (2.54*np.array([1.125, 0.0, 0.0]),
+                2.54*np.array([0.0, 0.0, 8.125]))]
 
 SURF_NORMALS = [np.array([1.0, 0.0, 0.0]), np.array([-1.0, 0.0, 0.0]),
                 np.array([0.0, 1.0, 0.0]), np.array([0.0, -1.0, 0.0]),
                 np.array([0.0, 0.0, 1.0]), np.array([0.0, 0.0, -1.0])]
+
 
 class DetectingSurface(Shape):
     """This class is used as the surface of a detector which we need to
@@ -175,7 +185,7 @@ def read_positions(fname):
         runn = int(elems[0])
         for i in range(7):
             detn = (i + 8 if i < 2 else i + 9)
-            center = np.array([float(elems[1+3*i]), float(elems[2+3*i]),
-                               float(elems[3+3*i])])
+            center = 2.54 * np.array([float(elems[1+3*i]), float(elems[2+3*i]),
+                                      float(elems[3+3*i])])
             pos_list.append((detn, runn, center))
     return pos_list
