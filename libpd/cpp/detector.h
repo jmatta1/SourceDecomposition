@@ -10,8 +10,9 @@ public:
     bool hasLineOfSight(double* pos);
     
 private:
-    double Vec1[3];
-    double Vec2[3];
-    double norm[3]
+    double vec1[3];
+    double vec2[3];
+    double norm[3];
+    double pos[3];
 };
 #endif //POSITION_DECOMP_LIBPD_CPP_DETECTOR_H

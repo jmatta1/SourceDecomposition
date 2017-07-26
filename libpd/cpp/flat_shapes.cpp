@@ -1,4 +1,4 @@
-#include"flat_shapes.cpp"
+#include"flat_shapes.h"
 #include"cmath"
 using std::cos;
 using std::sin;
@@ -38,8 +38,8 @@ Circle::Circle(double* cent, double r, double* rot) : radius(r)
 
 double* Circle::getPosition(double* params)
 {
-    double x = rad*cos(params[0]);
-    double y = rad*sin(params[0]);
+    double x = radius*cos(params[0]);
+    double y = radius*sin(params[0]);
     pos[0] = center[0] + params[1]*(x*rmat[0]+y*rmat[1]);
     pos[1] = center[1] + params[1]*(x*rmat[3]+y*rmat[4]);
     pos[2] = center[2] + params[1]*(x*rmat[6]+y*rmat[7]);
@@ -59,8 +59,8 @@ CircleXY::CircleXY(double* cent, double r) : radius(r)
 
 double* CircleXY::getPosition(double* params)
 {
-    pos[0] = center[0] + params[1]*(rad*cos(params[0]));
-    pos[1] = center[1] + params[1]*(rad*sin(params[0]));
+    pos[0] = center[0] + params[1]*(radius*cos(params[0]));
+    pos[1] = center[1] + params[1]*(radius*sin(params[0]));
     return pos;
 }
 
@@ -77,8 +77,8 @@ CircleXZ::CircleXZ(double* cent, double r) : radius(r)
 
 double* CircleXZ::getPosition(double* params)
 {
-    pos[0] = center[0] + params[1]*(rad*cos(params[0]));
-    pos[2] = center[2] + params[1]*(rad*sin(params[0]));
+    pos[0] = center[0] + params[1]*(radius*cos(params[0]));
+    pos[2] = center[2] + params[1]*(radius*sin(params[0]));
     return pos;
 }
 
@@ -96,7 +96,7 @@ CircleYZ::CircleYZ(double* cent, double r) : radius(r)
 
 double* CircleYZ::getPosition(double* params)
 {
-    pos[1] = center[1] + params[1]*(rad*cos(params[0]));
-    pos[2] = center[2] + params[1]*(rad*sin(params[0]));
+    pos[1] = center[1] + params[1]*(radius*cos(params[0]));
+    pos[2] = center[2] + params[1]*(radius*sin(params[0]));
     return pos;
 }
