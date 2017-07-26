@@ -1,13 +1,7 @@
-#ifndef POSITION_DECOMP_LIBPD_CPP_SHAPES_H
-#define POSITION_DECOMP_LIBPD_CPP_SHAPES_H
+#ifndef POSITION_DECOMP_LIBPD_CPP_FLAT_SHAPES_H
+#define POSITION_DECOMP_LIBPD_CPP_FLAT_SHAPES_H
 
-// the abstract base class for the various shape classes
-class Shape
-{
-public:
-    virtual ~Shape(){}
-    virtual double* getPosition(double*) = 0;
-};
+#include"shape.h"
 
 class Square : public Shape
 {
@@ -81,4 +75,4 @@ private:
     double pos[3];
 };
 
-#endif //POSITION_DECOMP_LIBPD_CPP_SHAPES_H
+#endif //POSITION_DECOMP_LIBPD_CPP_FLAT_SHAPES_H

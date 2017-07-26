@@ -1,9 +1,9 @@
 CXX_FLAGS=-O2 -g -shared -march=native -mtune=native -fPIC
 
-libPosition.so: cpp/shapes.o cpp/calculator.o cpp/ cpp/wrappers.o
+libPosition.so: cpp/flat_shapes.o cpp/calculator.o cpp/ cpp/wrappers.o
 	g++ $(CXX_FLAGS) $^ -o $@
 
-cpp/shapes.o: cpp/shapes.cpp cpp/shapes.h
+cpp/flat_shapes.o: cpp/flat_shapes.cpp cpp/flat_shapes.h cpp/shape.h
 	g++ -c $(CXX_FLAGS) $< -o $@
 
 cpp/calculator.o: cpp/calculator.cpp cpp/calculator.h cpp/shapes.h cpp/detector.h
