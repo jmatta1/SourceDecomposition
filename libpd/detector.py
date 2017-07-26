@@ -38,6 +38,8 @@ class DetectingSurface(Shape):
         edge_vec2 : vector
             vector from center to the middle of another edge (must be
             orthogonal to edge_vec1)
+        normal : vector
+            the direction of the outward face of the detector
         """
         self.center = center
         self.vec1 = edge_vec1
@@ -45,13 +47,46 @@ class DetectingSurface(Shape):
         self.norm = normal
 
     def get_num_integral_params(self):
+        """Returns the number of parameters that will need to be integrated
+        over
+
+        Returns
+        -------
+        num_params : int
+            the number of parameters that will need to be integrated over to
+            integrate over the volume of the object
+        """
         return 2
 
     def get_integral_bounds(self):
+        """Returns the bounds of each of the parameters to be integrated over
+
+        Returns
+        -------
+        bounds : list of lists of tuples
+            for each parameter to be integrated across, each sublist contains a
+            tuple with the upper and lower bounds of the parameter, each sub-
+            list is one set of bounds
+        """
         return [(-1.0, 1.0), (-1.0, 1.0)]
 
-    def get_position(self, *args):
-        return (self.center + args[0]*self.vec1 + args[1]*self.vec2)
+    def get_position(self, a, b):
+        """Given a set of parameter values (in the same order as the bounds
+        array) this returns the x,y,z position corresponding to those bounds
+
+        Parameters
+        ----------
+        a : float
+            The v1 scaling factor
+        b : float
+            The v2 scaling factor
+
+        Returns
+        -------
+        position : vector
+            The position corresponding to those integration parameters
+        """
+        return self.center + args[0]*self.vec1 + args[1]*self.vec2
 
 
 class Detector(object):
@@ -126,9 +161,7 @@ def read_positions(fname):
         elems = [val.strip() for val in line.strip().split(',')]
         runn = int(elems[0])
         for i in range(7):
-            if i==2:
-                continue
-            detn = (i+8 if i<2 else i+9)
+            detn = (i + 8 if i < 2 else i + 9)
             center = np.array([float(elems[1+3*i]), float(elems[2+3*i]),
                                float(elems[3+3*i])])
             pos_list.append((detn, runn, center))
