@@ -1,0 +1,7 @@
+[SIMILARITIES]
+
+# Minimum lines number of a similarity.
+# did this to turn off complaints for the similarity between a detector and
+# flat source class for certain functions
+min-similarity-lines=400
+
