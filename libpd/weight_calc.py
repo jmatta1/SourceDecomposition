@@ -71,7 +71,7 @@ def calculate_weights_single(detectors, sources):
                                    cp.deepcopy(src)))
     print "Commencing Integration!"
     # now calculate the weight at every position using a single core
-    weight_list = [calc_weight(x) for x in input_list]
+    weight_list = [calc_weight_opt(x) for x in input_list]
     # now return the summed weights
     return weight_list
 
@@ -117,9 +117,32 @@ def calculate_weights_multi(detectors, sources, num_cores):
     # set up the thread pool for the multiprocessing
     mp_pool = multiprocessing.Pool(processes=num_cores)
     # process the input list with that pool
-    weight_list = mp_pool.map(calc_weight, input_list)
+    weight_list = mp_pool.map(calc_weight_opt, input_list)
     # now return the summed weights
     return weight_list
+
+
+def calc_weight_opt(data_tuple):
+    """This function takes the data_tuple and uses it to perform the weight
+    calculation for that detecting surface and source pair, the difference
+    between this function and calc_weight is that this function uses the C/C++
+    backend written for these purposes
+
+    Parameters
+    ----------
+    data_tuple : tuple of information
+        The first element is a tuple containing the det num, run number, and
+        surface num the second element contains the detecting surface, the
+        third element contains the source object
+
+    Returns
+    -------
+    pos_info : tuple
+        just a copy of the first element of the data tuple
+    weight : float
+        The weight calculated for that surface source pair
+    """
+    pass
 
 
 def calc_weight(data_tuple):
