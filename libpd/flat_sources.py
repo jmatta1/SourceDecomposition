@@ -3,6 +3,7 @@ squares to be made"""
 
 from libpd.geom_base import Shape
 
+
 class Square(Shape):
     """This class allows the creation of a flat patch, with some arbitrary
     center and rotation"""

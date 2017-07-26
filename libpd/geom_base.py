@@ -7,6 +7,7 @@ import numpy as np
 # that 90.0 in cosine gives 0 (instead of 6.7e-17)
 RMAT_DEC = 15
 
+
 class Shape(object):
     """Base class for 1D, 2D, and 3D shapes, provides several functions to be
     overloaded in derived classes, by pythons typing system this may be
