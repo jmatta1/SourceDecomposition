@@ -14,7 +14,7 @@ Square::Square(double* cent, double* v1, double* v2)
     }
 }
 
-double* Square::getPosition(int n, double* params)
+double* Square::getPosition(double* params)
 {
     for(int i=0; i<3; ++i)
     {
@@ -36,7 +36,7 @@ Circle::Circle(double* cent, double r, double* rot) : radius(r)
     }
 }
 
-double* Circle::getPosition(int n, double* params)
+double* Circle::getPosition(double* params)
 {
     double x = rad*cos(params[0]);
     double y = rad*sin(params[0]);
@@ -57,7 +57,7 @@ CircleXY::CircleXY(double* cent, double r) : radius(r)
     pos[2] = center[2];
 }
 
-double* CircleXY::getPosition(int n, double* params)
+double* CircleXY::getPosition(double* params)
 {
     pos[0] = center[0] + params[1]*(rad*cos(params[0]));
     pos[1] = center[1] + params[1]*(rad*sin(params[0]));
@@ -75,7 +75,7 @@ CircleXZ::CircleXZ(double* cent, double r) : radius(r)
     pos[1] = center[1];
 }
 
-double* CircleXZ::getPosition(int n, double* params)
+double* CircleXZ::getPosition(double* params)
 {
     pos[0] = center[0] + params[1]*(rad*cos(params[0]));
     pos[2] = center[2] + params[1]*(rad*sin(params[0]));
@@ -94,7 +94,7 @@ CircleYZ::CircleYZ(double* cent, double r) : radius(r)
     pos[0] = center[0];
 }
 
-double* CircleYZ::getPosition(int n, double* params)
+double* CircleYZ::getPosition(double* params)
 {
     pos[1] = center[1] + params[1]*(rad*cos(params[0]));
     pos[2] = center[2] + params[1]*(rad*sin(params[0]));

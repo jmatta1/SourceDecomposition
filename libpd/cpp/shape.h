@@ -6,7 +6,7 @@ class Shape
 {
 public:
     virtual ~Shape(){}
-    virtual double* getPosition(double*) = 0;
+    virtual double* getPosition(double* params) = 0;
 };
 
 #endif //POSITION_DECOMP_LIBPD_CPP_SHAPE_H

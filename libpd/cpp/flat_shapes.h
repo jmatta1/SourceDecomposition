@@ -8,7 +8,7 @@ class Square : public Shape
 public:
     Square(double* cent, double* v1, double* v2);
     virtual ~Square(){}
-    virtual double* getPosition(int n, double* params);
+    virtual double* getPosition(double* params);
 
 private:
     double center[3];
@@ -22,7 +22,7 @@ class Circle : public Shape
 public:
     Circle(double* center, double rad, double* rot);
     virtual ~Circle(){}
-    virtual double* getPosition(int n, double* params);
+    virtual double* getPosition(double* params);
 
 private:
     double center[3];
@@ -36,7 +36,7 @@ class CircleXY : public Shape
 public:
     CircleXY(double* center, double rad);
     virtual ~CircleXY(){}
-    virtual double* getPosition(int n, double* params);
+    virtual double* getPosition(double* params);
 
 private:
     double center[3];
@@ -49,7 +49,7 @@ class CircleXZ : public Shape
 public:
     CircleXZ(double* center, double rad);
     virtual ~CircleXZ(){}
-    virtual double* getPosition(int n, double* params);
+    virtual double* getPosition(double* params);
 
 private:
     double center[3];
@@ -62,7 +62,7 @@ class CircleYZ : public Shape
 public:
     CircleYZ(double* center, double rad);
     virtual ~CircleYZ(){}
-    virtual double* getPosition(int n, double* params);
+    virtual double* getPosition(double* params);
 
 private:
     double center[3];
