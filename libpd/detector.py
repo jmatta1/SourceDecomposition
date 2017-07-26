@@ -5,29 +5,95 @@ surface of one of the patches on the outer surface of AD1"""
 import numpy as np
 from libpd.geom_base import Shape
 
-SURF_OFFSETS = [2.54*np.array([1.125, 0.0, 0.0]),
-                2.54*np.array([-1.125, 0.0, 0.0]),
-                2.54*np.array([0.0, 2.125, 0.0]),
-                2.54*np.array([0.0, -2.125, 0.0]),
-                2.54*np.array([0.0, 0.0, 8.125]),
-                2.54*np.array([0.0, 0.0, -8.125])]
+SURF_OFFSETS = [2.54*np.array([1.125, 0.0, 0.0]),   # front
+                2.54*np.array([-1.125, 0.0, 0.0]),  # back
+                2.54*np.array([0.0, 8.125, 0.0]),   # left
+                2.54*np.array([0.0, -8.125, 0.0]),  # right
+                2.54*np.array([0.0, 0.0, 2.125]),   # top
+                2.54*np.array([0.0, 0.0, -2.125])]  # bottom
 
-SURF_VECTORS = [(2.54*np.array([0.0, 2.125, 0.0]),
-                 2.54*np.array([0.0, 0.0, 8.125])),
-                (2.54*np.array([0.0, 2.125, 0.0]),
-                 2.54*np.array([0.0, 0.0, 8.125])),
-                (2.54*np.array([0.0, 2.125, 0.0]),
-                 2.54*np.array([1.125, 0.0, 0.0])),
-                (2.54*np.array([0.0, 2.125, 0.0]),
-                 2.54*np.array([1.125, 0.0, 0.0])),
-                (2.54*np.array([1.125, 0.0, 0.0]),
-                 2.54*np.array([0.0, 0.0, 8.125])),
-                (2.54*np.array([1.125, 0.0, 0.0]),
-                2.54*np.array([0.0, 0.0, 8.125]))]
+SURF_VECTORS = [(2.54*np.array([0.0, 2.125, 0.0]),  # front height
+                 2.54*np.array([0.0, 0.0, 8.125])), # front width
+                (2.54*np.array([0.0, 2.125, 0.0]),  # back height
+                 2.54*np.array([0.0, 0.0, 8.125])), # back width
+                (2.54*np.array([0.0, 2.125, 0.0]),  # left height
+                 2.54*np.array([1.125, 0.0, 0.0])), # left length
+                (2.54*np.array([0.0, 2.125, 0.0]),  # right height
+                 2.54*np.array([1.125, 0.0, 0.0])), # right length
+                (2.54*np.array([1.125, 0.0, 0.0]),  # top length
+                 2.54*np.array([0.0, 0.0, 8.125])), # top width
+                (2.54*np.array([1.125, 0.0, 0.0]),  # bottom length
+                 2.54*np.array([0.0, 0.0, 8.125]))] # bottom width
 
-SURF_NORMALS = [np.array([1.0, 0.0, 0.0]), np.array([-1.0, 0.0, 0.0]),
-                np.array([0.0, 1.0, 0.0]), np.array([0.0, -1.0, 0.0]),
-                np.array([0.0, 0.0, 1.0]), np.array([0.0, 0.0, -1.0])]
+SURF_NORMALS = [np.array([1.0, 0.0, 0.0]),          # front normal
+                np.array([-1.0, 0.0, 0.0]),         # back normal
+                np.array([0.0, 1.0, 0.0]),          # left normal
+                np.array([0.0, -1.0, 0.0]),         # right normal
+                np.array([0.0, 0.0, 1.0]),          # top normal
+                np.array([0.0, 0.0, -1.0])]         # bottom normal
+
+
+class SimpleDetectingSurface(Shape):
+    """This class is used as the surface of a detector which we need to
+    integrate across to calculate the contributions of a source to the flux
+    incident upon the 'visible' side of the surface, unlike sources, these
+    patches are always perpendicular to one of the principle axes, no
+    rotations, this variant is offset to center at zero for simplified
+    position calculations"""
+    def __init__(self, rhs):
+        """Initializes a detecting surface object
+
+        Parameters
+        ----------
+        rhs : DetectingSurface
+            The original detecting surface that this is based on
+        """
+        self.vec1 = rhs.vec1
+        self.vec2 = rhs.vec2
+        self.norm = rhs.norm
+        self.bounds = rhs.bounds
+
+    def get_num_integral_params(self):
+        """Returns the number of parameters that will need to be integrated
+        over
+
+        Returns
+        -------
+        num_params : int
+            the number of parameters that will need to be integrated over to
+            integrate over the volume of the object
+        """
+        return len(self.bounds)
+
+    def get_integral_bounds(self):
+        """Returns the bounds of each of the parameters to be integrated over
+
+        Returns
+        -------
+        bounds : list of lists of tuples
+            for each parameter to be integrated across, each sublist contains a
+            tuple with the upper and lower bounds of the parameter, each sub-
+            list is one set of bounds
+        """
+        return self.bounds
+
+    def get_position(self, *args):
+        """Given a set of parameter values (in the same order as the bounds
+        array) this returns the x,y,z position corresponding to those bounds
+
+        Parameters
+        ----------
+        scale1 : float
+            The v1 scaling factor
+        scale2 : float
+            The v2 scaling factor
+
+        Returns
+        -------
+        position : vector
+            The position corresponding to those integration parameters
+        """
+        return args[0]*self.vec1 + args[1]*self.vec2
 
 
 class DetectingSurface(Shape):
@@ -81,7 +147,7 @@ class DetectingSurface(Shape):
         """
         return self.bounds
 
-    def get_position(self, scale1, scale2):
+    def get_position(self, *args):
         """Given a set of parameter values (in the same order as the bounds
         array) this returns the x,y,z position corresponding to those bounds
 
@@ -97,7 +163,28 @@ class DetectingSurface(Shape):
         position : vector
             The position corresponding to those integration parameters
         """
-        return self.center + scale1*self.vec1 + scale2*self.vec2
+        return self.center + args[0]*self.vec1 + args[1]*self.vec2
+
+    def __str__(self):
+        """Returns the string representation of the object
+
+        Returns
+        -------
+        out_str : str
+            The string representation of the source
+        """
+        out_strs = []
+        out_strs.append("  Detecting Surface")
+        temp = "    Centered At: ({0:4.2f}, {1:4.2f}, {2:4.2f})\n"
+        out_strs.append(temp.format(self.center[0], self.center[1],
+                                    self.center[2]))
+        temp = "    First Basis Vector: ({0:4.2f}, {1:4.2f}, {2:4.2f})\n"
+        out_strs.append(temp.format(self.vec1[0], self.vec1[1], self.vec1[2]))
+        temp = "    Second Basis Vector: ({0:4.2f}, {1:4.2f}, {2:4.2f})"
+        out_strs.append(temp.format(self.vec2[0], self.vec2[1], self.vec2[2]))
+        return "".join(out_strs)
+
+    __repr__ = __str__
 
 
 class Detector(object):
@@ -146,6 +233,23 @@ class Detector(object):
             The list of the six surfaces that each Detector object has
         """
         return self.surf
+
+    def __str__(self):
+        """Returns the string representation of the object
+
+        Returns
+        -------
+        out_str : str
+            The string representation of the source
+        """
+        out_strs = []
+        out_strs.append("Detector {0:d} Run {1:d}".format(self.dnum,
+                                                          self.rnum))
+        for surf in self.surf:
+            out_strs.append(surf.__str__())
+        return "".join(out_strs)
+
+    __repr__ = __str__
 
 
 def make_nai_list(centers_list):
