@@ -2,6 +2,7 @@
 a detector, these can be the 6 outer surfaces of the NaI detector or the single
 surface of one of the patches on the outer surface of AD1"""
 
+import ctypes as ct
 import numpy as np
 from libpd.geom_base import Shape
 
@@ -95,6 +96,26 @@ class SimpleDetectingSurface(Shape):
         """
         return args[0]*self.vec1 + args[1]*self.vec2
 
+    def make_backend_object(self, lib, offset):
+        """This function generates a void ptr for the right backend object
+
+        Parameters
+        ----------
+        lib : ctypes.cdll
+            The link to the backend library
+        offset : numpy vector
+            The center of the detector surface object to be subtracted from
+            this sources position
+
+        Returns
+        -------
+        src_obj : ctypes.c_void_p
+            The pointer to the source object
+        """
+        return lib.makeDetector(self.vec1.ctypes.data_as(ct.POINTER(ct.c_double)),
+                                self.vec2.ctypes.data_as(ct.POINTER(ct.c_double)),
+                                self.norm.ctypes.data_as(ct.POINTER(ct.c_double)))
+
 
 class DetectingSurface(Shape):
     """This class is used as the surface of a detector which we need to
@@ -164,6 +185,26 @@ class DetectingSurface(Shape):
             The position corresponding to those integration parameters
         """
         return self.center + args[0]*self.vec1 + args[1]*self.vec2
+
+    def make_backend_object(self, lib, offset):
+        """This function generates a void ptr for the right backend object
+
+        Parameters
+        ----------
+        lib : ctypes.cdll
+            The link to the backend library
+        offset : numpy vector
+            The center of the detector surface object to be subtracted from
+            this sources position
+
+        Returns
+        -------
+        src_obj : ctypes.c_void_p
+            The pointer to the source object
+        """
+        return lib.makeDetector(self.vec1.ctypes.data_as(ct.POINTER(ct.c_double)),
+                                self.vec2.ctypes.data_as(ct.POINTER(ct.c_double)),
+                                self.norm.ctypes.data_as(ct.POINTER(ct.c_double)))
 
     def __str__(self):
         """Returns the string representation of the object
