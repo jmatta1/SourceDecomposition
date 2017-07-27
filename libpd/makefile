@@ -1,6 +1,6 @@
-CXX_FLAGS=-O2 -g -shared -march=native -mtune=native -fPIC
+CXX_FLAGS=-O3 -g -shared -march=native -mtune=native -fPIC
 
-libPosition.so: cpp/flat_shapes.o cpp/calculator.o cpp/detector.o cpp/wrappers.o
+libPositionDecomp.so: cpp/flat_shapes.o cpp/calculator.o cpp/detector.o cpp/wrappers.o
 	g++ $(CXX_FLAGS) $^ -o $@
 
 cpp/flat_shapes.o: cpp/flat_shapes.cpp cpp/flat_shapes.h cpp/shape.h
@@ -21,5 +21,5 @@ clean:
 
 .PHONY: cleanall
 cleanall: clean
-	-rm libPosition.so
+	-rm libPositionDecomp.so
 
