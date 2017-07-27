@@ -52,8 +52,8 @@ class Shape(object):
         """
         raise NotImplementedError("Call to unimplemented base class")
 
-    def make_source_object(self, lib, offset):
-        """This function generates a void ptr for a backend source object
+    def make_backend_object(self, lib, offset):
+        """This function generates a void ptr for the right backend object
 
         Parameters
         ----------
