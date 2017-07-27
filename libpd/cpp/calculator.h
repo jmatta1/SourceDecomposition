@@ -8,7 +8,7 @@ class Calculator
 public:
     Calculator(Detector* d, Shape* s):src(s), det(d){}
     ~Calculator(){delete src; delete det;}
-    
+
     double calcIntegrand(double* params);
 
 private:
