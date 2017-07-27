@@ -4,9 +4,11 @@ source, detector pair"""
 
 import copy as cp
 import multiprocessing
+import ctypes as ct
 import numpy as np
 from scipy import integrate as spi
 from libpd.detector import SimpleDetectingSurface
+import libpd.backend_interface as bi
 
 # relocated to the bottom so the functions can be found
 # INT_FUNC = [integrand2d, integrand3d, integrand4d, integrand5d]
@@ -142,7 +144,53 @@ def calc_weight_opt(data_tuple):
     weight : float
         The weight calculated for that surface source pair
     """
-    pass
+    pos_info = data_tuple[0]
+    surface = data_tuple[1]
+    source = data_tuple[2]
+    # make a list of the ranges, for the parameters in the surface and then
+    # source
+    ranges = surface.get_integral_bounds()
+    if source.get_num_integral_params() != 0: #make sure the src is not a point
+        ranges.extend(source.get_integral_bounds())
+    else:
+        # if the source params count is 0 then it is a point, perform the check
+        # to see if it is in view of the surface early to avoid unnecessary
+        # integrations
+        test = surface.norm.dot(source.center - data_tuple[1].center)
+        if not test > 0.0:
+            return (pos_info, 0.0)
+    # get the library and build the low-level call
+    integrand = build_low_level_call(surface, source)
+    options = {}
+    options["limit"] = 1000
+    weight = spi.nquad(integrand, ranges, args=(surface, source), opts=options)
+    print pos_info, weight
+    return (pos_info, weight[0])
+
+
+def build_low_level_call(surface, source):
+    """This function builds the scipy lowlevel call around the backend
+
+    Parameters
+    ----------
+    surface : libpd.detector.DetectingSurface
+        The detector's detection surface
+    source : libpd.geom_base.Shape
+        The source geometry
+
+    Return
+    ------
+    scp_call : scipy.LowLevelCallable
+        A low level callable wrapped around the backend library interface
+    """
+    # first get the library interface
+    lib = bi.initialize_interface()
+    # then make the detector object pointer
+    det = lib.makeDetector(surface.vec1.ctypes.data_as(ct.POINTER(ct.c_double)),
+                           surface.vec2.ctypes.data_as(ct.POINTER(ct.c_double)),
+                           surface.norm.ctypes.data_as(ct.POINTER(ct.c_double)))
+    # now make the source objection
+    src = source.make_source_object(lib, surface.center)
 
 
 def calc_weight(data_tuple):
@@ -187,10 +235,10 @@ def calc_weight(data_tuple):
     options["limit"] = 1000
     weight = spi.nquad(integrand, ranges, args=(surface, source), opts=options)
     print pos_info, weight
-    return (pos_info, weight)
+    return (pos_info, weight[0])
 
 
-def integrand2d(p1, p2, surf, src):
+def integrand2d(*args):
     """This function calculates the value at a given point of the integration
     in the case that the source is a point source, it does not perform the line
     of sight check because, for point sources, that is performed ahead of time
@@ -212,11 +260,13 @@ def integrand2d(p1, p2, surf, src):
         1/(4*pi*((x1-x2)^2+(y1-y2)^2+(z1-z2)^2) calculated for the current
         integration parameters
     """
-    dist_sq = np.sum(np.square(surf.get_position(p1, p2) - src.center))
-    return (INV_FOUR_PI/dist_sq)
+    surf = args[2]
+    src = args[3]
+    dist_sq = np.sum(np.square(surf.get_position(args[0], args[1]) - src.center))
+    return INV_FOUR_PI/dist_sq
 
 
-def integrand3d(p1, p2, p3, surf, src):
+def integrand3d(*args):
     """This function calculates the value at a given point of the integration
     for the case that the source is a line
 
@@ -239,14 +289,16 @@ def integrand3d(p1, p2, p3, surf, src):
         1/(4*pi*((x1-x2)^2+(y1-y2)^2+(z1-z2)^2) calculated for the current
         integration parameters, or 0.0, if there is no line of sight
     """
-    pos = src.get_position(p3)
+    surf = args[3]
+    src = args[4]
+    pos = src.get_position(args[2])
     if surf.norm.dot(pos) <= 0:
         return 0.0
-    dist_sq = np.sum(np.square(surf.get_position(p1, p2) - pos))
-    return (INV_FOUR_PI/dist_sq)
+    dist_sq = np.sum(np.square(surf.get_position(args[0], args[1]) - pos))
+    return INV_FOUR_PI/dist_sq
 
 
-def integrand4d(p1, p2, p3, p4, surf, src):
+def integrand4d(*args):
     """This function calculates the value at a given point of the integration
     for the case that the source is a surface
 
@@ -271,14 +323,16 @@ def integrand4d(p1, p2, p3, p4, surf, src):
         1/(4*pi*((x1-x2)^2+(y1-y2)^2+(z1-z2)^2) calculated for the current
         integration parameters, or 0.0, if there is no line of sight
     """
-    pos = src.get_position(p3, p4)
+    surf = args[4]
+    src = args[5]
+    pos = src.get_position(args[2], args[3])
     if surf.norm.dot(pos) <= 0:
         return 0.0
-    dist_sq = np.sum(np.square(surf.get_position(p1, p2) - pos))
-    return (INV_FOUR_PI/dist_sq)
+    dist_sq = np.sum(np.square(surf.get_position(args[0], args[1]) - pos))
+    return INV_FOUR_PI/dist_sq
 
 
-def integrand5d(p1, p2, p3, p4, p5, surf, src):
+def integrand5d(*args):
     """This function calculates the value at a given point of the integration
     for the case that the source is a volume
 
@@ -305,11 +359,13 @@ def integrand5d(p1, p2, p3, p4, p5, surf, src):
         1/(4*pi*((x1-x2)^2+(y1-y2)^2+(z1-z2)^2) calculated for the current
         integration parameters, or 0.0, if there is no line of sight
     """
-    pos = src.get_position(p3, p4, p5)
+    surf = args[5]
+    src = args[6]
+    pos = src.get_position(args[2], args[3], args[4])
     if surf.norm.dot(pos) <= 0:
         return 0.0
-    dist_sq = np.sum(np.square(surf.get_position(p1, p2) - pos))
-    return (INV_FOUR_PI/dist_sq)
+    dist_sq = np.sum(np.square(surf.get_position(args[0], args[1]) - pos))
+    return INV_FOUR_PI/dist_sq
 
 
 INT_FUNC = [integrand2d, integrand3d, integrand4d, integrand5d]
