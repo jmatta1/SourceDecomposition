@@ -7,6 +7,7 @@ import multiprocessing
 import ctypes as ct
 import numpy as np
 from scipy import integrate as spi
+from scipy import LowLevelCallable
 from libpd.detector import SimpleDetectingSurface
 import libpd.backend_interface as bi
 
@@ -160,11 +161,15 @@ def calc_weight_opt(data_tuple):
         if not test > 0.0:
             return (pos_info, 0.0)
     # get the library and build the low-level call
-    integrand = build_low_level_call(surface, source)
+    (lib, calc, scp_call) = build_low_level_call(surface, source)
+    # set up the options dictionary
     options = {}
     options["limit"] = 1000
-    weight = spi.nquad(integrand, ranges, args=(surface, source), opts=options)
+    # call the numerical integration
+    weight = spi.nquad(scp_call, ranges, args=(surface, source), opts=options)
     print pos_info, weight
+    # free the calculator objection before returning
+    lib.freeCalculator(calc)
     return (pos_info, weight[0])
 
 
@@ -180,17 +185,24 @@ def build_low_level_call(surface, source):
 
     Return
     ------
+    lib : ctypes cdll
+        The initialized library
+    calc : ctypes.c_void_p
+        The calculator void pointer
     scp_call : scipy.LowLevelCallable
         A low level callable wrapped around the backend library interface
     """
     # first get the library interface
     lib = bi.initialize_interface()
     # then make the detector object pointer
-    det = lib.makeDetector(surface.vec1.ctypes.data_as(ct.POINTER(ct.c_double)),
-                           surface.vec2.ctypes.data_as(ct.POINTER(ct.c_double)),
-                           surface.norm.ctypes.data_as(ct.POINTER(ct.c_double)))
+    det = surface.make_backend_object(lib, surface.center)
     # now make the source objection
-    src = source.make_source_object(lib, surface.center)
+    src = source.make_backend_object(lib, surface.center)
+    # now make the calculation object
+    calc = lib.makeCalculator(det, src)
+    # now make the low level callable
+    scp_call = LowLevelCallable(lib.calculateIntegrand, calc)
+    return (lib, calc, scp_call)
 
 
 def calc_weight(data_tuple):
