@@ -104,8 +104,7 @@ class SimpleDetectingSurface(Shape):
         lib : ctypes.cdll
             The link to the backend library
         offset : numpy vector
-            The center of the detector surface object to be subtracted from
-            this sources position
+            unused
 
         Returns
         -------
