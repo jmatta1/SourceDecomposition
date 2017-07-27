@@ -22,7 +22,7 @@ void* makeCircle(double* cent, double radius, double* rot)
     return (void*)temp;
 }
 
-void* makeCircleXY(double* cent, double radius);
+void* makeCircleXY(double* cent, double radius)
 {
     CircleXY* temp = new CircleXY(cent, radius);
     return (void*)temp;
@@ -34,7 +34,7 @@ void* makeCircleXZ(double* cent, double radius)
     return (void*)temp;
 }
 
-void* makeCircleYZ(double* cent, double radius);
+void* makeCircleYZ(double* cent, double radius)
 {
     CircleYZ* temp = new CircleYZ(cent, radius);
     return (void*)temp;
