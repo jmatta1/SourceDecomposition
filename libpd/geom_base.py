@@ -52,6 +52,24 @@ class Shape(object):
         """
         raise NotImplementedError("Call to unimplemented base class")
 
+    def make_source_object(self, lib, offset):
+        """This function generates a void ptr for a backend source object
+
+        Parameters
+        ----------
+        lib : ctypes.cdll
+            The link to the backend library
+        offset : numpy vector
+            The center of the detector surface object to be subtracted from
+            this sources position
+
+        Returns
+        -------
+        src_obj : ctypes.c_void_p
+            The pointer to the source object
+        """
+        raise NotImplementedError("Call to unimplemented base class")
+
 
 class Rotation(object):
     """This class contains the rotation matrix for describing a shapes

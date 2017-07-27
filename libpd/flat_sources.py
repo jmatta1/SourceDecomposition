@@ -3,6 +3,7 @@ squares to be made"""
 
 from libpd.geom_base import Shape
 import numpy as np
+import ctypes as ct
 
 
 class Square(Shape):
@@ -73,6 +74,26 @@ class Square(Shape):
             The position corresponding to those integration parameters
         """
         return self.center + args[0]*self.vec1 + args[1]*self.vec2
+
+    def make_source_object(self, lib, offset):
+        """This function generates a void ptr for a backend source object
+
+        Parameters
+        ----------
+        lib : ctypes.cdll
+            The link to the backend library
+        offset : numpy vector
+            The center of the detector surface object to be subtracted from
+            this sources position
+
+        Returns
+        -------
+        src_obj : ctypes.c_void_p
+            The pointer to the source object
+        """
+        return lib.makeSquare((self.center-offset).ctypes.data_as(ct.POINTER(ct.c_double)),
+                              self.vec1.ctypes.data_as(ct.POINTER(ct.c_double)),
+                              self.vec2.ctypes.data_as(ct.POINTER(ct.c_double)))
 
     def __str__(self):
         """Returns the string representation of the object
@@ -166,6 +187,26 @@ class Circle(Shape):
                                                    np.sin(args[0]), 0.0])))
         return self.center + args[1]*rvec
 
+    def make_source_object(self, lib, offset):
+        """This function generates a void ptr for a backend source object
+
+        Parameters
+        ----------
+        lib : ctypes.cdll
+            The link to the backend library
+        offset : numpy vector
+            The center of the detector surface object to be subtracted from
+            this sources position
+
+        Returns
+        -------
+        src_obj : ctypes.c_void_p
+            The pointer to the source object
+        """
+        return lib.makeCircle((self.center-offset).ctypes.data_as(ct.POINTER(ct.c_double)),
+                              self.radius,
+                              self.rmat.ctypes.data_as(ct.POINTER(ct.c_double)))
+
     def __str__(self):
         """Returns the string representation of the object
 
@@ -251,6 +292,25 @@ class CircleXY(Shape):
         rvec = self.rad * np.array([np.cos(args[0]), np.sin(args[0]), 0.0])
         return self.center + args[1]*rvec
 
+    def make_source_object(self, lib, offset):
+        """This function generates a void ptr for a backend source object
+
+        Parameters
+        ----------
+        lib : ctypes.cdll
+            The link to the backend library
+        offset : numpy vector
+            The center of the detector surface object to be subtracted from
+            this sources position
+
+        Returns
+        -------
+        src_obj : ctypes.c_void_p
+            The pointer to the source object
+        """
+        return lib.makeCircleXY((self.center-offset).ctypes.data_as(ct.POINTER(ct.c_double)),
+                                self.radius)
+
     def __str__(self):
         """Returns the string representation of the object
 
@@ -335,6 +395,25 @@ class CircleXZ(Shape):
         rvec = self.rad * np.array([np.cos(args[0]), 0.0, np.sin(args[0])])
         return self.center + args[1]*rvec
 
+    def make_source_object(self, lib, offset):
+        """This function generates a void ptr for a backend source object
+
+        Parameters
+        ----------
+        lib : ctypes.cdll
+            The link to the backend library
+        offset : numpy vector
+            The center of the detector surface object to be subtracted from
+            this sources position
+
+        Returns
+        -------
+        src_obj : ctypes.c_void_p
+            The pointer to the source object
+        """
+        return lib.makeCircleXZ((self.center-offset).ctypes.data_as(ct.POINTER(ct.c_double)),
+                                self.radius)
+
     def __str__(self):
         """Returns the string representation of the object
 
@@ -418,6 +497,25 @@ class CircleYZ(Shape):
         """
         rvec = self.rad * np.array([0.0, np.cos(args[0]), np.sin(args[0])])
         return self.center + args[1]*rvec
+
+    def make_source_object(self, lib, offset):
+        """This function generates a void ptr for a backend source object
+
+        Parameters
+        ----------
+        lib : ctypes.cdll
+            The link to the backend library
+        offset : numpy vector
+            The center of the detector surface object to be subtracted from
+            this sources position
+
+        Returns
+        -------
+        src_obj : ctypes.c_void_p
+            The pointer to the source object
+        """
+        return lib.makeCircleYZ((self.center-offset).ctypes.data_as(ct.POINTER(ct.c_double)),
+                                self.radius)
 
     def __str__(self):
         """Returns the string representation of the object
