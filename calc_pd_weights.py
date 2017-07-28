@@ -7,6 +7,7 @@ import numpy as np
 from libpd import detector as dt
 from libpd import geom_base as gb
 from libpd import flat_sources as fs
+from libpd import shell_sources as ss
 from libpd import weight_calc as wc
 
 def main():
@@ -19,16 +20,18 @@ def main():
     sys.argv[2] : str
         number of cores to use for the calculation
     """
-    if len(sys.argv) != 3:
+    if len(sys.argv) != 4:
         print USAGE.format(sys.argv[0])
         sys.exit()
     detectors = dt.make_nai_list(dt.read_positions(sys.argv[1]))
     num_cores = int(sys.argv[2])
     sources = set_up_sources()
-    temp = wc.calculate_weights(detectors, sources, num_cores)
-    #for elem in temp:
-    #    print elem
-
+    weights = wc.calculate_weights(detectors, sources, num_cores)
+    out_file = open(sys.argv[3], 'w')
+    fmt_str = "{0:d}, {1:d}, {2:s}, {3:10.8e}\n"
+    for elem in weights:
+        out_file.write(fmt_str.format(*elem))
+    out_file.close()
 
 def set_up_sources():
     """This function is what is used to generate the list of sources that the
@@ -43,7 +46,50 @@ def set_up_sources():
     src_list = []
     src_list.extend(make_cube_wall_sources())
     src_list.extend(make_hot_patches())
+    src_list.extend(make_vertical_cylinders())
+    src_list.extend(make_beamlines())
     return src_list
+
+
+def make_beamlines():
+    """This function generates cylindrical shells that represent the three
+    beamlines that we care about
+
+    Returns
+    -------
+    src_list : list
+        the list of source objects
+    """
+    beam_list = []
+    # make HB3
+    center = 2.54*np.array([188.0, 232.5, -163.653], dtype=np.float64)
+    beam_list.append(ss.RotXaxisCylinder("HB3", center, (15.0, 2.54*418.0), -31.5881))
+    # make HB3a
+    center = 2.54*np.array([88.5, 48.65, -163.653], dtype=np.float64)
+    beam_list.append(ss.RotXaxisCylinder("HB3a", center, (15.0, 2.54*165.0), 28.4119))
+    # make HB4
+    center = 2.54*np.array([173.5, -210.42, -163.653], dtype=np.float64)
+    beam_list.append(ss.RotXaxisCylinder("HB4", center, (30.0, 2.54*770.0), 60.0))
+    return beam_list
+
+
+def make_vertical_cylinders():
+    """This function generates cylindrical shells that represent the access
+    pipes down to the beam lines
+
+    Returns
+    -------
+    src_list : list
+        the list of source objects
+    """
+    vert_list = []
+    # make the vertical pipe to beamline 3
+    center = 2.54*np.array([185.0, 222.0, -81.8265], dtype=np.float64)
+    vert_list.append(ss.VertCylinder("HB3_Access", center, (15.0, 2.54*163.653)))
+    # make the vertical pipe to beamline 4
+    center = 2.54*np.array([192.5, 16.0, -81.8265], dtype=np.float64)
+    vert_list.append(ss.VertCylinder("HB4_Access", center, (20.0, 2.54*163.653)))
+    return vert_list
 
 
 def make_hot_patches():
@@ -115,7 +161,7 @@ def make_cube_wall_sources():
 
 
 USAGE = """Usage:
-    {0:s} <Path To NaI Center Points File> <Number of Cores>
+    {0:s} <Path To NaI Center Points File> <Number of Cores> <Ouput File Name>
 """
 
 if __name__ == "__main__":
