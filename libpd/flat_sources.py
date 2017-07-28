@@ -31,6 +31,7 @@ class Square(Shape):
         # apply it to the two basis vectors and then ignore it
         self.vec1 = rotation.rmat.dot(basis_vecs[0])
         self.vec2 = rotation.rmat.dot(basis_vecs[1])
+        self.area_scale = np.linalg.norm(self.vec1) * np.linalg.norm(self.vec2)
         self.bounds = [(-1.0, 1.0), (-1.0, 1.0)]
 
     def get_num_integral_params(self):
@@ -74,6 +75,23 @@ class Square(Shape):
             The position corresponding to those integration parameters
         """
         return self.center + args[0]*self.vec1 + args[1]*self.vec2
+
+    def get_area_element(self, *args):
+        """Given a set of parameter values (in the same order as the bounds
+        array) this returns the x,y,z position corresponding to those bounds
+
+        Parameters
+        ----------
+        *args : vector
+            A list of integration parameters in the same order as the bounds
+            tuple
+
+        Returns
+        -------
+        position : vector
+            The position corresponding to those integration parameters
+        """
+        return self.area_scale
 
     def make_backend_object(self, lib, offset):
         """This function generates a void ptr for the right backend object
@@ -188,6 +206,23 @@ class Circle(Shape):
                                                   dtype=np.float64)))
         return self.center + args[1]*rvec
 
+    def get_area_element(self, *args):
+        """Given a set of parameter values (in the same order as the bounds
+        array) this returns the x,y,z position corresponding to those bounds
+
+        Parameters
+        ----------
+        *args : vector
+            A list of integration parameters in the same order as the bounds
+            tuple
+
+        Returns
+        -------
+        position : vector
+            The position corresponding to those integration parameters
+        """
+        return self.rad*args[1]
+
     def make_backend_object(self, lib, offset):
         """This function generates a void ptr for the right backend object
 
@@ -294,6 +329,23 @@ class CircleXY(Shape):
                                    dtype=np.float64)
         return self.center + args[1]*rvec
 
+    def get_area_element(self, *args):
+        """Given a set of parameter values (in the same order as the bounds
+        array) this returns the x,y,z position corresponding to those bounds
+
+        Parameters
+        ----------
+        *args : vector
+            A list of integration parameters in the same order as the bounds
+            tuple
+
+        Returns
+        -------
+        position : vector
+            The position corresponding to those integration parameters
+        """
+        return self.rad*args[1]
+
     def make_backend_object(self, lib, offset):
         """This function generates a void ptr for the right backend object
 
@@ -398,6 +450,23 @@ class CircleXZ(Shape):
                                    dtype=np.float64)
         return self.center + args[1]*rvec
 
+    def get_area_element(self, *args):
+        """Given a set of parameter values (in the same order as the bounds
+        array) this returns the x,y,z position corresponding to those bounds
+
+        Parameters
+        ----------
+        *args : vector
+            A list of integration parameters in the same order as the bounds
+            tuple
+
+        Returns
+        -------
+        position : vector
+            The position corresponding to those integration parameters
+        """
+        return self.rad*args[1]
+
     def make_backend_object(self, lib, offset):
         """This function generates a void ptr for the right backend object
 
@@ -501,6 +570,23 @@ class CircleYZ(Shape):
         rvec = self.rad * np.array([0.0, np.cos(args[0]), np.sin(args[0])],
                                    dtype=np.float64)
         return self.center + args[1]*rvec
+
+    def get_area_element(self, *args):
+        """Given a set of parameter values (in the same order as the bounds
+        array) this returns the x,y,z position corresponding to those bounds
+
+        Parameters
+        ----------
+        *args : vector
+            A list of integration parameters in the same order as the bounds
+            tuple
+
+        Returns
+        -------
+        position : vector
+            The position corresponding to those integration parameters
+        """
+        return self.rad*args[1]
 
     def make_backend_object(self, lib, offset):
         """This function generates a void ptr for the right backend object

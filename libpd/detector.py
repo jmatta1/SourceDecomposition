@@ -51,6 +51,7 @@ class SimpleDetectingSurface(Shape):
         """
         self.vec1 = rhs.vec1
         self.vec2 = rhs.vec2
+        self.area_scale = np.linalg.norm(self.vec1) * np.linalg.norm(self.vec2)
         self.norm = rhs.norm
         self.bounds = rhs.bounds
 
@@ -96,6 +97,23 @@ class SimpleDetectingSurface(Shape):
         """
         return args[0]*self.vec1 + args[1]*self.vec2
 
+    def get_area_element(self, *args):
+        """Given a set of parameter values (in the same order as the bounds
+        array) this returns the x,y,z position corresponding to those bounds
+
+        Parameters
+        ----------
+        *args : vector
+            A list of integration parameters in the same order as the bounds
+            tuple
+
+        Returns
+        -------
+        position : vector
+            The position corresponding to those integration parameters
+        """
+        return self.area_scale
+
     def make_backend_object(self, lib, offset):
         """This function generates a void ptr for the right backend object
 
@@ -140,6 +158,7 @@ class DetectingSurface(Shape):
         self.center = center
         self.vec1 = edge_vec1
         self.vec2 = edge_vec2
+        self.area_scale = np.linalg.norm(self.vec1) * np.linalg.norm(self.vec2)
         self.norm = normal
         self.bounds = [(-1.0, 1.0), (-1.0, 1.0)]
 
@@ -184,6 +203,23 @@ class DetectingSurface(Shape):
             The position corresponding to those integration parameters
         """
         return self.center + args[0]*self.vec1 + args[1]*self.vec2
+
+    def get_area_element(self, *args):
+        """Given a set of parameter values (in the same order as the bounds
+        array) this returns the x,y,z position corresponding to those bounds
+
+        Parameters
+        ----------
+        *args : vector
+            A list of integration parameters in the same order as the bounds
+            tuple
+
+        Returns
+        -------
+        position : vector
+            The position corresponding to those integration parameters
+        """
+        return self.area_scale
 
     def make_backend_object(self, lib, offset):
         """This function generates a void ptr for the right backend object

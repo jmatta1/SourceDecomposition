@@ -52,6 +52,22 @@ class Shape(object):
         """
         raise NotImplementedError("Call to unimplemented base class")
 
+    def get_area_element(self, *args):
+        """This function returns the area element of the detecting surface
+
+        Parameters
+        ----------
+        *args : vector
+            A list of integration parameters in the same order as the bounds
+            tuple
+
+        Returns
+        -------
+        area : float
+            The area scaling factor for integration across the surface
+        """
+        raise NotImplementedError("Call to unimplemented base class")
+
     def make_backend_object(self, lib, offset):
         """This function generates a void ptr for the right backend object
 
