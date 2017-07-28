@@ -7,7 +7,7 @@ static const int MinDepth = 4;
 static const int MaxDepth = 30;
 static const int MaxParams = 8; //choose the first power of 2 >= the actual max
 static const int MaxSubsections = 256; //2^MaxParams
-static const double ConvergenceLimit = 1.0e-3;
+static const double ConvergenceLimit = 1.0e-4;
 static const double ValueLimit = 1.0e-14;
 
 class Calculator
