@@ -1,6 +1,7 @@
 #include"wrappers.h"
 #include"detector.h"
 #include"flat_shapes.h"
+#include"shell_shapes.h"
 #include"calculator.h"
 
 void* makeDetector(double* vec1, double* vec2, double* norm)
@@ -39,6 +40,19 @@ void* makeCircleYZ(double* cent, double radius)
     CircleYZ* temp = new CircleYZ(cent, radius);
     return (void*)temp;
 }
+
+void* makeVertCylinder(double* cent, double radius, double len)
+{
+    VertCylinder* temp = new VertCylinder(cent, radius, len);
+    return (void*)temp;
+}
+
+void* makeRotXaxisCylinder(double* cent, double radius, double len, double angle)
+{
+    RotXaxisCylinder* temp = new RotXaxisCylinder(cent, radius, len, angle);
+    return (void*)temp;
+}
+
 
 // Function to create the calculator object
 void* makeCalculator(void* detector, void* source)
