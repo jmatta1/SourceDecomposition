@@ -26,8 +26,8 @@ def main():
     num_cores = int(sys.argv[2])
     sources = set_up_sources()
     temp = wc.calculate_weights(detectors, sources, num_cores)
-    for elem in temp:
-        print elem
+    #for elem in temp:
+    #    print elem
 
 
 def set_up_sources():
@@ -57,7 +57,7 @@ def make_hot_patches():
     """
     patch_list = []
     # make the source that represents the hot-patch from EF4
-    center = 2.54*np.array([228.0, 105.0, 11.0])
+    center = 2.54*np.array([228.0, 105.0, 11.0], dtype=np.float64)
     patch_list.append(fs.CircleYZ("EF4_Cover", center, 20.0))
     return patch_list
 
@@ -76,39 +76,39 @@ def make_cube_wall_sources():
     # identity matrix
     no_rotate = gb.Rotation()
     # make the wall source that is the Rx pool wall
-    center = 2.54*np.array([219.0, 69.0, 95.0])
-    edge_vec1 = 2.54*np.array([0.0, 81.0, 0.0])
-    edge_vec2 = 2.54*np.array([0.0, 0.0, 95.0])
+    center = 2.54*np.array([219.0, 69.0, 95.0], dtype=np.float64)
+    edge_vec1 = 2.54*np.array([0.0, 81.0, 0.0], dtype=np.float64)
+    edge_vec2 = 2.54*np.array([0.0, 0.0, 95.0], dtype=np.float64)
     wall_list.append(fs.Square("Rx_Wall", center, (edge_vec1, edge_vec2),
                                no_rotate))
     # make the wall source that is the MIF room wall
-    center = 2.54*np.array([0.0, 69.0, 95.0])
-    edge_vec1 = 2.54*np.array([0.0, 81.0, 0.0])
-    edge_vec2 = 2.54*np.array([0.0, 0.0, 95.0])
+    center = 2.54*np.array([0.0, 69.0, 95.0], dtype=np.float64)
+    edge_vec1 = 2.54*np.array([0.0, 81.0, 0.0], dtype=np.float64)
+    edge_vec2 = 2.54*np.array([0.0, 0.0, 95.0], dtype=np.float64)
     wall_list.append(fs.Square("MIF_Room_Wall", center, (edge_vec1, edge_vec2),
                                no_rotate))
     # make the wall source that is the floor
-    center = 2.54*np.array([109.5, 69.0, 0.0])
-    edge_vec1 = 2.54*np.array([0.0, 81.0, 0.0])
-    edge_vec2 = 2.54*np.array([109.5, 0.0, 0.0])
+    center = 2.54*np.array([109.5, 69.0, 0.0], dtype=np.float64)
+    edge_vec1 = 2.54*np.array([0.0, 81.0, 0.0], dtype=np.float64)
+    edge_vec2 = 2.54*np.array([109.5, 0.0, 0.0], dtype=np.float64)
     wall_list.append(fs.Square("Floor", center, (edge_vec1, edge_vec2),
                                no_rotate))
     # make the wall source that is the ceiling
-    center = 2.54*np.array([109.5, 69.0, 190.0])
-    edge_vec1 = 2.54*np.array([0.0, 81.0, 0.0])
-    edge_vec2 = 2.54*np.array([109.5, 0.0, 0.0])
+    center = 2.54*np.array([109.5, 69.0, 190.0], dtype=np.float64)
+    edge_vec1 = 2.54*np.array([0.0, 81.0, 0.0], dtype=np.float64)
+    edge_vec2 = 2.54*np.array([109.5, 0.0, 0.0], dtype=np.float64)
     wall_list.append(fs.Square("Ceiling", center, (edge_vec1, edge_vec2),
                                no_rotate))
     # make the wall source that covers the area opposite the rollup door (east)
-    center = 2.54*np.array([109.5, -12.0, 95.0])
-    edge_vec1 = 2.54*np.array([0.0, 0.0, 95.0])
-    edge_vec2 = 2.54*np.array([109.5, 0.0, 0.0])
+    center = 2.54*np.array([109.5, -12.0, 95.0], dtype=np.float64)
+    edge_vec1 = 2.54*np.array([0.0, 0.0, 95.0], dtype=np.float64)
+    edge_vec2 = 2.54*np.array([109.5, 0.0, 0.0], dtype=np.float64)
     wall_list.append(fs.Square("East_Wall", center, (edge_vec1, edge_vec2),
                                no_rotate))
     # make the wall source that covers the area towards the rollup door (west)
-    center = 2.54*np.array([109.5, 150.0, 95.0])
-    edge_vec1 = 2.54*np.array([0.0, 0.0, 95.0])
-    edge_vec2 = 2.54*np.array([109.5, 0.0, 0.0])
+    center = 2.54*np.array([109.5, 150.0, 95.0], dtype=np.float64)
+    edge_vec1 = 2.54*np.array([0.0, 0.0, 95.0], dtype=np.float64)
+    edge_vec2 = 2.54*np.array([109.5, 0.0, 0.0], dtype=np.float64)
     wall_list.append(fs.Square("West_Wall", center, (edge_vec1, edge_vec2),
                                no_rotate))
     return wall_list
