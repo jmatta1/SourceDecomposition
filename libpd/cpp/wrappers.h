@@ -16,7 +16,10 @@ extern "C" void* makeCircleYZ(double* cent, double radius);
 extern "C" void* makeCalculator(void* detector, void* source);
 extern "C" void freeCalculator(void* calcObject);
 
-// Function to perform the calculation
+// Function to perform the integrand calculation
 extern "C" double calculateIntegrand(int n, double* params, void* calcObject);
+
+// Function to perform the integral calculation
+extern "C" void calcIntegral(void* calcObject, double* outParams);
 
 #endif //POSITION_DECOMP_LIBPD_CPP_WRAPPERS_H

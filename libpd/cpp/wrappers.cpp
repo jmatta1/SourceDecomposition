@@ -58,3 +58,13 @@ double calculateIntegrand(int n, double* params, void* calcObject)
 {
     return ((Calculator*)calcObject)->calcIntegrand(params);
 }
+
+// Function to perform the calculation
+void calcIntegral(void* calcObject, double* outParams)
+{
+    double* temp = ((Calculator*)calcObject)->calcIntegral();
+    for(int i=0; i<3; ++i)
+    {
+        outParams[i] = temp[i];
+    }
+}

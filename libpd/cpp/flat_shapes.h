@@ -9,11 +9,16 @@ public:
     Square(double* cent, double* v1, double* v2);
     virtual ~Square(){}
     virtual double* getPosition(double* params);
+    virtual double getVolumeElement(double* params, double* widths);
+    virtual int getNumParams();
+    virtual const double* getBounds();
 
 private:
     double center[3];
     double vec1[3];
+    double mag1;
     double vec2[3];
+    double mag2;
     double pos[3];
 };
 
@@ -23,6 +28,9 @@ public:
     Circle(double* center, double rad, double* rot);
     virtual ~Circle(){}
     virtual double* getPosition(double* params);
+    virtual double getVolumeElement(double* params, double* widths);
+    virtual int getNumParams();
+    virtual const double* getBounds();
 
 private:
     double center[3];
@@ -37,6 +45,9 @@ public:
     CircleXY(double* center, double rad);
     virtual ~CircleXY(){}
     virtual double* getPosition(double* params);
+    virtual double getVolumeElement(double* params, double* widths);
+    virtual int getNumParams();
+    virtual const double* getBounds();
 
 private:
     double center[3];
@@ -50,6 +61,9 @@ public:
     CircleXZ(double* center, double rad);
     virtual ~CircleXZ(){}
     virtual double* getPosition(double* params);
+    virtual double getVolumeElement(double* params, double* widths);
+    virtual int getNumParams();
+    virtual const double* getBounds();
 
 private:
     double center[3];
@@ -63,6 +77,9 @@ public:
     CircleYZ(double* center, double rad);
     virtual ~CircleYZ(){}
     virtual double* getPosition(double* params);
+    virtual double getVolumeElement(double* params, double* widths);
+    virtual int getNumParams();
+    virtual const double* getBounds();
 
 private:
     double center[3];
