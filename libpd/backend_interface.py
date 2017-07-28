@@ -35,9 +35,29 @@ def initialize_interface():
     # set up the function that does the calculation of the full integral
     lib.calculateIntegrand.restype = ct.POINTER(ct.c_double)
     lib.calculateIntegrand.argtypes = [ct.c_void_p, ct.POINTER(ct.c_double)]
-    # now call the function that adds all the flat show creation functions
+    # now call the functions that add all the shape creation functions
     initialize_flat_shape_funcs(lib)
+    initialize_shell_shape_funcs(lib)
     return lib
+
+
+def initialize_shell_shape_funcs(lib):
+    """This function initializes the argtypes and restypes for the make shell
+    shape functions within lib
+
+    Parameters
+    ----------
+    lib : ctypes.cdd object
+        The object for the loaded backend library
+    """
+    # the vertical cylinder
+    lib.makeVertCylinder.restype = ct.c_void_p
+    lib.makeVertCylinder.argtypes = [ct.POINTER(ct.c_double), ct.c_double,
+                                     ct.c_double]
+    # the rotated horizontal cylinder
+    lib.makeRotXaxisCylinder.restype = ct.c_void_p
+    lib.makeRotXaxisCylinder.argtypes = [ct.POINTER(ct.c_double), ct.c_double,
+                                         ct.c_double, ct.c_double]
 
 
 def initialize_flat_shape_funcs(lib):
