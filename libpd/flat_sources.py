@@ -184,7 +184,8 @@ class Circle(Shape):
             The position corresponding to those integration parameters
         """
         rvec = self.rmat.dot((self.rad * np.array([np.cos(args[0]),
-                                                   np.sin(args[0]), 0.0])))
+                                                   np.sin(args[0]), 0.0],
+                                                  dtype=np.float64)))
         return self.center + args[1]*rvec
 
     def make_backend_object(self, lib, offset):
@@ -289,7 +290,8 @@ class CircleXY(Shape):
         position : vector
             The position corresponding to those integration parameters
         """
-        rvec = self.rad * np.array([np.cos(args[0]), np.sin(args[0]), 0.0])
+        rvec = self.rad * np.array([np.cos(args[0]), np.sin(args[0]), 0.0],
+                                   dtype=np.float64)
         return self.center + args[1]*rvec
 
     def make_backend_object(self, lib, offset):
@@ -392,7 +394,8 @@ class CircleXZ(Shape):
         position : vector
             The position corresponding to those integration parameters
         """
-        rvec = self.rad * np.array([np.cos(args[0]), 0.0, np.sin(args[0])])
+        rvec = self.rad * np.array([np.cos(args[0]), 0.0, np.sin(args[0])],
+                                   dtype=np.float64)
         return self.center + args[1]*rvec
 
     def make_backend_object(self, lib, offset):
@@ -495,7 +498,8 @@ class CircleYZ(Shape):
         position : vector
             The position corresponding to those integration parameters
         """
-        rvec = self.rad * np.array([0.0, np.cos(args[0]), np.sin(args[0])])
+        rvec = self.rad * np.array([0.0, np.cos(args[0]), np.sin(args[0])],
+                                   dtype=np.float64)
         return self.center + args[1]*rvec
 
     def make_backend_object(self, lib, offset):

@@ -78,7 +78,7 @@ class Rotation(object):
         """Initializes the rotation matrix as the simple identity matrix"""
         self.rmat = np.array([[1.0, 0.0, 0.0],
                               [0.0, 1.0, 0.0],
-                              [0.0, 0.0, 1.0]])
+                              [0.0, 0.0, 1.0]], dtype=np.float64)
 
     def add_z_rot(self, theta):
         """Multiplies a rotation by theta degrees about the Z axis onto the
@@ -93,7 +93,7 @@ class Rotation(object):
         cos = np.cos(np.pi*theta/180.0)
         rot = np.array([[cos, -sin, 0.0],
                         [sin, cos, 0.0],
-                        [0.0, 0.0, 1.0]])
+                        [0.0, 0.0, 1.0]], dtype=np.float64)
         self.rmat = np.dot(rot, self.rmat)
         np.round(self.rmat, RMAT_DEC, out=self.rmat)
 
@@ -110,7 +110,7 @@ class Rotation(object):
         cos = np.cos(np.pi*theta/180.0)
         rot = np.array([[cos, 0.0, sin],
                         [0.0, 1.0, 0.0],
-                        [-sin, 0.0, cos]])
+                        [-sin, 0.0, cos]], dtype=np.float64)
         self.rmat = np.dot(rot, self.rmat)
         np.round(self.rmat, RMAT_DEC, out=self.rmat)
 
@@ -127,7 +127,7 @@ class Rotation(object):
         cos = np.cos(np.pi*theta/180.0)
         rot = np.array([[1.0, 0.0, 0.0],
                         [0.0, cos, -sin],
-                        [0.0, sin, cos]])
+                        [0.0, sin, cos]], dtype=np.float64)
         self.rmat = np.dot(rot, self.rmat)
         np.round(self.rmat, RMAT_DEC, out=self.rmat)
 
@@ -144,10 +144,12 @@ class Rotation(object):
         """
         sin = np.sin(np.pi*theta/180.0)
         cos = np.cos(np.pi*theta/180.0)
-        term1 = np.array([[cos, 0.0, 0.0], [0.0, cos, 0.0], [0.0, 0.0, cos]])
+        term1 = np.array([[cos, 0.0, 0.0], [0.0, cos, 0.0], [0.0, 0.0, cos]],
+                         dtype=np.float64)
         term2 = sin * np.array([[0.0, -unit_vector[2], unit_vector[1]],
                                 [unit_vector[2], 0.0, -unit_vector[0]],
-                                [-unit_vector[1], unit_vector[0], 0.0]])
+                                [-unit_vector[1], unit_vector[0], 0.0]],
+                               dtype=np.float64)
         term3 = (1.0-cos) * np.tensordot(unit_vector, unit_vector, axes=0)
         rot = term1 + term2 + term3
         self.rmat = np.dot(rot, self.rmat)

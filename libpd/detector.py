@@ -6,32 +6,32 @@ import ctypes as ct
 import numpy as np
 from libpd.geom_base import Shape
 
-SURF_OFFSETS = [2.54*np.array([1.125, 0.0, 0.0]),   # front
-                2.54*np.array([-1.125, 0.0, 0.0]),  # back
-                2.54*np.array([0.0, 8.125, 0.0]),   # left
-                2.54*np.array([0.0, -8.125, 0.0]),  # right
-                2.54*np.array([0.0, 0.0, 2.125]),   # top
-                2.54*np.array([0.0, 0.0, -2.125])]  # bottom
+SURF_OFFSETS = [2.54*np.array([1.125, 0.0, 0.0], dtype=np.float64),   # front
+                2.54*np.array([-1.125, 0.0, 0.0], dtype=np.float64),  # back
+                2.54*np.array([0.0, 8.125, 0.0], dtype=np.float64),   # left
+                2.54*np.array([0.0, -8.125, 0.0], dtype=np.float64),  # right
+                2.54*np.array([0.0, 0.0, 2.125], dtype=np.float64),   # top
+                2.54*np.array([0.0, 0.0, -2.125], dtype=np.float64)]  # bottom
 
-SURF_VECTORS = [(2.54*np.array([0.0, 2.125, 0.0]),  # front height
-                 2.54*np.array([0.0, 0.0, 8.125])), # front width
-                (2.54*np.array([0.0, 2.125, 0.0]),  # back height
-                 2.54*np.array([0.0, 0.0, 8.125])), # back width
-                (2.54*np.array([0.0, 2.125, 0.0]),  # left height
-                 2.54*np.array([1.125, 0.0, 0.0])), # left length
-                (2.54*np.array([0.0, 2.125, 0.0]),  # right height
-                 2.54*np.array([1.125, 0.0, 0.0])), # right length
-                (2.54*np.array([1.125, 0.0, 0.0]),  # top length
-                 2.54*np.array([0.0, 0.0, 8.125])), # top width
-                (2.54*np.array([1.125, 0.0, 0.0]),  # bottom length
-                 2.54*np.array([0.0, 0.0, 8.125]))] # bottom width
+SURF_VECTORS = [(2.54*np.array([0.0, 2.125, 0.0], dtype=np.float64),  # front height
+                 2.54*np.array([0.0, 0.0, 8.125], dtype=np.float64)), # front width
+                (2.54*np.array([0.0, 2.125, 0.0], dtype=np.float64),  # back height
+                 2.54*np.array([0.0, 0.0, 8.125], dtype=np.float64)), # back width
+                (2.54*np.array([0.0, 2.125, 0.0], dtype=np.float64),  # left height
+                 2.54*np.array([1.125, 0.0, 0.0], dtype=np.float64)), # left length
+                (2.54*np.array([0.0, 2.125, 0.0], dtype=np.float64),  # right height
+                 2.54*np.array([1.125, 0.0, 0.0], dtype=np.float64)), # right length
+                (2.54*np.array([1.125, 0.0, 0.0], dtype=np.float64),  # top length
+                 2.54*np.array([0.0, 0.0, 8.125], dtype=np.float64)), # top width
+                (2.54*np.array([1.125, 0.0, 0.0], dtype=np.float64),  # bottom length
+                 2.54*np.array([0.0, 0.0, 8.125], dtype=np.float64))] # bottom width
 
-SURF_NORMALS = [np.array([1.0, 0.0, 0.0]),          # front normal
-                np.array([-1.0, 0.0, 0.0]),         # back normal
-                np.array([0.0, 1.0, 0.0]),          # left normal
-                np.array([0.0, -1.0, 0.0]),         # right normal
-                np.array([0.0, 0.0, 1.0]),          # top normal
-                np.array([0.0, 0.0, -1.0])]         # bottom normal
+SURF_NORMALS = [np.array([1.0, 0.0, 0.0], dtype=np.float64),          # front normal
+                np.array([-1.0, 0.0, 0.0], dtype=np.float64),         # back normal
+                np.array([0.0, 1.0, 0.0], dtype=np.float64),          # left normal
+                np.array([0.0, -1.0, 0.0], dtype=np.float64),         # right normal
+                np.array([0.0, 0.0, 1.0], dtype=np.float64),          # top normal
+                np.array([0.0, 0.0, -1.0], dtype=np.float64)]         # bottom normal
 
 
 class SimpleDetectingSurface(Shape):
@@ -249,7 +249,8 @@ class Detector(object):
         self.cent = center
         self.surf = []
         for cent, vec, norm in zip(SURF_OFFSETS, SURF_VECTORS, SURF_NORMALS):
-            self.surf.append(DetectingSurface(cent, vec[0], vec[1], norm))
+            self.surf.append(DetectingSurface(cent+center, vec[0], vec[1],
+                                              norm))
 
     def get_run_data(self):
         """Returns the detector number and run number as a pair
@@ -330,6 +331,6 @@ def read_positions(fname):
         for i in range(7):
             detn = (i + 8 if i < 2 else i + 9)
             center = 2.54 * np.array([float(elems[1+3*i]), float(elems[2+3*i]),
-                                      float(elems[3+3*i])])
+                                      float(elems[3+3*i])], dtype=np.float64)
             pos_list.append((detn, runn, center))
     return pos_list

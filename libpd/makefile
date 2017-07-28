@@ -1,4 +1,4 @@
-CXX_FLAGS=-O3 -g -shared -march=native -mtune=native -fPIC
+CXX_FLAGS=-Wall -O3 -ffast-math -std=c++11 -g -shared -march=native -mtune=native -fPIC
 
 libPositionDecomp.so: cpp/flat_shapes.o cpp/calculator.o cpp/detector.o cpp/wrappers.o
 	g++ $(CXX_FLAGS) $^ -o $@

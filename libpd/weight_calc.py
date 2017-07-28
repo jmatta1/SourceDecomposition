@@ -74,6 +74,7 @@ def calculate_weights_single(detectors, sources):
                                    cp.deepcopy(src)))
     print "Commencing Integration!"
     # now calculate the weight at every position using a single core
+    # TODO: revert to full calculation after debugging
     weight_list = [calc_weight_opt(x) for x in input_list]
     # now return the summed weights
     return weight_list
@@ -120,7 +121,7 @@ def calculate_weights_multi(detectors, sources, num_cores):
     # set up the thread pool for the multiprocessing
     mp_pool = multiprocessing.Pool(processes=num_cores)
     # process the input list with that pool
-    weight_list = mp_pool.map(calc_weight_opt, input_list)
+    weight_list = mp_pool.map(calc_weight_opt, input_list[:42])
     # now return the summed weights
     return weight_list
 
@@ -161,15 +162,24 @@ def calc_weight_opt(data_tuple):
         if not test > 0.0:
             return (pos_info, 0.0)
     # get the library and build the low-level call
-    (lib, calc, scp_call) = build_low_level_call(surface, source)
+    (lib, calc) = build_low_level_call(surface, source)
     # set up the options dictionary
     options = {}
+    options["epsabs"] = 1.49e-08
+    options["epsrel"] = 1.49e-08
     options["limit"] = 1000
+    #options["points"] = None
+    #options["weight"] = None
+    #options["wvar"] = None
+    #options["wopts"] = None
     # call the numerical integration
-    weight = spi.nquad(scp_call, ranges, args=(surface, source), opts=options)
-    print pos_info, weight
+    # weight = spi.nquad(scp_call, ranges, args=(surface, source), opts=options)
+    weight = np.array(range(3), dtype=np.float64)
+    lib.calcIntegral(ct.cast(calc, ct.c_void_p), weight.ctypes.data_as(ct.POINTER(ct.c_double)))
+    fmt_str = "({0:d}, {1:d}, {2:d}, {3:14s})".format(*pos_info)
+    print fmt_str, weight
     # free the calculator objection before returning
-    lib.freeCalculator(calc)
+    lib.freeCalculator(ct.cast(calc, ct.c_void_p))
     return (pos_info, weight[0])
 
 
@@ -199,10 +209,8 @@ def build_low_level_call(surface, source):
     # now make the source objection
     src = source.make_backend_object(lib, surface.center)
     # now make the calculation object
-    calc = lib.makeCalculator(det, src)
-    # now make the low level callable
-    scp_call = LowLevelCallable(lib.calculateIntegrand, calc)
-    return (lib, calc, scp_call)
+    calc = lib.makeCalculator(ct.cast(det, ct.c_void_p), ct.cast(src, ct.c_void_p))
+    return (lib, calc)
 
 
 def calc_weight(data_tuple):
