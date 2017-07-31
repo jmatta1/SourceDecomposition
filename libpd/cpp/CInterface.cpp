@@ -43,13 +43,13 @@ void* makeCircleYZ(double* cent, double radius)
 
 void* makeVertCylinder(double* cent, double radius, double len)
 {
-    VertCylinder* temp = new VertCylinder(cent, radius, len);
+    CylinderZaxis* temp = new CylinderZaxis(cent, radius, len);
     return (void*)temp;
 }
 
 void* makeRotXaxisCylinder(double* cent, double radius, double len, double angle)
 {
-    RotXaxisCylinder* temp = new RotXaxisCylinder(cent, radius, len, angle);
+    CylinderXaxisRotatedZ* temp = new CylinderXaxisRotatedZ(cent, radius, len, angle);
     return (void*)temp;
 }
 
