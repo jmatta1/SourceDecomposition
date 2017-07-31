@@ -1,7 +1,9 @@
-#ifndef POSITION_DECOMP_LIBPD_CPP_CALCULATOR_H
-#define POSITION_DECOMP_LIBPD_CPP_CALCULATOR_H
+#ifndef POSITION_DECOMP_LIBPD_CPP_CALCULATION_CALCULATOR_H
+#define POSITION_DECOMP_LIBPD_CPP_CALCULATION_CALCULATOR_H
 #include"Geometry/Detector.h"
 #include"Geometry/Shape.h"
+#include"BoundsHandler.h"
+#include"ResultCache.h"
 
 static const int MinDepth = 4;
 static const int MaxDepth = 60;
@@ -24,15 +26,10 @@ public:
     //Third: The number of calls to the integrand function
     double* calcIntegral();
 private:
-    double calcIntegrand(double* params);
-    
-    double recursiveRefinement(int level, double segmentGuess);
+    double calcIntegralSegment(double* params, double* widths);
+    double recursiveRefinement(int level);
 
     void obtainBounds();
-    double calcIntegralSegment(int level);
-    void genParamSetAndWidths(int level);
-    void generateBoundsFull(int level, int bInd);
-    void generateBoundsSingle(int level, int axis, bool lowSet);
 
     Shape* src;       ///< Owned pointer of the source object
     Detector* det;    ///< Owned pointer of the detector object
@@ -40,21 +37,11 @@ private:
     int numParams;    ///< The total number of parameters to integrate across for both objections
     int numSegs;      ///< The number of 1/2 subdivisions across all possible axes
     int splitRecurs;  ///< Counter for the number of times we have done a 1D recursion instead of full
-    int attainedLevel;///< The maximum depth of recursion currently obtained
     unsigned long long calls;  ///< The number of calls to calcIntegrand
     double outVec[3]; ///< The output data vector
     //parameters for the recursion
-    double origLo[MaxParams];
-    double origHi[MaxParams];
-    double loBnds[(MaxDepth+2)*MaxParams];
-    double hiBnds[(MaxDepth+2)*MaxParams];
-    double twoWayVals[(MaxDepth+2)*MaxSplits];
-    double twoWayInts[(MaxDepth+2)*MaxParams];
-    double diffs[MaxParams];
-    bool lowVals[MaxParams];
-    double* valueSet;
-    double paramSet[MaxParams];
-    double widths[MaxParams];
+    ResultCache valCache;
+    BoundsHandler bounds;
 
 public:
     Calculator(const Calculator& rhs) = delete;
@@ -62,5 +49,5 @@ public:
     
 };
 
-#endif //POSITION_DECOMP_LIBPD_CPP_CALCULATOR_H
+#endif //POSITION_DECOMP_LIBPD_CPP_CALCULATION_CALCULATOR_H
 
