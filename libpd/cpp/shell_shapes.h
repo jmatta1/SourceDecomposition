@@ -8,10 +8,10 @@ class VertCylinder : public Shape
 public:
     VertCylinder(double* cent, double rad, double len);
     virtual ~VertCylinder(){}
-    virtual double* getPosition(double* params);
-    virtual double getVolumeElement(double* params, double* widths);
-    virtual int getNumParams();
-    virtual const double* getBounds();
+    virtual double* getPosition(double* params) override final;
+    virtual double getVolumeElement(double* params, double* widths) override final;
+    virtual int getNumParams() override final;
+    virtual const double* getBounds() override final;
 
 private:
     double center[3];
@@ -25,10 +25,10 @@ class RotXaxisCylinder : public Shape
 public:
     RotXaxisCylinder(double* cent, double rad, double len, double angle);
     virtual ~RotXaxisCylinder(){}
-    virtual double* getPosition(double* params);
-    virtual double getVolumeElement(double* params, double* widths);
-    virtual int getNumParams();
-    virtual const double* getBounds();
+    virtual double* getPosition(double* params) override final;
+    virtual double getVolumeElement(double* params, double* widths) override final;
+    virtual int getNumParams() override final;
+    virtual const double* getBounds() override final;
 
 private:
     double center[3];
