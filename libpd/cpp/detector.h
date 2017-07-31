@@ -15,7 +15,7 @@ public:
     double getSurfaceElement(double* params, double* widths);
     int getNumParams(){return 2;}
     const double* getBounds(){return DetBounds;}
-    bool hasLineOfSight(double* pos);
+    bool hasLineOfSight(double* posVec);
 
 private:
     double vec1[3];

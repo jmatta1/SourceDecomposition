@@ -33,12 +33,12 @@ double Detector::getSurfaceElement(double* params, double* widths)
     return std::abs(widths[0]*mag1 * widths[1]*mag2);
 }
 
-bool Detector::hasLineOfSight(double* pos)
+bool Detector::hasLineOfSight(double* posVec)
 {
     double dotProd = 0.0;
     for(int i=0; i<3; ++i)
     {
-        dotProd += (pos[i]*norm[i]);
+        dotProd += (posVec[i]*norm[i]);
     }
     return (dotProd > 0.0);
 }
