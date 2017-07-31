@@ -1,7 +1,7 @@
 #ifndef POSITION_DECOMP_LIBPD_CPP_CALCULATOR_H
 #define POSITION_DECOMP_LIBPD_CPP_CALCULATOR_H
-#include"detector.h"
-#include"shape.h"
+#include"Geometry/Detector.h"
+#include"Geometry/Shape.h"
 
 static const int MinDepth = 4;
 static const int MaxDepth = 60;
