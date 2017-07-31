@@ -1,5 +1,5 @@
-#ifndef POSITION_DECOMP_LIBPD_CPP_WRAPPERS_H
-#define POSITION_DECOMP_LIBPD_CPP_WRAPPERS_H
+#ifndef POSITION_DECOMP_LIBPD_CPP_CINTERFACE_H
+#define POSITION_DECOMP_LIBPD_CPP_CINTERFACE_H
 
 // Make detector shape
 extern "C" void* makeDetector(double* vec1, double* vec2, double* norm);
@@ -23,4 +23,4 @@ extern "C" void freeCalculator(void* calcObject);
 // Function to perform the integral calculation
 extern "C" void calcIntegral(void* calcObject, double* outParams);
 
-#endif //POSITION_DECOMP_LIBPD_CPP_WRAPPERS_H
+#endif //POSITION_DECOMP_LIBPD_CPP_CINTERFACE_H

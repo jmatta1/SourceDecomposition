@@ -1,8 +1,8 @@
-#include"wrappers.h"
-#include"detector.h"
-#include"flat_shapes.h"
-#include"shell_shapes.h"
-#include"calculator.h"
+#include"CInterface.h"
+#include"Geometry/Detector.h"
+#include"Geometry/FlatShapes.h"
+#include"Geometry/ShellShapes.h"
+#include"Calculation/Calculator.h"
 
 void* makeDetector(double* vec1, double* vec2, double* norm)
 {
