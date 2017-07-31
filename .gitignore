@@ -2,3 +2,4 @@
 *.so
 *.o
 *.txt.user
+libpd/build
