@@ -5,7 +5,8 @@ using std::sin;
 
 static const double SimpleCylinderBounds[4] = {0.0, 6.283185307179586476925286766559, -1.0, 1.0};
 
-CylinderXaxisRotatedZ::CylinderXaxisRotatedZ(double* cent, double rad, double len, double angle) : radius(rad), length(len), sEval(sin(angle)), cEval(cos(angle))
+CylinderXaxisRotatedZ::CylinderXaxisRotatedZ(double* cent, double rad, double len, double angle) :
+    radius(rad), length(len), areaScale(rad*len), sEval(sin(angle)), cEval(cos(angle))
 {
     for(int i=0; i<3; ++i)
     {
@@ -25,7 +26,7 @@ double* CylinderXaxisRotatedZ::getPosition(double* params)
 
 double CylinderXaxisRotatedZ::getVolumeElement(double* params, double* widths)
 {
-    return radius*widths[0]*length*widths[1];
+    return areaScale*widths[0]*widths[1];
 }
 
 int CylinderXaxisRotatedZ::getNumParams()

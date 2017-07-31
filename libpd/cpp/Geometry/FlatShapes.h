@@ -1,8 +1,8 @@
 #ifndef POSITION_DECOMP_LIBPD_CPP_GEOMETRY_FLATSHAPES_H
 #define POSITION_DECOMP_LIBPD_CPP_GEOMETRY_FLATSHAPES_H
 
-#include"Square.h"
-#include"Circle.h"
-#include"PlanarCircles.h"
+#include"2dFlat/Square.h"
+#include"2dFlat/Circle.h"
+#include"2dFlat/PlanarCircles.h"
 
 #endif //POSITION_DECOMP_LIBPD_CPP_FLATSHAPES_H

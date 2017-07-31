@@ -1,7 +1,7 @@
 #ifndef POSITION_DECOMP_LIBPD_CPP_GEOMETRY_SHELLSHAPES_H
 #define POSITION_DECOMP_LIBPD_CPP_GEOMETRY_SHELLSHAPES_H
 
-#include"AxialCylinder.h"
-#include"SimpleCylinder.h"
+#include"2dComplex/AxialCylinder.h"
+#include"2dComplex/SimpleCylinder.h"
 
 #endif //POSITION_DECOMP_LIBPD_CPP_GEOMETRY_SHELLSHAPES_H

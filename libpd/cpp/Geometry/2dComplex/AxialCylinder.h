@@ -1,7 +1,7 @@
-#ifndef POSITION_DECOMP_LIBPD_CPP_GEOMETRY_AXIALCYLINDER_H
-#define POSITION_DECOMP_LIBPD_CPP_GEOMETRY_AXIALCYLINDER_H
+#ifndef POSITION_DECOMP_LIBPD_CPP_GEOMETRY_2DCOMPLEX_AXIALCYLINDER_H
+#define POSITION_DECOMP_LIBPD_CPP_GEOMETRY_2DCOMPLEX_AXIALCYLINDER_H
 
-#include"Shape.h"
+#include"Geometry/Shape.h"
 
 class CylinderXaxis : public Shape
 {
@@ -26,8 +26,8 @@ private:
 class CylinderYaxis : public Shape
 {
 public:
-    VertCylinder(double* cent, double rad, double len);
-    virtual ~VertCylinder(){}
+    CylinderYaxis(double* cent, double rad, double len);
+    virtual ~CylinderYaxis(){}
     virtual double* getPosition(double* params) override final;
     virtual double getVolumeElement(double* params, double* widths) override final;
     virtual int getNumParams() override final;
@@ -46,8 +46,8 @@ private:
 class CylinderZaxis : public Shape
 {
 public:
-    VertCylinder(double* cent, double rad, double len);
-    virtual ~VertCylinder(){}
+    CylinderZaxis(double* cent, double rad, double len);
+    virtual ~CylinderZaxis(){}
     virtual double* getPosition(double* params) override final;
     virtual double getVolumeElement(double* params, double* widths) override final;
     virtual int getNumParams() override final;
@@ -61,4 +61,4 @@ private:
     double pos[3];
 };
 
-#endif //POSITION_DECOMP_LIBPD_CPP_GEOMETRY_AXIALCYLINDER_H
+#endif //POSITION_DECOMP_LIBPD_CPP_GEOMETRY_2DCOMPLEX_AXIALCYLINDER_H

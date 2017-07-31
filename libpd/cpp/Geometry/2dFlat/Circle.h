@@ -1,7 +1,7 @@
-#ifndef POSITION_DECOMP_LIBPD_CPP_CIRCLE_H
-#define POSITION_DECOMP_LIBPD_CPP_CIRCLE_H
+#ifndef POSITION_DECOMP_LIBPD_CPP_GEOMETRY_2DFLAT_CIRCLE_H
+#define POSITION_DECOMP_LIBPD_CPP_GEOMETRY_2DFLAT_CIRCLE_H
 
-#include"Shape.h"
+#include"Geometry/Shape.h"
 class Circle : public Shape
 {
 public:
@@ -20,4 +20,4 @@ private:
     double pos[3];
 };
 
-#endif //POSITION_DECOMP_LIBPD_CPP_CIRCLE_H
+#endif //POSITION_DECOMP_LIBPD_CPP_GEOMETRY_2DFLAT_CIRCLE_H
