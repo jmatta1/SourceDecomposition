@@ -3,6 +3,5 @@
 
 #include"AxialCylinder.h"
 #include"SimpleCylinder.h"
-#include"Cylinder.h"
 
 #endif //POSITION_DECOMP_LIBPD_CPP_GEOMETRY_SHELLSHAPES_H
