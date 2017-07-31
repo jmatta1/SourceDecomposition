@@ -9,10 +9,8 @@ using std::endl;
 static const double SquareBounds[4] = {-1.0, 1.0, -1.0, 1.0};
 static const double CircleBounds[4] = {0.0, 6.283185307179586476925286766559, 0.0, 1.0};
 
-Square::Square(double* cent, double* v1, double* v2)
+Square::Square(double* cent, double* v1, double* v2) : mag1(0.0), mag2(0.0)
 {
-    mag1=0.0;
-    mag2=0.0;
     for(int i=0; i<3; ++i)
     {
         this->center[i] = cent[i];
@@ -36,7 +34,7 @@ double* Square::getPosition(double* params)
 
 double Square::getVolumeElement(double* params, double* widths)
 {
-    return std::abs(widths[0]*mag1 * widths[1]*mag2);
+    return std::abs(mag1 * widths[0] * mag2 * widths[1]);
 }
 
 int Square::getNumParams()
