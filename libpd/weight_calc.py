@@ -74,7 +74,7 @@ def calculate_weights_single(detectors, sources):
                                    cp.deepcopy(src)))
     print "Commencing Single Threaded Integration!"
     # now calculate the weight at every position using a single core
-    weight_list = [calc_weight_opt(x) for x in input_list]
+    weight_list = [calc_weight_opt(x) for x in input_list[:12]]
     # return the sorted and summed weights
     return sort_and_sum(weight_list)
 
@@ -120,7 +120,7 @@ def calculate_weights_multi(detectors, sources, num_cores):
     # set up the thread pool for the multiprocessing
     mp_pool = multiprocessing.Pool(processes=num_cores)
     # process the input list with that pool
-    weight_list = mp_pool.map(calc_weight_opt, input_list)
+    weight_list = mp_pool.map(calc_weight_opt, input_list[:12])
     # return the sorted and summed weights
     return sort_and_sum(weight_list)
 
@@ -200,8 +200,8 @@ def calc_weight_opt(data_tuple):
     # weight = spi.nquad(scp_call, ranges, args=(surface, source), opts=options)
     weight = np.array(range(3), dtype=np.float64)
     lib.calcIntegral(ct.cast(calc, ct.c_void_p), weight.ctypes.data_as(ct.POINTER(ct.c_double)))
-    temp = (pos_info[0], pos_info[1], pos_info[2], pos_info[3], weight[0])
-    print "{0:d}, {1:d}, {2:d}, {3:s}, {4:e}".format(*temp)
+    temp = (pos_info[0], pos_info[1], pos_info[2], pos_info[3], weight[0], int(weight[1]))
+    print "{0:d}, {1:d}, {2:d}, {3:s}, {4:e}, {5:d}".format(*temp)
     # free the calculator objection before returning
     lib.freeCalculator(ct.cast(calc, ct.c_void_p))
     return (pos_info, weight[0])
