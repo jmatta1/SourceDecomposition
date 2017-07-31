@@ -8,16 +8,16 @@ BoundsHandler::~BoundsHandler()
     for(auto&& x: centersCache) delete[] x;
 }
 
-std::tuple<double*, double*, double*, double*> BoundsHandler::getBoundsWidthsAndCenters(int level)
+std::tuple<double*, double*> getParamsAndWidths(int level)
 {
     //things should already be allocated since prepBounds should have already have been called for this level
     if(level != -1)
     {
-        return std::make_tuple(loBoundsCache[level], hiBoundsCache[level], widthsCache[level], centersCache[level]);
+        return std::make_tuple(widthsCache[level], centersCache[level]);
     }
     else
     {
-        return std::make_tuple(origLoBounds, origHiBounds, origWidths, origCenters);
+        return std::make_tuple(origWidths, origCenters);
     }
 }
 

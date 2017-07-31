@@ -13,7 +13,7 @@ public:
     void setNumDims(int nd){numDims = nd; allocationSize = (1<<numDims);}
     std::tuple<double*, double*> getCaches(int level);
     
-    
+    int getMaxDepth(){return lastAllocated;}
 private:
     void allocAndInitLevel();
     

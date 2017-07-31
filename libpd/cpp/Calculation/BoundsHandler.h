@@ -10,10 +10,11 @@ public:
     ~BoundsHandler();
     void setData(int nd, double* origLoBnds, double* origHiBnds);
     
-    std::tuple<double*, double*, double*, double*> getBoundsWidthsAndCenters(int level);
+    std::tuple<double*, double*> getParamsAndWidths(int level);
     
     void prepBounds(int level, int dimMask, int splitInd);
 
+    int getMaxDepth(){return lastAllocated;}
 private:
     void allocAndInitLevel();
 
