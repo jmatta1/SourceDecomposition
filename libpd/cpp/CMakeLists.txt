@@ -6,6 +6,11 @@ project(libPositionDecomp)
 # lists of warning flags for the compiler
 include(./CMakeFlagDefs.txt)
 
+# set things up so that files include as if they were at the root of the dir
+# tree unless they are including a file within their own folder
+include_directories(".")
+
+# flags that *always* apply to the compiled library
 add_definitions(-m64 -std=c++11 -shared -fPIC)
 
 # check for each supported build type and add the appropriate g++ flags
