@@ -45,9 +45,9 @@ def set_up_sources():
     """
     src_list = []
     src_list.extend(make_cube_wall_sources())
-    src_list.extend(make_hot_patches())
-    src_list.extend(make_vertical_cylinders())
-    src_list.extend(make_beamlines())
+    #src_list.extend(make_hot_patches())
+    #src_list.extend(make_vertical_cylinders())
+    #src_list.extend(make_beamlines())
     return src_list
 
 
