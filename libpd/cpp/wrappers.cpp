@@ -67,11 +67,6 @@ void freeCalculator(void* calcObject)
     delete temp;
 }
 
-// Function to perform the calculation
-double calculateIntegrand(int n, double* params, void* calcObject)
-{
-    return ((Calculator*)calcObject)->calcIntegrand(params);
-}
 
 // Function to perform the calculation
 void calcIntegral(void* calcObject, double* outParams)

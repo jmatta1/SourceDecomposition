@@ -20,9 +20,6 @@ extern "C" void* makeRotXaxisCylinder(double* cent, double radius, double len, d
 extern "C" void* makeCalculator(void* detector, void* source);
 extern "C" void freeCalculator(void* calcObject);
 
-// Function to perform the integrand calculation
-extern "C" double calculateIntegrand(int n, double* params, void* calcObject);
-
 // Function to perform the integral calculation
 extern "C" void calcIntegral(void* calcObject, double* outParams);
 
