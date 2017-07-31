@@ -1,0 +1,35 @@
+CMAKE_MINIMUM_REQUIRED(VERSION 2.8)
+
+project(libPositionDecomp)
+
+# include the file where I define a couple of compiler flags, including the long
+# lists of warning flags for the compiler
+include(./CMakeFlagDefs.txt)
+
+add_definitions(-m64 -std=c++11 -shared -fPIC)
+
+# check for each supported build type and add the appropriate g++ flags
+if(BUILD_TYPE STREQUAL "Release")
+    add_definitions(${GCC_OPT_FLAG})
+elseif(BUILD_TYPE STREQUAL "Debug")
+    add_definitions(${GCC_DEB_FLAG})
+elseif(BUILD_TYPE STREQUAL "Opt_Debug")
+    add_definitions(${GCC_DEB_FLAG})
+    add_definitions(${GCC_OPT_FLAG})
+elseif(BUILD_TYPE STREQUAL "Warn")
+    add_definitions(${WARN_FLAGS})
+elseif(BUILD_TYPE STREQUAL "Warn_Opt")
+    add_definitions(${WARN_FLAGS})
+    add_definitions(${WARN_OPT_FLAGS})
+endif(BUILD_TYPE STREQUAL "Release")
+
+# Grab all the source files
+file(GLOB_RECURSE SRCS *.cpp)
+
+# Grab all the header files
+file(GLOB_RECURSE HDRS *.h)
+
+# Set the executable and what it depends on
+add_library(PositionDecomp SHARED ${SRCS} ${HDRS})
+
+
