@@ -28,10 +28,6 @@ def initialize_interface():
     lib.makeCalculator.restype = ct.c_void_p
     lib.makeCalculator.argtypes = [ct.c_void_p, ct.c_void_p]
     lib.freeCalculator.argtypes = [ct.c_void_p]
-    # set up the function that does the calculation of the integrand
-    lib.calculateIntegrand.restype = ct.c_double
-    lib.calculateIntegrand.argtypes = [ct.c_int, ct.POINTER(ct.c_double),
-                                       ct.c_void_p]
     # set up the function that does the calculation of the full integral
     lib.calculateIntegrand.restype = ct.POINTER(ct.c_double)
     lib.calculateIntegrand.argtypes = [ct.c_void_p, ct.POINTER(ct.c_double)]
