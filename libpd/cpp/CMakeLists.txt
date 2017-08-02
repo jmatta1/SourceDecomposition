@@ -26,6 +26,7 @@ elseif(BUILD_TYPE STREQUAL "Warn")
 elseif(BUILD_TYPE STREQUAL "Warn_Opt")
     add_definitions(${WARN_FLAGS})
     add_definitions(${WARN_OPT_FLAGS})
+    add_definitions(${GCC_OPT_FLAG})
 endif(BUILD_TYPE STREQUAL "Release")
 
 # Grab all the source files
