@@ -329,6 +329,70 @@ class Detector(object):
     __repr__ = __str__
 
 
+class ProspectPatch(object):
+    """This class represents one of the patches on the side of the prospect
+    detector
+    """
+    def __init__(self, run_data, center, norm, vec):
+        """Initializes a Detector object from a det number, run number, and a
+        position vector to the detector center
+
+        Parameters
+        ----------
+        det_num : int
+            the index of the detector
+        run_num : int
+            the run number for the position scan
+        center : vector
+            the position vector of the center of the detector
+        """
+        self.dnum = run_data[0]
+        self.rnum = run_data[1]
+        self.cent = center
+        self.surf = []
+        self.surf.append(DetectingSurface(center, vec[0], vec[1], norm))
+            
+
+    def get_run_data(self):
+        """Returns the detector number and run number as a pair
+
+        Returns
+        -------
+        det_num : int
+            The detector number at this position
+        run_num : int
+            The run number for this position
+        """
+        return (self.dnum, self.rnum)
+
+    def get_detecting_surfaces(self):
+        """Returns the list of detecting surfaces for integration and for
+        visibility testing
+
+        Returns
+        -------
+        self.surf : list of DetectingSurface
+            The list of the six surfaces that each Detector object has
+        """
+        return self.surf
+
+    def __str__(self):
+        """Returns the string representation of the object
+
+        Returns
+        -------
+        out_str : str
+            The string representation of the source
+        """
+        out_strs = []
+        out_strs.append("Patch {0:d}, {1:d}".format(self.dnum, self.rnum))
+        for surf in self.surf:
+            out_strs.append(surf.__str__())
+        return "".join(out_strs)
+
+    __repr__ = __str__
+
+
 def make_nai_list(centers_list):
     """Convenience function to take a list or det_nums, run_nums, and centers
     and generate a detector for each entry in that list
@@ -343,6 +407,53 @@ def make_nai_list(centers_list):
         List of Detector objects
     """
     return [Detector(*x) for x in centers_list]
+
+def read_patches(fname):
+    """Reads a file of AD1 "detecting patches"
+
+    Parameters
+    ----------
+    fname : str
+        The path to the file of detecting patches on AD1
+
+    Returns
+    -------
+    patch_list : list of ProspectPatch
+        The list of detecting patches on prospect
+    """
+    infile = open(fname)
+    patch_list = []
+    for line in infile:
+        if line[0] == '#' or len(line) == 0:  # ignore comments and blanks
+            continue
+        elem = [x.strip() for x in line.strip().split(',')]
+        rdat = (int(elem[0]), int(elem[1]))
+        center = np.array([float(elem[2]), float(elem[3]), float(elem[4])],
+                           dtype=np.float64)
+        norm = np.array([float(elem[5]), float(elem[6]), float(elem[7])],
+                        dtype=np.float64)
+        extent_x = float(elem[8])
+        extent_y = float(elem[9])
+        extent_z = float(elem[10])
+        vec1 = None
+        vec2 = None
+        if extent_x > 0.0001:
+            if vec1 is None:
+                vec1 = np.array([extent_x, 0.0, 0.0], dtype=np.float64)
+            elif vec2 is None:
+                vec2 = np.array([extent_x, 0.0, 0.0], dtype=np.float64)
+        if extent_y > 0.0001:
+            if vec1 is None:
+                vec1 = np.array([0.0, extent_y, 0.0], dtype=np.float64)
+            elif vec2 is None:
+                vec2 = np.array([0.0, extent_y, 0.0], dtype=np.float64)
+        if extent_z > 0.0001:
+            if vec1 is None:
+                vec1 = np.array([0.0, 0.0, extent_z], dtype=np.float64)
+            elif vec2 is None:
+                vec2 = np.array([0.0, 0.0, extent_z], dtype=np.float64)
+        patch_list.append(ProspectPatch(rdat, center, norm, (vec1, vec2)))
+    return patch_list
 
 
 def read_positions(fname):
