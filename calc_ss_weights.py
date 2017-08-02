@@ -20,11 +20,13 @@ def main():
         path to the list of AD1 patches, normals, and sizes
     sys.argv[2] : str
         number of cores to use for the calculation
+    sys.argv[3] : str
+        name of the output file
     """
     if len(sys.argv) != 4:
         print USAGE.format(sys.argv[0])
         sys.exit()
-    detectors = dt.make_nai_list(dt.read_positions(sys.argv[1]))
+    detectors = dt.read_patches(sys.argv[1])
     num_cores = int(sys.argv[2])
     sources = set_up_sources()
     weights = wc.calculate_weights(detectors, sources, num_cores)
@@ -46,9 +48,9 @@ def set_up_sources():
     """
     src_list = []
     src_list.extend(make_cube_wall_sources())
-    src_list.extend(make_hot_patches())
-    src_list.extend(make_vertical_cylinders())
-    src_list.extend(make_beamlines())
+    #src_list.extend(make_hot_patches())
+    #src_list.extend(make_vertical_cylinders())
+    #src_list.extend(make_beamlines())
     return src_list
 
 
