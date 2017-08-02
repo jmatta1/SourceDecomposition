@@ -72,7 +72,7 @@ void freeCalculator(void* calcObject)
 void calcIntegral(void* calcObject, double* outParams)
 {
     double* temp = ((Calculator*)calcObject)->calcIntegral();
-    for(int i=0; i<3; ++i)
+    for(int i=0; i<4; ++i)
     {
         outParams[i] = temp[i];
     }
