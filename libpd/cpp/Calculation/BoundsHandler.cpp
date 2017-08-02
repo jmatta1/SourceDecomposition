@@ -1,11 +1,12 @@
 #include"BoundsHandler.h"
 #include"Internals.h"
 
+
 BoundsHandler::BoundsHandler() :
-    loBoundsCache(Internal::MinDepth, nullptr),
-    hiBoundsCache(Internal::MinDepth, nullptr),
-    widthsCache(Internal::MinDepth, nullptr),
-    centersCache(Internal::MinDepth, nullptr)
+    loBoundsCache(),
+    hiBoundsCache(),
+    widthsCache(),
+    centersCache()
 {}
 
 BoundsHandler::~BoundsHandler()
@@ -43,8 +44,14 @@ std::tuple<double*, double*> BoundsHandler::getParamsAndWidths(int level)
 
 void BoundsHandler::prepBounds(int level, unsigned int dimMask, unsigned int splitInd)
 {
-    int dimCount = 0;
+    //allocate the arrays
     int nextLevel = (level+1);
+    while(nextLevel > lastAllocated)
+    {
+        this->allocAndInitLevel();
+    }
+    
+    int dimCount = 0;
     double* loBndCurr = nullptr;
     double* hiBndCurr = nullptr;
     double* widthsCurr = nullptr;

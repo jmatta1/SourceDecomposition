@@ -30,9 +30,10 @@ private:
     int detParams;    ///< The number of parameters to integrate across for the detector object
     int numParams;    ///< The total number of parameters to integrate across for both objections
     int numSegs;      ///< The number of 1/2 subdivisions across all possible axes
-    unsigned int singleAxisRecurCount;  ///< Counter for the number of times we have done a 1D recursion instead of full
+    unsigned long long singleAxisRecurCount;  ///< Counter for the number of times we have done a 1D recursion instead of full
+    unsigned long long fullRecurCount;  ///< Counter for the number of times we have done an full recursion
     unsigned long long calls;  ///< The number of calls to calcIntegrand
-    double outVec[4]; ///< The output data vector
+    double outVec[5]; ///< The output data vector
     //parameters for the recursion
     ResultCache valCache;
     BoundsHandler bounds;

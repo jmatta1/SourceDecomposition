@@ -1,11 +1,10 @@
 #include"ResultCache.h"
 #include"Internals.h"
 
-
 ResultCache::ResultCache() :
-    valueCache(Internal::MinDepth, nullptr),
-    integralCache(Internal::MinDepth, nullptr),
-    differenceCache(Internal::MinDepth, nullptr)
+    valueCache(),
+    integralCache(),
+    differenceCache()
 {}
 
 ResultCache::~ResultCache()

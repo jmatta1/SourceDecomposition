@@ -1,16 +1,13 @@
 #include"Calculator.h"
 #include<cmath>
-#include<iostream>
-using std::cout;
-using std::endl;
 #include"Internals.h"
 
 inline double calculateDiff(const double& guess, const double& val) {return std::abs(1.0-(val/guess));}
 
 Calculator::Calculator(Detector* d, Shape* s) :
     src(s), det(d), detParams(0), numParams(0), numSegs(0),
-    singleAxisRecurCount(0), calls(0), outVec{0.0, 0.0, 0.0, 0.0},
-    valCache(), bounds()
+    singleAxisRecurCount(0), fullRecurCount(0), calls(0),
+    outVec{0.0, 0.0, 0.0, 0.0}, valCache(), bounds()
 {}
 
 double* Calculator::calcIntegral()
@@ -24,7 +21,7 @@ double* Calculator::calcIntegral()
     double integralSum = 0.0;
     double* params = nullptr;
     double* widths = nullptr;
-    std::tie(params, widths) = bounds.getParamsAndWidths(0);
+    std::tie(widths, params) = bounds.getParamsAndWidths(0);
     for(int i=0; i<numSegs; ++i) //iterate across each chunk
     {
         //calculating bounds at level n generates bounds at level n+1
@@ -37,7 +34,8 @@ double* Calculator::calcIntegral()
     outVec[0] = integralSum;
     outVec[1] = bounds.getMaxDepth();
     outVec[2] = singleAxisRecurCount;
-    outVec[3] = calls;
+    outVec[3] = fullRecurCount;
+    outVec[4] = calls;
 
     return outVec;
 }
@@ -51,7 +49,7 @@ double Calculator::recursiveRefinement(int level, const double& segmentGuess)
     std::tie(values, integrals, diffs) = valCache.getCaches(level);
     double* params = nullptr;
     double* widths = nullptr;
-    std::tie(params, widths) = bounds.getParamsAndWidths(level+1);
+    std::tie(widths, params) = bounds.getParamsAndWidths(level+1);
     //now calculate integrals and differences for a single axis
     //calculating bounds at level n generates bounds at level n+1
     //since we get our parameters at level+1, we prep bounds within this function at level
@@ -87,7 +85,7 @@ double Calculator::recursiveRefinement(int level, const double& segmentGuess)
     double diff = calculateDiff(segmentGuess, integralSum);
     //now check if the all axis break resulted in the need for recursion
     if((level >= Internal::MaxDepth) ||
-       ((level > Internal::MinDepth) && (diff < Internal::ConvergenceLimit ||
+       ((level >= Internal::MinDepth) && (diff < Internal::ConvergenceLimit ||
                                          integralSum < Internal::ValueLimit)))
     {// possible reasons we are declaring the recursion done:
         //1. we have reached the maximum recursion depth
@@ -99,6 +97,7 @@ double Calculator::recursiveRefinement(int level, const double& segmentGuess)
     {//in this case we must recur
         //here we will be recurring on all axes
         integralSum = 0.0;
+        ++fullRecurCount;
         for(int i=0; i<numSegs; ++i) //iterate across each chunk
         {
             //calculating bounds at level n generates bounds at level n+1
@@ -121,6 +120,7 @@ bool Calculator::testSingleAxis(double* integrals, double* diffs, int& maxDiffAx
             if(diffs[i] > Internal::ConvergenceLimit) needsRecur = true;
             if(diffs[i] > largestDiff)
             {
+                
                 largestDiff = diffs[i];
                 maxDiffAxis = i;
             }
@@ -195,6 +195,7 @@ void Calculator::obtainBounds()
     }
     numSegs = (0x0001 << numParams);
     bounds.setData(numParams, tempLo, tempHi);
+    valCache.setNumDims(numParams);
     delete[] tempLo;
     delete[] tempHi;
 }
