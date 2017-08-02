@@ -28,17 +28,17 @@ double* Square::getPosition(double* params)
     return pos;
 }
 
-double Square::getVolumeElement(double* params, double* widths)
+double Square::getVolumeElement(double* params, double* widths) const
 {
     return std::abs(mag1 * widths[0] * mag2 * widths[1]);
 }
 
-int Square::getNumParams()
+int Square::getNumParams() const
 {
     return 2;
 }
 
-const double* Square::getBounds()
+const double* Square::getBounds() const
 {
     return SquareBounds;
 }

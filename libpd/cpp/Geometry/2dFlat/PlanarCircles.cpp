@@ -23,18 +23,18 @@ double* CircleXY::getPosition(double* params)
     return pos;
 }
 
-double CircleXY::getVolumeElement(double* params, double* widths)
+double CircleXY::getVolumeElement(double* params, double* widths) const
 {
     // see Circle::getVolumeElement for explanation
     return std::abs(params[1]*widths[1]*widths[0]*radSquare);
 }
 
-int CircleXY::getNumParams()
+int CircleXY::getNumParams() const
 {
     return 2;
 }
 
-const double* CircleXY::getBounds()
+const double* CircleXY::getBounds() const
 {
     return PlanarCircleBounds;
 }
@@ -59,18 +59,18 @@ double* CircleXZ::getPosition(double* params)
     return pos;
 }
 
-double CircleXZ::getVolumeElement(double* params, double* widths)
+double CircleXZ::getVolumeElement(double* params, double* widths) const
 {
     // see Circle::getVolumeElement for explanation
     return std::abs(params[1]*widths[1]*widths[0]*radSquare);
 }
 
-int CircleXZ::getNumParams()
+int CircleXZ::getNumParams() const
 {
     return 2;
 }
 
-const double* CircleXZ::getBounds()
+const double* CircleXZ::getBounds() const
 {
     return PlanarCircleBounds;
 }
@@ -95,18 +95,18 @@ double* CircleYZ::getPosition(double* params)
     return pos;
 }
 
-double CircleYZ::getVolumeElement(double* params, double* widths)
+double CircleYZ::getVolumeElement(double* params, double* widths) const
 {
     // see Circle::getVolumeElement for explanation
     return std::abs(params[1]*widths[1]*widths[0]*radSquare);
 }
 
-int CircleYZ::getNumParams()
+int CircleYZ::getNumParams() const
 {
     return 2;
 }
 
-const double* CircleYZ::getBounds()
+const double* CircleYZ::getBounds() const
 {
     return PlanarCircleBounds;
 }

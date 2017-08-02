@@ -1,8 +1,5 @@
 #ifndef POSITION_DECOMP_LIBPD_CPP_GEOMETRY_DETECTOR_H
 #define POSITION_DECOMP_LIBPD_CPP_GEOMETRY_DETECTOR_H
-#include<iostream>
-using std::cout;
-using std::endl;
 
 static const double DetBounds[4] = {-1.0, 1.0, -1.0, 1.0};
 
@@ -11,11 +8,11 @@ class Detector
 {
 public:
     Detector(double* v1, double* v2, double* nm);
-    double* getPosition(double* params);
-    double getSurfaceElement(double* params, double* widths);
-    int getNumParams(){return 2;}
-    const double* getBounds(){return DetBounds;}
-    bool hasLineOfSight(double* posVec);
+    double* getPosition(double* params) __attribute__((pure));
+    double getSurfaceElement(double* params, double* widths) const __attribute__((pure));
+    int getNumParams() const __attribute__((pure)) {return 2;}
+    const double* getBounds() const __attribute__((const, pure)) {return DetBounds;}
+    bool hasLineOfSight(double* posVec) const __attribute__((const, pure));
 
 private:
     double vec1[3];

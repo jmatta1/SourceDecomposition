@@ -1,8 +1,5 @@
 #include"Detector.h"
 #include<cmath>
-#include<iostream>
-using std::cout;
-using std::endl;
 
 Detector::Detector(double* v1, double* v2, double* nm) : mag1(0.0), mag2(0.0)
 {
@@ -28,12 +25,12 @@ double* Detector::getPosition(double* params)
     return pos;
 }
 
-double Detector::getSurfaceElement(double* params, double* widths)
+double Detector::getSurfaceElement(double* params, double* widths) const
 {
     return std::abs(widths[0]*mag1 * widths[1]*mag2);
 }
 
-bool Detector::hasLineOfSight(double* posVec)
+bool Detector::hasLineOfSight(double* posVec) const
 {
     double dotProd = 0.0;
     for(int i=0; i<3; ++i)

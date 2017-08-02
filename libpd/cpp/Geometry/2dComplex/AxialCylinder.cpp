@@ -22,17 +22,17 @@ double* CylinderXaxis::getPosition(double* params)
     return pos;
 }
 
-double CylinderXaxis::getVolumeElement(double* params, double* widths)
+double CylinderXaxis::getVolumeElement(double* params, double* widths) const
 {
     return areaScale*widths[0]*widths[1];
 }
 
-int CylinderXaxis::getNumParams()
+int CylinderXaxis::getNumParams() const
 {
     return 2;
 }
 
-const double* CylinderXaxis::getBounds()
+const double* CylinderXaxis::getBounds() const
 {
     return AxialCylinderBounds;
 }
@@ -56,17 +56,17 @@ double* CylinderYaxis::getPosition(double* params)
     return pos;
 }
 
-double CylinderYaxis::getVolumeElement(double* params, double* widths)
+double CylinderYaxis::getVolumeElement(double* params, double* widths) const
 {
     return areaScale*widths[0]*widths[1];
 }
 
-int CylinderYaxis::getNumParams()
+int CylinderYaxis::getNumParams() const
 {
     return 2;
 }
 
-const double* CylinderYaxis::getBounds()
+const double* CylinderYaxis::getBounds() const
 {
     return AxialCylinderBounds;
 }
@@ -90,17 +90,17 @@ double* CylinderZaxis::getPosition(double* params)
     return pos;
 }
 
-double CylinderZaxis::getVolumeElement(double* params, double* widths)
+double CylinderZaxis::getVolumeElement(double* params, double* widths) const
 {
     return areaScale*widths[0]*widths[1];
 }
 
-int CylinderZaxis::getNumParams()
+int CylinderZaxis::getNumParams() const
 {
     return 2;
 }
 
-const double* CylinderZaxis::getBounds()
+const double* CylinderZaxis::getBounds() const
 {
     return AxialCylinderBounds;
 }

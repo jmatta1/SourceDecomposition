@@ -28,7 +28,7 @@ double* Circle::getPosition(double* params)
     return pos;
 }
 
-double Circle::getVolumeElement(double* params, double* widths)
+double Circle::getVolumeElement(double* params, double* widths) const
 {
     //The radius range is rmin = radius*(params[1]-widths[1]/2.0) and rmax = radius*(params[1]+widths[1]/2.0)
     //Given that DeltaTheta = widths[0] then you have: that the area = DeltaTheta/2.0*(rmax^2-rmin^2)
@@ -44,12 +44,12 @@ double Circle::getVolumeElement(double* params, double* widths)
     return std::abs(params[1] * widths[1] * widths[0] * radSquare);
 }
 
-int Circle::getNumParams()
+int Circle::getNumParams() const
 {
     return 2;
 }
 
-const double* Circle::getBounds()
+const double* Circle::getBounds() const
 {
     return CircleBounds;
 }

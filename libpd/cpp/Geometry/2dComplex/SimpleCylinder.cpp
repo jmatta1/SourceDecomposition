@@ -24,17 +24,17 @@ double* CylinderXaxisRotatedZ::getPosition(double* params)
     return pos;
 }
 
-double CylinderXaxisRotatedZ::getVolumeElement(double* params, double* widths)
+double CylinderXaxisRotatedZ::getVolumeElement(double* params, double* widths) const
 {
     return areaScale*widths[0]*widths[1];
 }
 
-int CylinderXaxisRotatedZ::getNumParams()
+int CylinderXaxisRotatedZ::getNumParams() const
 {
     return 2;
 }
 
-const double* CylinderXaxisRotatedZ::getBounds()
+const double* CylinderXaxisRotatedZ::getBounds() const
 {
     return SimpleCylinderBounds;
 }

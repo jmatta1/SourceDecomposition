@@ -8,10 +8,10 @@ class Square : public Shape
 public:
     Square(double* cent, double* v1, double* v2);
     virtual ~Square(){}
-    virtual double* getPosition(double* params) override final;
-    virtual double getVolumeElement(double* params, double* widths) override final;
-    virtual int getNumParams() override final;
-    virtual const double* getBounds() override final;
+    virtual double* getPosition(double* params) override final __attribute__((pure));
+    virtual double getVolumeElement(double* params, double* widths) const override final __attribute__((pure));
+    virtual int getNumParams() const override final __attribute__((const, pure));
+    virtual const double* getBounds() const override final __attribute__((const, pure));
 
 private:
     double center[3];
