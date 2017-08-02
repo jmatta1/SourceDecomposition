@@ -15,6 +15,9 @@ import libpd.backend_interface as bi
 # INT_FUNC = [integrand2d, integrand3d, integrand4d, integrand5d]
 INV_FOUR_PI = (1.0/(4.0*np.pi))
 NUM_BACKEND_OUT_PARAMS = 5
+FMT_STR = "{0:d}, {1:d}, {2:d}, {3:s}, {4:e}, {5:d}, {6:d}, {7:d}, {8:d}"
+HEADINGS = "Det, Run, Side, Source Name, Weight, Recursion Depth, Single Axis"\
+    "Recursions, All Axis Recursions, Integrand Evaluations"
 
 def calculate_weights(detectors, sources, num_cores):
     """This function calculates the weights for each source and detector
@@ -73,8 +76,10 @@ def calculate_weights_single(detectors, sources):
                 input_list.append((sdat, cp.deepcopy(det_surf),
                                    cp.deepcopy(src)))
     print "Commencing Single Threaded Integration!"
+    print "There are", len(input_list), "integrals to calculate"
+    print HEADINGS
     # now calculate the weight at every position using a single core
-    weight_list = [calc_weight_opt(x) for x in input_list[:12]]
+    weight_list = [calc_weight_opt(x) for x in input_list]
     # return the sorted and summed weights
     return sort_and_sum(weight_list)
 
@@ -117,10 +122,12 @@ def calculate_weights_multi(detectors, sources, num_cores):
         temp = "Too many cores passed, restricting to what is available: {0:d}"
         print temp.format(num_cores)
     print "Commencing Multi Threaded Integration!"
+    print "There are", len(input_list), "integrals to calculate"
+    print HEADINGS
     # set up the thread pool for the multiprocessing
     mp_pool = multiprocessing.Pool(processes=num_cores)
     # process the input list with that pool
-    weight_list = mp_pool.map(calc_weight_opt, input_list[:12])
+    weight_list = mp_pool.map(calc_weight_opt, input_list)
     # return the sorted and summed weights
     return sort_and_sum(weight_list)
 
@@ -199,10 +206,11 @@ def calc_weight_opt(data_tuple):
     # call the numerical integration
     # weight = spi.nquad(scp_call, ranges, args=(surface, source), opts=options)
     weight = np.array(range(NUM_BACKEND_OUT_PARAMS), dtype=np.float64)
-    lib.calcIntegral(ct.cast(calc, ct.c_void_p), weight.ctypes.data_as(ct.POINTER(ct.c_double)))
+    lib.calcIntegral(ct.cast(calc, ct.c_void_p),
+                     weight.ctypes.data_as(ct.POINTER(ct.c_double)))
     temp = (pos_info[0], pos_info[1], pos_info[2], pos_info[3], weight[0],
             int(weight[1]), int(weight[2]), int(weight[3]), int(weight[4]))
-    print "{0:d}, {1:d}, {2:d}, {3:s}, {4:e}, {5:d}, {6:d}, {7:d}, {8:d}".format(*temp)
+    print FMT_STR.format(*temp)
     # free the calculator objection before returning
     lib.freeCalculator(ct.cast(calc, ct.c_void_p))
     return (pos_info, weight[0])
