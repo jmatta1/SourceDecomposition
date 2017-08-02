@@ -1,36 +1,50 @@
 #include"BoundsHandler.h"
+#include"Internals.h"
+
+BoundsHandler::BoundsHandler() :
+    loBoundsCache(Internal::MinDepth, nullptr),
+    hiBoundsCache(Internal::MinDepth, nullptr),
+    widthsCache(Internal::MinDepth, nullptr),
+    centersCache(Internal::MinDepth, nullptr)
+{}
 
 BoundsHandler::~BoundsHandler()
 {
-    for(auto&& x: loBoundsCache) delete[] x;
-    for(auto&& x: hiBoundsCache) delete[] x;
-    for(auto&& x: widthsCache) delete[] x;
-    for(auto&& x: centersCache) delete[] x;
-}
-
-std::tuple<double*, double*> getParamsAndWidths(int level)
-{
-    //things should already be allocated since prepBounds should have already have been called for this level
-    if(level != -1)
+    for(int i=0; i< lastAllocated; ++i)
     {
-        return std::make_tuple(widthsCache[level], centersCache[level]);
-    }
-    else
-    {
-        return std::make_tuple(origWidths, origCenters);
+        double* temp = loBoundsCache[i];
+        if(temp != nullptr) delete[] temp;
+        temp = hiBoundsCache[i];
+        if(temp != nullptr) delete[] temp;
+        temp = widthsCache[i];
+        if(temp != nullptr) delete[] temp;
+        temp = centersCache[i];
+        if(temp != nullptr) delete[] temp;
     }
 }
 
-void BoundsHandler::prepBounds(int level, int dimMask, int splitInd)
+std::tuple<double*, double*> BoundsHandler::getParamsAndWidths(int level)
 {
-    int dimCount = 0;
-    int nextLevel = (level+1);
-    //allocate the
-    while(nextLevel > lastAllocated)
+    //allocate the arrays
+    while(level > lastAllocated)
     {
         this->allocAndInitLevel();
     }
-    
+
+    if(level != -1)
+    {
+        return std::tuple<double*, double*>{widthsCache[level], centersCache[level]};
+    }
+    else
+    {
+        return std::tuple<double*, double*>{origWidths, origCenters};
+    }
+}
+
+void BoundsHandler::prepBounds(int level, unsigned int dimMask, unsigned int splitInd)
+{
+    int dimCount = 0;
+    int nextLevel = (level+1);
     double* loBndCurr = nullptr;
     double* hiBndCurr = nullptr;
     double* widthsCurr = nullptr;
@@ -60,38 +74,38 @@ void BoundsHandler::prepBounds(int level, int dimMask, int splitInd)
     {
         //First check if the dimension mask says that this is a dim
         //that will be split or not
-        if(((dimMask>>j)&0x01) != 0)
+        if(((dimMask>>i)&0x01) != 0)
         {//we are on a dimension that is getting split
             //since we are in a dimension that is going to be split, check to see
             //if we are going to make the lower or upper value for the split
-            double splitVal = (loBndCurr[j] + hiBndCurr[j])/2.0;
+            double splitVal = (loBndCurr[i] + hiBndCurr[i])/2.0;
             if(((splitInd>>dimCount)&0x01) != 0)
             {//we are taking the lower split on dimension j
-                loBndNext[j] = loBndCurr[j];
-                hiBndNext[j] = splitVal;
-                widthsNext[j] = (splitVal - loBndCurr[j]);
-                centersNext[j] = (loBndCurr[j] + splitValue)/2.0;
+                loBndNext[i] = loBndCurr[i];
+                hiBndNext[i] = splitVal;
+                widthsNext[i] = (splitVal - loBndCurr[i]);
+                centersNext[i] = (loBndCurr[i] + splitVal)/2.0;
             }
             else
             {//we are taking the upper split on dimension j
-                loBndNext[j] = splitVal;
-                hiBndNext[j] = hiBndCurr[j];
-                widthsNext[j] = (hiBndCurr[j] - splitVal);
-                centersNext[j] = (splitValue + hiBndCurr[j])/2.0;
+                loBndNext[i] = splitVal;
+                hiBndNext[i] = hiBndCurr[i];
+                widthsNext[i] = (hiBndCurr[i] - splitVal);
+                centersNext[i] = (splitVal + hiBndCurr[i])/2.0;
             }
             ++dimCount;
         }
         else
         {//everything stays the same for this dimension
-            loBndNext[j] = loBndCurr[j];
-            hiBndNext[j] = hiBndCurr[j];
-            widthsNext[j] = widthsCurr[j];
-            centersNext[j] = centersCurr[j];
+            loBndNext[i] = loBndCurr[i];
+            hiBndNext[i] = hiBndCurr[i];
+            widthsNext[i] = widthsCurr[i];
+            centersNext[i] = centersCurr[i];
         }
     }
 }
 
-void setData(int nd, double* origLoBnds, double* origHiBnds)
+void BoundsHandler::setData(int nd, double* origLoBnds, double* origHiBnds)
 {
     numDims = nd;
     origLoBounds = new double[nd];
@@ -113,7 +127,7 @@ void BoundsHandler::allocAndInitLevel()
     double* temp2 = new double[numDims];
     double* temp3 = new double[numDims];
     double* temp4 = new double[numDims];
-    for(int i=0; i<allocationSize; ++i)
+    for(int i=0; i<numDims; ++i)
     {
         temp1[i] = 0.0;
         temp2[i] = 0.0;

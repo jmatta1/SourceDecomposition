@@ -6,13 +6,13 @@
 class BoundsHandler
 {
 public:
-    BoundsHandler(){}
+    BoundsHandler();
     ~BoundsHandler();
     void setData(int nd, double* origLoBnds, double* origHiBnds);
     
     std::tuple<double*, double*> getParamsAndWidths(int level);
     
-    void prepBounds(int level, int dimMask, int splitInd);
+    void prepBounds(int level, unsigned int dimMask, unsigned int splitInd);
 
     int getMaxDepth(){return lastAllocated;}
 private:

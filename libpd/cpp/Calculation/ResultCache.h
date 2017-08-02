@@ -3,25 +3,26 @@
 #include<tuple>
 #include<vector>
 
-
 class ResultCache
 {
 public:
-    ResultCache(){}
-    ~ResultCache(){for(auto&& x: valueCache) delete[] x;}
+    ResultCache();
+    ~ResultCache();
     
-    void setNumDims(int nd){numDims = nd; allocationSize = (1<<numDims);}
-    std::tuple<double*, double*> getCaches(int level);
+    void setNumDims(int nd);
+    std::tuple<double*, double*, double*> getCaches(int level);
     
     int getMaxDepth(){return lastAllocated;}
 private:
     void allocAndInitLevel();
     
     int numDims=0;
-    int allocationSize=1;
+    int valueAllocationSize=1;
+    int diffAllocationSize=1;
     int lastAllocated=-1;
     std::vector<double*> valueCache;
     std::vector<double*> integralCache;
+    std::vector<double*> differenceCache;
 
 public:
     ResultCache(const ResultCache& rhs) = delete;

@@ -5,20 +5,11 @@
 #include"BoundsHandler.h"
 #include"ResultCache.h"
 
-static const int MinDepth = 4;
-static const int MaxDepth = 60;
-static const int MaxParams = 8; //choose the first power of 2 >= the actual max
-static const int MaxSubsections = 256; //2^MaxParams
-static const int MaxSplits = 16;
-static const double ConvergenceLimit = 1.0e-4;
-static const double ValueLimit = 1.0e-14;
-static const double ForceFullRecurLim = 1.0e-2;
-
 class Calculator
 {
 public:
     Calculator(Detector* d, Shape* s);
-    ~Calculator(){delete src; delete det; delete[] valueSet;}
+    ~Calculator(){delete src; delete det;}
 
     //returns a pointer to outVec the elements of the vector are as follows:
     //First: The calculation result
@@ -27,18 +18,21 @@ public:
     double* calcIntegral();
 private:
     double calcIntegralSegment(double* params, double* widths);
-    double recursiveRefinement(int level);
+    double recursiveRefinement(int level, const double& segmentGuess);
 
+    void calculateSingleAxis(int level, double* params, double* widths, double* integrals, double* values, double* diffs, const double& segmentGuess);
+    bool testSingleAxis(double* integrals, double* diffs, int& maxDiffAxis);
+    
     void obtainBounds();
-
+    
     Shape* src;       ///< Owned pointer of the source object
     Detector* det;    ///< Owned pointer of the detector object
     int detParams;    ///< The number of parameters to integrate across for the detector object
     int numParams;    ///< The total number of parameters to integrate across for both objections
     int numSegs;      ///< The number of 1/2 subdivisions across all possible axes
-    int splitRecurs;  ///< Counter for the number of times we have done a 1D recursion instead of full
+    unsigned int singleAxisRecurCount;  ///< Counter for the number of times we have done a 1D recursion instead of full
     unsigned long long calls;  ///< The number of calls to calcIntegrand
-    double outVec[3]; ///< The output data vector
+    double outVec[4]; ///< The output data vector
     //parameters for the recursion
     ResultCache valCache;
     BoundsHandler bounds;
