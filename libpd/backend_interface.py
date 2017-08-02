@@ -29,8 +29,8 @@ def initialize_interface():
     lib.makeCalculator.argtypes = [ct.c_void_p, ct.c_void_p]
     lib.freeCalculator.argtypes = [ct.c_void_p]
     # set up the function that does the calculation of the full integral
-    lib.calculateIntegrand.restype = ct.POINTER(ct.c_double)
-    lib.calculateIntegrand.argtypes = [ct.c_void_p, ct.POINTER(ct.c_double)]
+    lib.calcIntegral.restype = ct.POINTER(ct.c_double)
+    lib.calcIntegral.argtypes = [ct.c_void_p, ct.POINTER(ct.c_double)]
     # now call the functions that add all the shape creation functions
     initialize_flat_shape_funcs(lib)
     initialize_shell_shape_funcs(lib)
