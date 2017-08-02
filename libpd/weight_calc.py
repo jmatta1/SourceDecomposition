@@ -14,7 +14,7 @@ import libpd.backend_interface as bi
 # relocated to the bottom so the functions can be found
 # INT_FUNC = [integrand2d, integrand3d, integrand4d, integrand5d]
 INV_FOUR_PI = (1.0/(4.0*np.pi))
-NUM_BACKEND_OUT_PARAMS = 4
+NUM_BACKEND_OUT_PARAMS = 5
 
 def calculate_weights(detectors, sources, num_cores):
     """This function calculates the weights for each source and detector
@@ -200,8 +200,9 @@ def calc_weight_opt(data_tuple):
     # weight = spi.nquad(scp_call, ranges, args=(surface, source), opts=options)
     weight = np.array(range(NUM_BACKEND_OUT_PARAMS), dtype=np.float64)
     lib.calcIntegral(ct.cast(calc, ct.c_void_p), weight.ctypes.data_as(ct.POINTER(ct.c_double)))
-    temp = (pos_info[0], pos_info[1], pos_info[2], pos_info[3], weight[0], int(weight[1]))
-    print "{0:d}, {1:d}, {2:d}, {3:s}, {4:e}, {5:d}".format(*temp)
+    temp = (pos_info[0], pos_info[1], pos_info[2], pos_info[3], weight[0],
+            int(weight[1]), int(weight[2]), int(weight[3]), int(weight[4]))
+    print "{0:d}, {1:d}, {2:d}, {3:s}, {4:e}, {5:d}, {6:d}, {7:d}, {8:d}".format(*temp)
     # free the calculator objection before returning
     lib.freeCalculator(ct.cast(calc, ct.c_void_p))
     return (pos_info, weight[0])
