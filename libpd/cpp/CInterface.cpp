@@ -1,5 +1,6 @@
 #include"CInterface.h"
 #include"Geometry/Detector.h"
+#include"Geometry/LowDimSources.h"
 #include"Geometry/FlatShapes.h"
 #include"Geometry/ShellShapes.h"
 #include"Calculation/Calculator.h"
@@ -7,6 +8,20 @@
 void* makeDetector(double* vec1, double* vec2, double* norm)
 {
     Detector* temp = new Detector(vec1, vec2, norm);
+    return (void*)temp;
+}
+
+//Make Point source
+void* makePoint(double* cent)
+{
+    PointSource* temp = new PointSource(cent);
+    return (void*)temp;
+}
+
+//Make Line source
+void* makeLine(double* start, double* stop)
+{
+    LineSource* temp = new LineSource(start, stop);
     return (void*)temp;
 }
 
