@@ -38,7 +38,7 @@ def initialize_interface():
     return lib
 
 
-def initialize_shell_shape_funcs(lib):
+def initialize_low_dim_shape_funcs(lib):
     """This function initializes the argtypes and restypes for the make low
     dimensional shape functions
 

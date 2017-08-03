@@ -353,7 +353,7 @@ class ProspectPatch(object):
         self.cent = center
         self.surf = []
         self.surf.append(DetectingSurface(center, vec[0], vec[1], norm))
-            
+
 
     def get_run_data(self):
         """Returns the detector number and run number as a pair
@@ -431,7 +431,7 @@ def read_patches(fname):
         elem = [x.strip() for x in line.strip().split(',')]
         rdat = (int(elem[0]), int(elem[1]))
         center = np.array([float(elem[2]), float(elem[3]), float(elem[4])],
-                           dtype=np.float64)
+                          dtype=np.float64)
         norm = np.array([float(elem[5]), float(elem[6]), float(elem[7])],
                         dtype=np.float64)
         extent_x = float(elem[8])
