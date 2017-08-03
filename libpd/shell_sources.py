@@ -77,7 +77,8 @@ class VertCylinder(Shape):
 
     def get_area_element(self, *args):
         """Given a set of parameter values (in the same order as the bounds
-        array) this returns the x,y,z position corresponding to those bounds
+        array) this returns the area scaling factor corresponding to those
+        parameters
 
         Parameters
         ----------
@@ -87,8 +88,8 @@ class VertCylinder(Shape):
 
         Returns
         -------
-        position : vector
-            The position corresponding to those integration parameters
+        area_scale : float
+            The area scaling factor
         """
         return self.rad*self.len
 
@@ -207,7 +208,8 @@ class RotXaxisCylinder(Shape):
 
     def get_area_element(self, *args):
         """Given a set of parameter values (in the same order as the bounds
-        array) this returns the x,y,z position corresponding to those bounds
+        array) this returns the area scaling factor corresponding to those
+        parameters
 
         Parameters
         ----------
@@ -217,8 +219,8 @@ class RotXaxisCylinder(Shape):
 
         Returns
         -------
-        position : vector
-            The position corresponding to those integration parameters
+        area_scale : float
+            The area scaling factor
         """
         return self.sizes[0]*self.sizes[1]
 

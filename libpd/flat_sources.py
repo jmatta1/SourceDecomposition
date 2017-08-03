@@ -78,7 +78,8 @@ class Square(Shape):
 
     def get_area_element(self, *args):
         """Given a set of parameter values (in the same order as the bounds
-        array) this returns the x,y,z position corresponding to those bounds
+        array) this returns the area scaling factor corresponding to those
+        parameters
 
         Parameters
         ----------
@@ -88,8 +89,8 @@ class Square(Shape):
 
         Returns
         -------
-        position : vector
-            The position corresponding to those integration parameters
+        area_scale : float
+            The area scaling factor
         """
         return self.area_scale
 
@@ -208,7 +209,8 @@ class Circle(Shape):
 
     def get_area_element(self, *args):
         """Given a set of parameter values (in the same order as the bounds
-        array) this returns the x,y,z position corresponding to those bounds
+        array) this returns the area scaling factor corresponding to those
+        parameters
 
         Parameters
         ----------
@@ -218,8 +220,8 @@ class Circle(Shape):
 
         Returns
         -------
-        position : vector
-            The position corresponding to those integration parameters
+        area_scale : float
+            The area scaling factor
         """
         return self.rad*args[1]
 
@@ -331,7 +333,8 @@ class CircleXY(Shape):
 
     def get_area_element(self, *args):
         """Given a set of parameter values (in the same order as the bounds
-        array) this returns the x,y,z position corresponding to those bounds
+        array) this returns the area scaling factor corresponding to those
+        parameters
 
         Parameters
         ----------
@@ -341,8 +344,8 @@ class CircleXY(Shape):
 
         Returns
         -------
-        position : vector
-            The position corresponding to those integration parameters
+        area_scale : float
+            The area scaling factor
         """
         return self.rad*args[1]
 
@@ -452,7 +455,8 @@ class CircleXZ(Shape):
 
     def get_area_element(self, *args):
         """Given a set of parameter values (in the same order as the bounds
-        array) this returns the x,y,z position corresponding to those bounds
+        array) this returns the area scaling factor corresponding to those
+        parameters
 
         Parameters
         ----------
@@ -462,8 +466,8 @@ class CircleXZ(Shape):
 
         Returns
         -------
-        position : vector
-            The position corresponding to those integration parameters
+        area_scale : float
+            The area scaling factor
         """
         return self.rad*args[1]
 
@@ -573,7 +577,8 @@ class CircleYZ(Shape):
 
     def get_area_element(self, *args):
         """Given a set of parameter values (in the same order as the bounds
-        array) this returns the x,y,z position corresponding to those bounds
+        array) this returns the area scaling factor corresponding to those
+        parameters
 
         Parameters
         ----------
@@ -583,8 +588,8 @@ class CircleYZ(Shape):
 
         Returns
         -------
-        position : vector
-            The position corresponding to those integration parameters
+        area_scale : float
+            The area scaling factor
         """
         return self.rad*args[1]
 
