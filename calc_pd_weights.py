@@ -19,7 +19,7 @@ def main(nai_pos_path, core_count, out_name):
     out_name : str
         name of the output file
     """
-    detectors = dt.make_nai_list(dt.read_positions(nai_pos_path)
+    detectors = dt.make_nai_list(dt.read_positions(nai_pos_path))
     sources = sc.set_up_no_wall_sources()
     sources.extend(sc.make_cube_corner_sources())
     weights = wc.calculate_weights(detectors, sources, core_count)
