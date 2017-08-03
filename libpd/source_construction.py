@@ -7,7 +7,32 @@ import libpd.flat_sources as fs
 import libpd.shell_sources as ss
 import libpd.low_dim_sources as lds
 
-def set_up_no_wall_sources():
+
+WALL_CENTERS = [2.54*np.array([219.0, 69.0, 95.0], dtype=np.float64),
+                2.54*np.array([0.0, 69.0, 95.0], dtype=np.float64),
+                2.54*np.array([109.5, 69.0, 0.0], dtype=np.float64),
+                2.54*np.array([109.5, 69.0, 190.0], dtype=np.float64),
+                2.54*np.array([109.5, -12.0, 95.0], dtype=np.float64),
+                2.54*np.array([109.5, 150.0, 95.0], dtype=np.float64)]
+
+WALL_EDGES1 = [2.54*np.array([0.0, 81.0, 0.0], dtype=np.float64),
+               2.54*np.array([0.0, 81.0, 0.0], dtype=np.float64),
+               2.54*np.array([0.0, 81.0, 0.0], dtype=np.float64),
+               2.54*np.array([0.0, 81.0, 0.0], dtype=np.float64),
+               2.54*np.array([0.0, 0.0, 95.0], dtype=np.float64),
+               2.54*np.array([0.0, 0.0, 95.0], dtype=np.float64)]
+
+WALL_EDGES2 = [2.54*np.array([0.0, 0.0, 95.0], dtype=np.float64), 
+               2.54*np.array([0.0, 0.0, 95.0], dtype=np.float64),
+               2.54*np.array([109.5, 0.0, 0.0], dtype=np.float64),
+               2.54*np.array([109.5, 0.0, 0.0], dtype=np.float64),
+               2.54*np.array([109.5, 0.0, 0.0], dtype=np.float64),
+               2.54*np.array([109.5, 0.0, 0.0], dtype=np.float64)]
+
+WALL_NAMES = ["Rx_Wall", "MIF_Room_Wall", "Floor", "Ceiling", "East_Wall", "West_Wall"]
+
+
+def set_up_all_sources():
     """This function is what is used to generate the list of sources that the
     weights are calculated for, it then returns the list of source objects
     necessary to perform the weight calculations
@@ -18,6 +43,9 @@ def set_up_no_wall_sources():
         the list of source objects
     """
     src_list = []
+    src_list.extend(make_cube_wall_sources())
+    src_list.extend(make_cube_corner_sources())
+    src_list.extend(make_cube_edge_sources())
     src_list.extend(make_hot_patches())
     src_list.extend(make_vertical_cylinders())
     src_list.extend(make_beamlines())
@@ -82,6 +110,135 @@ def make_hot_patches():
 
 
 def make_cube_wall_sources():
+    """This function generates the sources that represent segments "walls"
+    around the AD1 and position scan area
+
+    Returns
+    -------
+    wall_list : list
+        list of square surface objects located at "Effective" walls
+    """
+    wall_list = []
+    wall_list.extend(make_whole_cube_wall_sources())
+    wall_list.extend(make_quarter_cube_wall_sources())
+    wall_list.extend(make_ninthed_cube_wall_sources())
+    wall_list.extend(make_sixteenthed_cube_wall_sources())
+    return wall_list
+
+
+def make_sixteenthed_cube_wall_sources():
+    """This function generates the sixteenthed sources that represent "walls"
+    around the AD1 and position scan area
+
+    Returns
+    -------
+    wall_list : list
+        list of square surface objects located at "Effective" walls
+    """
+    wall_list = []
+    # creating a rotation matrix without adding rotations makes it just the
+    # identity matrix
+    no_rotate = gb.Rotation()
+    for name, cent, edge1, edge2 in zip(WALL_NAMES, WALL_CENTERS, WALL_EDGES1,
+                                        WALL_EDGES2):
+        wall_list.append(fs.Square(name+"_16_0", cent+3.0*edge1/4.0+3.0*edge2/4.0,
+                                   (edge1/4.0, edge2/4.0), no_rotate))
+        wall_list.append(fs.Square(name+"_16_1", cent+3.0*edge1/4.0+edge2/4.0,
+                                   (edge1/4.0, edge2/4.0), no_rotate))
+        wall_list.append(fs.Square(name+"_16_2", cent+3.0*edge1/4.0-edge2/4.0,
+                                   (edge1/4.0, edge2/4.0), no_rotate))
+        wall_list.append(fs.Square(name+"_16_3", cent+3.0*edge1/4.0-3.0*edge2/4.0,
+                                   (edge1/4.0, edge2/4.0), no_rotate))
+        wall_list.append(fs.Square(name+"_16_4", cent+edge1/4.0+3.0*edge2/4.0,
+                                   (edge1/4.0, edge2/4.0), no_rotate))
+        wall_list.append(fs.Square(name+"_16_5", cent+edge1/4.0+edge2/4.0,
+                                   (edge1/4.0, edge2/4.0), no_rotate))
+        wall_list.append(fs.Square(name+"_16_6", cent+edge1/4.0-edge2/4.0,
+                                   (edge1/4.0, edge2/4.0), no_rotate))
+        wall_list.append(fs.Square(name+"_16_7", cent+edge1/4.0-3.0*edge2/4.0,
+                                   (edge1/4.0, edge2/4.0), no_rotate))
+        wall_list.append(fs.Square(name+"_16_8", cent-edge1/4.0+3.0*edge2/4.0,
+                                   (edge1/4.0, edge2/4.0), no_rotate))
+        wall_list.append(fs.Square(name+"_16_9", cent-edge1/4.0+edge2/4.0,
+                                   (edge1/4.0, edge2/4.0), no_rotate))
+        wall_list.append(fs.Square(name+"_16_10", cent-edge1/4.0-edge2/4.0,
+                                   (edge1/4.0, edge2/4.0), no_rotate))
+        wall_list.append(fs.Square(name+"_16_11", cent-edge1/4.0-3.0*edge2/4.0,
+                                   (edge1/4.0, edge2/4.0), no_rotate))
+        wall_list.append(fs.Square(name+"_16_12", cent-3.0*edge1/4.0+3.0*edge2/4.0,
+                                   (edge1/4.0, edge2/4.0), no_rotate))
+        wall_list.append(fs.Square(name+"_16_13", cent-3.0*edge1/4.0+edge2/4.0,
+                                   (edge1/4.0, edge2/4.0), no_rotate))
+        wall_list.append(fs.Square(name+"_16_14", cent-3.0*edge1/4.0-edge2/4.0,
+                                   (edge1/4.0, edge2/4.0), no_rotate))
+        wall_list.append(fs.Square(name+"_16_15", cent-3.0*edge1/4.0-3.0*edge2/4.0,
+                                   (edge1/4.0, edge2/4.0), no_rotate))
+    return wall_list
+
+
+def make_ninthed_cube_wall_sources():
+    """This function generates the ninthed sources that represent "walls"
+    around the AD1 and position scan area
+
+    Returns
+    -------
+    wall_list : list
+        list of square surface objects located at "Effective" walls
+    """
+    wall_list = []
+    # creating a rotation matrix without adding rotations makes it just the
+    # identity matrix
+    no_rotate = gb.Rotation()
+    for name, cent, edge1, edge2 in zip(WALL_NAMES, WALL_CENTERS, WALL_EDGES1,
+                                        WALL_EDGES2):
+        wall_list.append(fs.Square(name+"_9_0", cent+2.0*edge1/3.0+2.0*edge2/3.0,
+                                   (edge1/3.0, edge2/3.0), no_rotate))
+        wall_list.append(fs.Square(name+"_9_1", cent+2.0*edge1/3.0,
+                                   (edge1/3.0, edge2/3.0), no_rotate))
+        wall_list.append(fs.Square(name+"_9_2", cent+2.0*edge1/3.0-2.0*edge2/3.0,
+                                   (edge1/3.0, edge2/3.0), no_rotate))
+        wall_list.append(fs.Square(name+"_9_3", cent+2.0*edge2/3.0,
+                                   (edge1/3.0, edge2/3.0), no_rotate))
+        wall_list.append(fs.Square(name+"_9_4", cent,
+                                   (edge1/3.0, edge2/3.0), no_rotate))
+        wall_list.append(fs.Square(name+"_9_5", cent-2.0*edge2/3.0,
+                                   (edge1/3.0, edge2/3.0), no_rotate))
+        wall_list.append(fs.Square(name+"_9_6", cent-2.0*edge1/3.0+2.0*edge2/3.0,
+                                   (edge1/3.0, edge2/3.0), no_rotate))
+        wall_list.append(fs.Square(name+"_9_7", cent-2.0*edge1/3.0,
+                                   (edge1/3.0, edge2/3.0), no_rotate))
+        wall_list.append(fs.Square(name+"_9_8", cent-2.0*edge1/3.0-2.0*edge2/3.0,
+                                   (edge1/3.0, edge2/3.0), no_rotate))
+    return wall_list
+
+
+def make_quarter_cube_wall_sources():
+    """This function generates the quarted sources that represent "walls"
+    around the AD1 and position scan area
+
+    Returns
+    -------
+    wall_list : list
+        list of square surface objects located at "Effective" walls
+    """
+    wall_list = []
+    # creating a rotation matrix without adding rotations makes it just the
+    # identity matrix
+    no_rotate = gb.Rotation()
+    for name, cent, edge1, edge2 in zip(WALL_NAMES, WALL_CENTERS, WALL_EDGES1,
+                                        WALL_EDGES2):
+        wall_list.append(fs.Square(name+"_4_0", cent+edge1/2.0+edge2/2.0,
+                                   (edge1/2.0, edge2/2.0), no_rotate))
+        wall_list.append(fs.Square(name+"_4_1", cent+edge1/2.0-edge2/2.0,
+                                   (edge1/2.0, edge2/2.0), no_rotate))
+        wall_list.append(fs.Square(name+"_4_2", cent-edge1/2.0+edge2/2.0,
+                                   (edge1/2.0, edge2/2.0), no_rotate))
+        wall_list.append(fs.Square(name+"_4_3", cent-edge1/2.0-edge2/2.0,
+                                   (edge1/2.0, edge2/2.0), no_rotate))
+    return wall_list
+
+
+def make_whole_cube_wall_sources():
     """This function generates the sources that represent "walls" around the
     AD1 and position scan area
 
@@ -94,42 +251,9 @@ def make_cube_wall_sources():
     # creating a rotation matrix without adding rotations makes it just the
     # identity matrix
     no_rotate = gb.Rotation()
-    # make the wall source that is the Rx pool wall
-    center = 2.54*np.array([219.0, 69.0, 95.0], dtype=np.float64)
-    edge_vec1 = 2.54*np.array([0.0, 81.0, 0.0], dtype=np.float64)
-    edge_vec2 = 2.54*np.array([0.0, 0.0, 95.0], dtype=np.float64)
-    wall_list.append(fs.Square("Rx_Wall", center, (edge_vec1, edge_vec2),
-                               no_rotate))
-    # make the wall source that is the MIF room wall
-    center = 2.54*np.array([0.0, 69.0, 95.0], dtype=np.float64)
-    edge_vec1 = 2.54*np.array([0.0, 81.0, 0.0], dtype=np.float64)
-    edge_vec2 = 2.54*np.array([0.0, 0.0, 95.0], dtype=np.float64)
-    wall_list.append(fs.Square("MIF_Room_Wall", center, (edge_vec1, edge_vec2),
-                               no_rotate))
-    # make the wall source that is the floor
-    center = 2.54*np.array([109.5, 69.0, 0.0], dtype=np.float64)
-    edge_vec1 = 2.54*np.array([0.0, 81.0, 0.0], dtype=np.float64)
-    edge_vec2 = 2.54*np.array([109.5, 0.0, 0.0], dtype=np.float64)
-    wall_list.append(fs.Square("Floor", center, (edge_vec1, edge_vec2),
-                               no_rotate))
-    # make the wall source that is the ceiling
-    center = 2.54*np.array([109.5, 69.0, 190.0], dtype=np.float64)
-    edge_vec1 = 2.54*np.array([0.0, 81.0, 0.0], dtype=np.float64)
-    edge_vec2 = 2.54*np.array([109.5, 0.0, 0.0], dtype=np.float64)
-    wall_list.append(fs.Square("Ceiling", center, (edge_vec1, edge_vec2),
-                               no_rotate))
-    # make the wall source that covers the area opposite the rollup door (east)
-    center = 2.54*np.array([109.5, -12.0, 95.0], dtype=np.float64)
-    edge_vec1 = 2.54*np.array([0.0, 0.0, 95.0], dtype=np.float64)
-    edge_vec2 = 2.54*np.array([109.5, 0.0, 0.0], dtype=np.float64)
-    wall_list.append(fs.Square("East_Wall", center, (edge_vec1, edge_vec2),
-                               no_rotate))
-    # make the wall source that covers the area towards the rollup door (west)
-    center = 2.54*np.array([109.5, 150.0, 95.0], dtype=np.float64)
-    edge_vec1 = 2.54*np.array([0.0, 0.0, 95.0], dtype=np.float64)
-    edge_vec2 = 2.54*np.array([109.5, 0.0, 0.0], dtype=np.float64)
-    wall_list.append(fs.Square("West_Wall", center, (edge_vec1, edge_vec2),
-                               no_rotate))
+    for name, cent, edge1, edge2 in zip(WALL_NAMES, WALL_CENTERS, WALL_EDGES1,
+                                        WALL_EDGES2):
+        wall_list.append(fs.Square(name, cent, (edge1, edge2), no_rotate))
     return wall_list
 
 
@@ -168,3 +292,56 @@ def make_cube_corner_sources():
     center = 2.54*np.array([0.0, 150.0, 0.0], dtype=np.float64)
     pt_list.append(lds.PointSource("Back_Bottom_Left_Corner", center))
     return pt_list
+
+
+def make_cube_edge_sources():
+    """This function generates the sources that represent corners of the walls
+    that surround the AD1 area
+
+    Returns
+    -------
+    line_list : list
+        list of line objects located at edges of the "Effective" walls
+    """
+    line_list = []
+    # front edges
+    pt1 = 2.54*np.array([219.0, -12.0, 190.0], dtype=np.float64)
+    pt2 = 2.54*np.array([219.0, 150.0, 190.0], dtype=np.float64)
+    line_list.append(lds.LineSource("Front_Top_Edge", pt1, pt2))
+    pt1 = 2.54*np.array([219.0, -12.0, 0.0], dtype=np.float64)
+    pt2 = 2.54*np.array([219.0, 150.0, 0.0], dtype=np.float64)
+    line_list.append(lds.LineSource("Front_Bottom_Edge", pt1, pt2))
+    pt1 = 2.54*np.array([219.0, -12.0, 0.0], dtype=np.float64)
+    pt2 = 2.54*np.array([219.0, -12.0, 190.0], dtype=np.float64)
+    line_list.append(lds.LineSource("Front_Right_Edge", pt1, pt2))
+    pt1 = 2.54*np.array([219.0, 150.0, 0.0], dtype=np.float64)
+    pt2 = 2.54*np.array([219.0, 150.0, 190.0], dtype=np.float64)
+    line_list.append(lds.LineSource("Front_Left_Edge", pt1, pt2))
+    # back edges
+    pt1 = 2.54*np.array([0.0, -12.0, 190.0], dtype=np.float64)
+    pt2 = 2.54*np.array([0.0, 150.0, 190.0], dtype=np.float64)
+    line_list.append(lds.LineSource("Back_Top_Edge", pt1, pt2))
+    pt1 = 2.54*np.array([0.0, -12.0, 0.0], dtype=np.float64)
+    pt2 = 2.54*np.array([219.0, 150.0, 0.0], dtype=np.float64)
+    line_list.append(lds.LineSource("Back_Bottom_Edge", pt1, pt2))
+    pt1 = 2.54*np.array([0.0, -12.0, 0.0], dtype=np.float64)
+    pt2 = 2.54*np.array([0.0, -12.0, 190.0], dtype=np.float64)
+    line_list.append(lds.LineSource("Back_Right_Edge", pt1, pt2))
+    pt1 = 2.54*np.array([0.0, 150.0, 0.0], dtype=np.float64)
+    pt2 = 2.54*np.array([0.0, 150.0, 190.0], dtype=np.float64)
+    line_list.append(lds.LineSource("Back_Left_Edge", pt1, pt2))
+    # right edges
+    pt1 = 2.54*np.array([0.0, -12.0, 190.0], dtype=np.float64)
+    pt2 = 2.54*np.array([219.0, -12.0, 190.0], dtype=np.float64)
+    line_list.append(lds.LineSource("Top_Right_Edge", pt1, pt2))
+    pt1 = 2.54*np.array([0.0, -12.0, 0.0], dtype=np.float64)
+    pt2 = 2.54*np.array([219.0, -12.0, 0.0], dtype=np.float64)
+    line_list.append(lds.LineSource("Bottom_Right_Edge", pt1, pt2))
+    # left edges
+    pt1 = 2.54*np.array([0.0, 150.0, 190.0], dtype=np.float64)
+    pt2 = 2.54*np.array([219.0, 150.0, 190.0], dtype=np.float64)
+    line_list.append(lds.LineSource("Top_Left_Edge", pt1, pt2))
+    pt1 = 2.54*np.array([0.0, 150.0, 0.0], dtype=np.float64)
+    pt2 = 2.54*np.array([219.0, 150.0, 0.0], dtype=np.float64)
+    line_list.append(lds.LineSource("Bottom_Left_Edge", pt1, pt2))
+    return line_list
