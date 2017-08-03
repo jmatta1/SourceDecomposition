@@ -9,7 +9,7 @@ LineSource::LineSource(double* start, double* stop)
     for(int i=0; i<3; ++i)
     {
         pt1[i] = start[i];
-        pt2[i] = stop[i];
+        vec1[i] = stop[i];
         temp += ((stop[i] - start[i])*(stop[i] - start[i]));
     }
     mag = std::sqrt(temp);
@@ -17,9 +17,9 @@ LineSource::LineSource(double* start, double* stop)
 
 double* LineSource::getPosition(double* params)
 {
-    pos[0] = pt1[0] + params[0]*pt2[0];
-    pos[1] = pt1[1] + params[0]*pt2[1];
-    pos[2] = pt1[2] + params[0]*pt2[2];
+    pos[0] = pt1[0] + params[0]*vec1[0];
+    pos[1] = pt1[1] + params[0]*vec1[1];
+    pos[2] = pt1[2] + params[0]*vec1[2];
     return pos;
 }
 

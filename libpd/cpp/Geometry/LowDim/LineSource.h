@@ -15,7 +15,7 @@ public:
 private:
     double mag = 0.0;
     double pt1[3];
-    double pt2[3];
+    double vec1[3];
     double pos[3];
 };
 
