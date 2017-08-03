@@ -4,6 +4,10 @@
 // Make detector shape
 extern "C" void* makeDetector(double* vec1, double* vec2, double* norm);
 
+//Make Low Dimensional source shapes
+extern "C" void* makePoint(double* cent);
+extern "C" void* makeLine(double* start, double* stop);
+
 // Make flat source shapes
 extern "C" void* makeSquare(double* cent, double* vec1, double* vec2);
 extern "C" void* makeCircle(double* cent, double radius, double* rot);
