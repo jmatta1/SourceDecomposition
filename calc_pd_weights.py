@@ -20,8 +20,7 @@ def main(nai_pos_path, core_count, out_name):
         name of the output file
     """
     detectors = dt.make_nai_list(dt.read_positions(nai_pos_path))
-    sources = sc.set_up_no_wall_sources()
-    sources.extend(sc.make_cube_corner_sources())
+    sources = sc.set_up_all_sources()
     weights = wc.calculate_weights(detectors, sources, core_count)
     out_file = open(out_name, 'w')
     fmt_str = "{0:d}, {1:d}, {2:s}, {3:10.8e}\n"
