@@ -14,8 +14,12 @@ SRC_NAMES = ["Rx_Wall", "MIF_Room_Wall", "East_Wall", "West_Wall", "Ceiling",
 def main(infile_name, outfile_name):
     # first open the input file
     raw_data = read_input_file(infile_name)
+    # print out the indexing arrays of det number and scan number where index
+    # is equal to the position index
+    print_index_arrays(raw_data)
     # generate the numpy 2D array that will hold the data before dumping to root
     resp_mat, xsize, ysize = make_resp_mat(raw_data)
+    # write the response matrix to root
     write_resp_mat(outfile_name, resp_mat, xsize, ysize)
 
 
@@ -30,6 +34,22 @@ def write_resp_mat(outfile_name, resp_mat, xsize, ysize):
     out_hist.Write()
     outfile.Flush()
     outfile.Close()
+
+
+def print_index_arrays(raw_data):
+    base_fmt_str = "{{ {0:02d}"
+    fmt_str = ", {0:02d}"
+    data = [x for x in raw_data if x[1] == SRC_NAMES[0]]
+    det_str = base_fmt_str.format(data[0][0][0])
+    run_str = base_fmt_str.format(data[0][0][1])
+    for x in data[1:]:
+        det_str += fmt_str.format(x[0][0])
+        run_str += fmt_str.format(x[0][1])
+    outfile = open("lookup_arrays", 'w')
+    outfile.write(det_str)
+    outfile.write("}\n\n")
+    outfile.write(run_str)
+    outfile.write("}\n")
 
 
 def make_resp_mat(raw_data):
