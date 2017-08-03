@@ -7,9 +7,14 @@ import numpy as np
 import ROOT as rt
 
 # TODO: write proper doc strings for this code
-SRC_NAMES = ["Rx_Wall", "MIF_Room_Wall", "East_Wall", "West_Wall", "Ceiling",
-"Floor", "EF4_Cover", "HB3_Access", "HB4_Access", "HB3", "HB3a", "HB4"]
-
+#SRC_NAMES = ["Rx_Wall", "MIF_Room_Wall", "East_Wall", "West_Wall", "Ceiling",
+#             "Floor", "EF4_Cover", "HB3_Access", "HB4_Access", "HB3", "HB3a",
+#             "HB4"]
+SRC_NAMES = ["Front_Bottom_Right_Corner", "Front_Top_Left_Corner",
+             "Front_Bottom_Right_Corner", "Front_Bottom_Left_Corner",
+             "Back_Top_Right_Corner", "Back_Top_Left_Corner",
+             "Back_Bottom_Right_Corner", "Back_Bottom_Left_Corner",
+             "EF4_Cover", "HB3_Access", "HB4_Access", "HB3", "HB3a", "HB4"]
 
 def main(infile_name, outfile_name):
     # first open the input file
