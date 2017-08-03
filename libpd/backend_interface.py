@@ -34,7 +34,25 @@ def initialize_interface():
     # now call the functions that add all the shape creation functions
     initialize_flat_shape_funcs(lib)
     initialize_shell_shape_funcs(lib)
+    initialize_low_dim_shape_funcs(lib)
     return lib
+
+
+def initialize_shell_shape_funcs(lib):
+    """This function initializes the argtypes and restypes for the make low
+    dimensional shape functions
+
+    Parameters
+    ----------
+    lib : ctypes.cdd object
+        The object for the loaded backend library
+    """
+    # the point source
+    lib.makePoint.restype = ct.c_void_p
+    lib.makePoint.argtypes = [ct.POINTER(ct.c_double)]
+    # the line source
+    lib.makeLine.restype = ct.c_void_p
+    lib.makeLine.argtypes = [ct.POINTER(ct.c_double), ct.POINTER(ct.c_double)]
 
 
 def initialize_shell_shape_funcs(lib):
