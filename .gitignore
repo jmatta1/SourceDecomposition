@@ -6,3 +6,4 @@ libpd/build
 *.pdf
 *.root
 *.csv
+positionDecomp
