@@ -3,7 +3,6 @@
 calculations"""
 
 import sys
-import numpy as np
 from libpd import detector as dt
 from libpd import source_construction as sc
 import libpd.weight_calc as wc
