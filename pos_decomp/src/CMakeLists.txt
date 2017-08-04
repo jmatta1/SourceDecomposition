@@ -40,5 +40,4 @@ file(GLOB_RECURSE HDRS *.h)
 
 # Set the executable and what it depends on
 add_executable(PositionDecomposer ${SRCS} ${HDRS})
-
-
+target_link_libraries(PositionDecomposer ${ROOT_LIBRARIES})
