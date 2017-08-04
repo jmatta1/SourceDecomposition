@@ -2,6 +2,9 @@ CMAKE_MINIMUM_REQUIRED(VERSION 2.8)
 
 project(PositionDecomposer)
 
+list(APPEND CMAKE_PREFIX_PATH $ENV{ROOTSYS})
+find_package(ROOT COMPONENTS Core RIO Hist Tree REQUIRED)
+
 # include the file where I define a couple of compiler flags, including the long
 # lists of warning flags for the compiler
 include(./CMakeFlagDefs.txt)
