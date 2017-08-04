@@ -1,0 +1,13 @@
+#ifndef POSITIONDECOMPOSER_SRC_ROOTINTERFACE_RESPGRABBER_H
+#define POSITIONDECOMPOSER_SRC_ROOTINTERFACE_RESPGRABBER_H
+#include<TFile.h>
+#include<string>
+
+class ResponseMatrixBuilder
+{
+public:
+    
+private:
+};
+
+#endif //POSITIONDECOMPOSER_SRC_ROOTINTERFACE_RESPGRABBER_H
