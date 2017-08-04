@@ -3,7 +3,7 @@
 *.o
 *.txt.user
 libpd/build
-*.pdf
 *.root
-*.csv
-positionDecomp
+PositionDecomposer
+images
+calcs
