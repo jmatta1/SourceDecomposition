@@ -21,6 +21,7 @@ ResponseMatrixBuilder::ResponseMatrixBuilder(const std::vector<std::string>& fun
     //double check the data in the response matrix for safety
     if(!validRespMatrix())
     {
+        std::cout<<"Zero containing row(s) or column(s) detected in the response matrix, aborting"<<std::endl;
         throw std::domain_error("One or more zero rows or columns in response matrix");
     }
 }
