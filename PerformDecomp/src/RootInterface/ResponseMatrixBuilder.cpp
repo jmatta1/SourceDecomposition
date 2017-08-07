@@ -58,6 +58,11 @@ void  ResponseMatrixBuilder::loadMatrix(const std::string& inFileName, const std
 void ResponseMatrixBuilder::loadMatrixRow(int rowNum, const std::string& name, TFile* inFile)
 {
     TH1D* hist = (TH1D*)inFile->Get(name.c_str());
+    if(hist == nullptr)
+    {
+        std::cout << "Response function with name: " << name << " was not present in response function file" << std::endl;
+        throw std::domain_error("Response function not present.");
+    }
     int offset = rowNum*numPositions;
     for(int i=0; i<numPositions; ++i)
     {
