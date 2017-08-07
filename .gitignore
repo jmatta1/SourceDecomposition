@@ -7,4 +7,4 @@ libpd/build
 PositionDecomposer
 images
 calcs
-pos_decomp/build
+PerformDecomp/build
