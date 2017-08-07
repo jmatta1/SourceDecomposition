@@ -13,6 +13,12 @@ void InData::setNumEnergyBins(int input)
     this->setNumEnergyBins_ = true;
 }
 
+void InData::setScanFile(const std::string& input)
+{
+    this->scanDataFileName = input;
+    this->setScanDataFileName_ = true;
+}
+
 void InData::setRespFile(const std::string& input)
 {
     this->respFuncFileName = input;
@@ -38,40 +44,45 @@ void InData::addFunction(const std::string& input)
 
 bool InData::validate()
 {
-    return (setDirectoryName_ && setOutputFileName_ && setRespFuncFileName_ &&
-            functionList.size() > 0);
+    return (setNumPositions_&& setNumEnergyBins_ && setDirectoryName_ &&
+            setOutputFileName_ && setRespFuncFileName_ && setScanDataFileName_ &&
+            (functionList.size() > 0) && (functionList.size() <= numPositions));
 }
 
-void InData::printValidation()
+void InData::printValidationErrors()
 {
     std::cout<<"Begin Position Decomposer Input Validation"<<std::endl;
     if(!setNumPositions_)
     {
-        std::cout << "The number of positions was not set" <<std::endl;
+        std::cout << "    The number of positions was not set" <<std::endl;
     }
     if(!setNumEnergyBins_)
     {
-        std::cout << "The number of energy bins was not set" << std::endl;
+        std::cout << "    The number of energy bins was not set" << std::endl;
     }
-    if(!setDirectoryName_)
+    if(!setScanDataFileName_)
     {
-        std::cout << "The TDirectory name was not set" << std::endl;
-    }
-    if(!setOutputFileName_)
-    {
-        std::cout << "The output ROOT file name was not set" <<std::endl;
+        std::cout << "    The scan data file was was not set" << std::endl;
     }
     if(!setRespFuncFileName_)
     {
-        std::cout << "The name of the ROOT file with response functions was not set"<<std::endl;
+        std::cout << "    The name of the ROOT file with response functions was not set"<<std::endl;
+    }
+    if(!setDirectoryName_)
+    {
+        std::cout << "    The TDirectory name was not set" << std::endl;
+    }
+    if(!setOutputFileName_)
+    {
+        std::cout << "    The output ROOT file name was not set" <<std::endl;
     }
     if(functionList.size() < 2)
     {
-        std::cout << "There must be at least 2 response functions used" << std::endl;
+        std::cout << "    There must be at least 2 response functions used" << std::endl;
     }
     if(functionList.size() > numPositions)
     {
-        std::cout << "The number of sources must be less than or equal to the nummber of response functions" << std::endl;
+        std::cout << "    The number of sources must be less than or equal to the nummber of scan positions" << std::endl;
     }
     std::cout << "End Position Decomposer Input Validation" << std::endl;
 }
@@ -80,15 +91,15 @@ void InData::printValidation()
 std::ostream& operator<<(std::ostream& os, InData const& id) 
 {
     os << "[StartPositionDecompInput]\n"
-    << "    Number of Positions   = "   << id.numPositions          << "\n"
-    << "    Number of En Bins     = "   << id.numEnergyBins         << "\n"
-    << "    Response Func File    = "   << id.respFuncFileName      << "\n"
-    << "    Output File Name      = "   << id.outputFileName        << "\n"
-    << "    TDirectory Name       = "   << id.directoryName         << "\n"
-    << "    Resp Func List        = \n";
-    for(int i=0; i<id.functionList.size(); ++i)
+    << "    Number of Positions   = " << id.numPositions          << "\n"
+    << "    Number of En Bins     = " << id.numEnergyBins         << "\n"
+    << "    Response Func File    = " << id.respFuncFileName      << "\n"
+    << "    Output File Name      = " << id.outputFileName        << "\n"
+    << "    TDirectory Name       = " << id.directoryName         << "\n"
+    << "    Resp Func List        = [ " << id.functionList[0];
+    for(int i=1; i<id.functionList.size(); ++i)
     {
-        os << "        "<<id.functionList[i]<<"\n";
+        os << ",\n                              "<<id.functionList[i];
     }
-    return os << "[EndPositionDecompInput]";
+    return os << " ]\n[EndPositionDecompInput]";
 }
