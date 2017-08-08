@@ -6,6 +6,7 @@
 
 class TFile;
 using ResMatData = std::tuple<double*, double*, double*, int, int>;
+using ResMatDump = std::tuple<double*, double*, int, int>;
 
 class ResponseMatrixBuilder
 {
@@ -14,6 +15,7 @@ public:
                           const std::string& inFileName, int numPos);
     ~ResponseMatrixBuilder();
     ResMatData getMatrixInfo(){return ResMatData{respMat, respMatTr, respProjection, numPositions, numSources};}
+    ResMatDump getMatrixDump(){return ResMatDump{respMat, respMatTr, numPositions, numSources};}
 
 private:
     void allocAndInit();
