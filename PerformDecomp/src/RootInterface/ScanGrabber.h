@@ -4,7 +4,7 @@
 #include<tuple>
 
 using ScanData = std::tuple<double*, int, int>;
-using FullScanData = std::tuple<double*, double*, int, int>;
+using FullScanData = std::tuple<double*, double*, int, int, double, double>;
 
 class ScanGrabber
 {
@@ -12,7 +12,7 @@ public:
     ScanGrabber(const std::string& inFileName, int numPos, int numEnBins);
     ~ScanGrabber(){delete[] scanData; delete[] scanDataTr;}
     ScanData getScanData(){return ScanData{scanData, numEnergyBins, numPositions};}
-    FullScanData getFullScanData(){return FullScanData{scanData, scanDataTr, numEnergyBins, numPositions};}
+    FullScanData getFullScanData(){return FullScanData{scanData, scanDataTr, numEnergyBins, numPositions, minEdge, maxEdge};}
 
 private:
     void allocAndInit();
@@ -20,6 +20,8 @@ private:
     
     double* scanData; //where each column the energy spectrum at a particular position, each row is the position data for a particular energy
     double* scanDataTr; //where each row the energy spectrum at a particular position, each column is the position data for a particular energy
+    double minEdge = 0.0;
+    double maxEdge = 0.0;
     int numPositions;
     int numEnergyBins;
 };

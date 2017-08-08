@@ -63,6 +63,11 @@ void ScanGrabber::loadData(const std::string& inFileName)
         std::ostringstream namer;
         namer<<"Decomp_"<<ScanInternal::DetNums[i]<<"_"<<ScanInternal::RunNums[i];
         TH1D* hist = (TH1D*)file->Get(namer.str().c_str());
+        if(i==0)
+        {
+            minEdge = hist->GetBinLowEdge(1);
+            maxEdge = hist->GetBinLowEdge(numEnergyBins+1);
+        }
         for(int j=0; j<numEnergyBins; ++j)
         {
             double temp = hist->GetBinContent(j+1);
