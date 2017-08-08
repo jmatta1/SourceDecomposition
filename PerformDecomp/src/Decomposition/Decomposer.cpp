@@ -2,7 +2,7 @@
 #include<iostream>
 #include<cmath>
 
-Decomposer::Decomposer(ResMatData& respDat, ScanData& scanDat)
+Decomposer::Decomposer(const ResMatData& respDat, const ScanData& scanDat)
 {
     std::tie(respMat, respMatTr, respMatProj, numPositions, numSources) = respDat;
     int placeholder = 0;
@@ -41,6 +41,7 @@ void Decomposer::performDecomp()
         int temp = decomposeSingleBin(i);
         if((i%Internal::DisplayChunk)==0) std::cout<<"  - Conveged at iteration: "<<temp<<std::endl;
     }
+    hasRun = true;
 }
 
 int Decomposer::decomposeSingleBin(int index)
@@ -53,6 +54,7 @@ int Decomposer::decomposeSingleBin(int index)
     }
     
     unsigned long long i = 0;
+    bool hasConverged = false;
     for(; !hasConverged; ++i)
     {
         //calculate multipliers
@@ -95,10 +97,11 @@ int Decomposer::decomposeSingleBin(int index)
         newVals = temp;
     }
     
-    for(int i=0; i<numSources; ++i)
+    for(int j=0; j<numSources; ++j)
     {
-        outputArray[index*numSources + i] = oldVals[i];
+        outputArray[index*numSources + j] = oldVals[j];
     }
+    return i;
 }
 
 bool Decomposer::checkConvergence()

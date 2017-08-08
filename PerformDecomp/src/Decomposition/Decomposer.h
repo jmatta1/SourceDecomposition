@@ -7,19 +7,19 @@ namespace Internal
 {
 static const int DisplayChunk = 50;
 
-static const double ValueThreshold = 1.0e-9;
+static const double ValueThreshold = 1.0e-12;
 
-static const double ConvLimit = 0.005;
+static const double ConvLimit = 0.0005;
 }
 
 class Decomposer
 {
 public:
-    Decomposer(ResMatData& respDat, ScanData& scanDat);
+    Decomposer(const ResMatData& respDat, const ScanData& scanDat);
     ~Decomposer(){delete[] newVals; delete[] oldVals; delete[] mults; delete[] products; delete[] outputArray;}
 
     void performDecomp();
-    double* getFinalResult(){if(!hasConverged) performDecomp(); return outputArray;}
+    double* getFinalResult(){if(!hasRun) performDecomp(); return outputArray;}
 
 private:
     int decomposeSingleBin(int index);
@@ -30,7 +30,7 @@ private:
     double* respMatProj = nullptr; // the projection of the position response matrix onto its Y-Axis
     double* scanData = nullptr; // the scan data arranged as each row is numPositions long and corresponds to a single energy bin at every position
     
-    bool hasConverged = false;
+    bool hasRun = false;
     
     //owned data, so we need to delete it on shutdown
     double* newVals = nullptr;
