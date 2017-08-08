@@ -39,22 +39,6 @@ def write_resp_func(outfile_name, raw_data, name_list):
     outfile.Close()
 
 
-def print_index_arrays(raw_data):
-    base_fmt_str = "{{ {0:02d}"
-    fmt_str = ", {0:02d}"
-    data = [x for x in raw_data if x[1] == SRC_NAMES[0]]
-    det_str = base_fmt_str.format(data[0][0][0])
-    run_str = base_fmt_str.format(data[0][0][1])
-    for x in data[1:]:
-        det_str += fmt_str.format(x[0][0])
-        run_str += fmt_str.format(x[0][1])
-    outfile = open("lookup_arrays", 'w')
-    outfile.write(det_str)
-    outfile.write("}\n\n")
-    outfile.write(run_str)
-    outfile.write("}\n")
-
-
 def read_input_file(infile_name):
     infile = open(infile_name)
     out_list = []
