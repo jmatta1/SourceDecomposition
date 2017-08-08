@@ -7,7 +7,7 @@ import numpy as np
 import ROOT as rt
 
 # TODO: write proper doc strings for this code
-NUM_POS = 109
+NUM_POS = 105
 
 def main(name_list_path, infile_name, outfile_name):
     # first open the input file
