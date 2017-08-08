@@ -2,6 +2,15 @@
 #include<iostream>
 #include<cmath>
 
+namespace Internal
+{
+static const int DisplayChunk = 50;
+
+static const double ValueThreshold = 1.0e-10;
+
+static const double ConvLimit = 0.005;
+}
+
 Decomposer::Decomposer(const ResMatData& respDat, const ScanData& scanDat)
 {
     std::tie(respMat, respMatTr, respMatProj, numPositions, numSources) = respDat;

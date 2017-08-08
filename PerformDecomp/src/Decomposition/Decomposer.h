@@ -3,15 +3,6 @@
 #include"RootInterface/ScanGrabber.h"
 #include"RootInterface/ResponseMatrixBuilder.h"
 
-namespace Internal
-{
-static const int DisplayChunk = 50;
-
-static const double ValueThreshold = 1.0e-12;
-
-static const double ConvLimit = 0.0005;
-}
-
 class Decomposer
 {
 public:
