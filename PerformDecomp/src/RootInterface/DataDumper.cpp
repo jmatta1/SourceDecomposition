@@ -94,8 +94,28 @@ double DataDumper::calcChiSq()
     //now calculate the residual spectrum
     TH2D* residSpectra = (TH2D*) dataSpectra->Clone();
     residSpectra->SetNameTitle("ResidSpectra", "Residual Position Spectra");
-    residSpectra->Add(calcSpectra, -1.0);
+    TH2D* fracResSpectra = (TH2D*) dataSpectra->Clone();
+    fracResSpectra->SetNameTitle("FracResidSpectra", "Fraction Residual Position Spectra");
+    for(int i=0; i<numPositions; ++i)
+    {
+        for(int j=0; j<numEnergyBins; ++j)
+        {
+            double data = dataSpectra->GetBinContent(j+1, i+1);
+            double calc = calcSpectra->GetBinContent(j+1, i+1);
+            if(data > 1.0e-10)
+            {
+                residSpectra->SetBinContent(j+1, i+1, (data-calc));
+                fracResSpectra->SetBinContent(j+1, i+1, std::abs((data-calc)*2.0/(data+calc)));
+            }
+            else
+            {
+                residSpectra->SetBinContent(j+1, i+1, 0.0);
+                fracResSpectra->SetBinContent(j+1, i+1, 0.0);
+            }
+        }
+    }
     residSpectra->Write();
+    fracResSpectra->Write();
     outFile->Flush();
     //now calculate the chi^2 using the residuals
     double chi = 0.0;
@@ -104,10 +124,13 @@ double DataDumper::calcChiSq()
         for(int j=0; j<numEnergyBins; ++j)
         {
             double resid = residSpectra->GetBinContent(j+1, i+1);
-            double err = (0.0408248290463863*std::sqrt(dataSpectra->GetBinContent(j+1,i+1)));
-            chi += (resid*resid)/(err*err);
+            chi += (resid*resid);
         }
     }
+    delete dataSpectra;
+    delete calcSpectra;
+    delete residSpectra;
+    delete fracResSpectra;
     return chi;
 }
 
