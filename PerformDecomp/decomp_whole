@@ -1,0 +1,14 @@
+[StartConfig]
+NumPositions = 105
+NumEnergyBins = 1400
+ScanDataFileName = "./decomp.root"
+RespFuncFileName = "./RespFuncs.root"
+OutputFileName = "./position_output.root
+DirectoryName = "whole_walls"
+FunctionList += "Rx_Wall"
+FunctionList += "MIF_Room_Wall"
+FunctionList += "East_Wall"
+FunctionList += "West_Wall"
+FunctionList += "Ceiling"
+FunctionList += "Floor"
+[EndConfig]
