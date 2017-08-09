@@ -269,9 +269,9 @@ def make_point_sources():
     xvals = [(219.0, "Front"), (109.5, "Midpoint"), (0.0, "Back")]
     yvals = [(150.0, "Left"), (69.0, "Center"), (-12.0, "Right")]
     zvals = [(190.0, "Top"), (94.0, "Middle"), (-2.0, "Bottom")]
-    for xv, xn in enumerate(xvals):
-        for yv, yn in enumerate(yvals):
-            for zv, zn in enumerate(zvals):
+    for xv, xn in xvals:
+        for yv, yn in yvals:
+            for zv, zn in zvals:
                 if zn == "Middle" and yn == "Center" and xn == "Midpoint":
                     continue
                 else:
