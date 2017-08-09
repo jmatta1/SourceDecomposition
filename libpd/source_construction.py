@@ -8,22 +8,22 @@ import libpd.shell_sources as ss
 import libpd.low_dim_sources as lds
 
 
-WALL_CENTERS = [2.54*np.array([219.0, 69.0, 95.0], dtype=np.float64),
-                2.54*np.array([0.0, 69.0, 95.0], dtype=np.float64),
-                2.54*np.array([109.5, 69.0, 0.0], dtype=np.float64),
+WALL_CENTERS = [2.54*np.array([219.0, 69.0, 94.0], dtype=np.float64),
+                2.54*np.array([0.0, 69.0, 94.0], dtype=np.float64),
+                2.54*np.array([109.5, 69.0, -2.0], dtype=np.float64),
                 2.54*np.array([109.5, 69.0, 190.0], dtype=np.float64),
-                2.54*np.array([109.5, -12.0, 95.0], dtype=np.float64),
-                2.54*np.array([109.5, 150.0, 95.0], dtype=np.float64)]
+                2.54*np.array([109.5, -12.0, 94.0], dtype=np.float64),
+                2.54*np.array([109.5, 150.0, 94.0], dtype=np.float64)]
 
 WALL_EDGES1 = [2.54*np.array([0.0, 81.0, 0.0], dtype=np.float64),
                2.54*np.array([0.0, 81.0, 0.0], dtype=np.float64),
                2.54*np.array([0.0, 81.0, 0.0], dtype=np.float64),
                2.54*np.array([0.0, 81.0, 0.0], dtype=np.float64),
-               2.54*np.array([0.0, 0.0, 95.0], dtype=np.float64),
-               2.54*np.array([0.0, 0.0, 95.0], dtype=np.float64)]
+               2.54*np.array([0.0, 0.0, 96.0], dtype=np.float64),
+               2.54*np.array([0.0, 0.0, 96.0], dtype=np.float64)]
 
-WALL_EDGES2 = [2.54*np.array([0.0, 0.0, 95.0], dtype=np.float64), 
-               2.54*np.array([0.0, 0.0, 95.0], dtype=np.float64),
+WALL_EDGES2 = [2.54*np.array([0.0, 0.0, 96.0], dtype=np.float64), 
+               2.54*np.array([0.0, 0.0, 96.0], dtype=np.float64),
                2.54*np.array([109.5, 0.0, 0.0], dtype=np.float64),
                2.54*np.array([109.5, 0.0, 0.0], dtype=np.float64),
                2.54*np.array([109.5, 0.0, 0.0], dtype=np.float64),
@@ -44,7 +44,7 @@ def set_up_all_sources():
     """
     src_list = []
     src_list.extend(make_cube_wall_sources())
-    src_list.extend(make_cube_corner_sources())
+    src_list.extend(make_point_sources())
     src_list.extend(make_cube_edge_sources())
     src_list.extend(make_hot_patches())
     src_list.extend(make_vertical_cylinders())
@@ -257,9 +257,8 @@ def make_whole_cube_wall_sources():
     return wall_list
 
 
-def make_cube_corner_sources():
-    """This function generates the sources that represent corners of the walls
-    that surround the AD1 area
+def make_point_sources():
+    """This function generates the various point sources that we will try using
 
     Returns
     -------
@@ -267,30 +266,18 @@ def make_cube_corner_sources():
         list of square surface objects located at "Effective" walls
     """
     pt_list = []
-    # make top right front corner
-    center = 2.54*np.array([219.0, -12.0, 190.0], dtype=np.float64)
-    pt_list.append(lds.PointSource("Front_Top_Right_Corner", center))
-    # make top left front corner
-    center = 2.54*np.array([219.0, 150.0, 190.0], dtype=np.float64)
-    pt_list.append(lds.PointSource("Front_Top_Left_Corner", center))
-    # make bottom right front corner
-    center = 2.54*np.array([219.0, -12.0, 0.0], dtype=np.float64)
-    pt_list.append(lds.PointSource("Front_Bottom_Right_Corner", center))
-    # make bottom left front corner
-    center = 2.54*np.array([219.0, 150.0, 0.0], dtype=np.float64)
-    pt_list.append(lds.PointSource("Front_Bottom_Left_Corner", center))
-    # make top right back corner
-    center = 2.54*np.array([0.0, -12.0, 190.0], dtype=np.float64)
-    pt_list.append(lds.PointSource("Back_Top_Right_Corner", center))
-    # make top left back corner
-    center = 2.54*np.array([0.0, 150.0, 190.0], dtype=np.float64)
-    pt_list.append(lds.PointSource("Back_Top_Left_Corner", center))
-    # make bottom right back corner
-    center = 2.54*np.array([0.0, -12.0, 0.0], dtype=np.float64)
-    pt_list.append(lds.PointSource("Back_Bottom_Right_Corner", center))
-    # make bottom left back corner
-    center = 2.54*np.array([0.0, 150.0, 0.0], dtype=np.float64)
-    pt_list.append(lds.PointSource("Back_Bottom_Left_Corner", center))
+    xvals = [(219.0, "Front"), (109.5, "Midpoint"), (0.0, "Back")]
+    yvals = [(150.0, "Left"), (69.0, "Center"), (-12.0, "Right")]
+    zvals = [(190.0, "Top"), (94.0, "Middle"), (-2.0, "Bottom")]
+    for xv, xn in enumerate(xvals):
+        for yv, yn in enumerate(yvals):
+            for zv, zn in enumerate(zvals):
+                if zn == "Middle" and yn == "Center" and xn == "Midpoint":
+                    continue
+                else:
+                    name = "{0:s}_{1:s}_{2:s}".format(xn, yn, zn)
+                    center = 2.54*np.array([xv, yv, zv], dtype=np.float64)
+                    pt_list.append(lds.PointSource(name, center))
     return pt_list
 
 
