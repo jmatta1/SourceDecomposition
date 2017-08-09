@@ -26,6 +26,7 @@ def main(infile_name, outfile_name):
     #    name_list = [line.strip() for line in namefile]
     # take the response data and generate a response function for every one
     # and write that function into a root file
+    print "Dumping Spectra"
     write_resp_func(outfile_name, raw_data, name_list)
 
 

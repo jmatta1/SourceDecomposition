@@ -9,17 +9,15 @@ import ROOT as rt
 # TODO: write proper doc strings for this code
 NUM_POS = 105
 
-def main(name_list_path, infile_name, outfile_name):
+def main(infile_name, outfile_name):
     # first open the input file
     print "Reading Raw Data"
     raw_data = read_input_file(infile_name)
     # read the list of source names
-    print "Reading Name List"
-    name_list = None
-    with open(name_list_path) as namefile:
-        name_list = [line.strip() for line in namefile]
+    name_list = set([x[1] for x in raw_data])
     # take the response data and generate a response function for every one
     # and write that function into a root file
+    print "Dumping Spectra"
     write_resp_func(outfile_name, raw_data, name_list)
 
 
@@ -56,12 +54,12 @@ def read_input_file(infile_name):
 
 
 USAGE = """Usage:
-    {0:s} <name_list_path> <input file name> <output root file name>
+    {0:s} <input file name> <output root file name>
 """
 
 
 if __name__ == "__main__":
-    if len(sys.argv) != 4:
+    if len(sys.argv) != 3:
         print USAGE.format(sys.argv[0])
         sys.exit()
-    main(sys.argv[1], sys.argv[2], sys.argv[3])
+    main(sys.argv[1], sys.argv[2])
