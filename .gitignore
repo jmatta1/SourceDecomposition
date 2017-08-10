@@ -10,3 +10,5 @@ calcs
 PerformDecomp/build
 ComputePatches/build
 PatchworkHistBuilder
+AD1_Weights.csv
+NaI_Weights.csv
