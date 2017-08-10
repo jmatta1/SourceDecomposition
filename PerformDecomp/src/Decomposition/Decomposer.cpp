@@ -53,7 +53,7 @@ void Decomposer::performDecomp()
         if((i%Internal::DisplayChunk)==0)
         {
             std::cout<<"  - Conveged at iteration: "<<temp;
-            std::cout<<"\n        Total Iterations: "<<iterationCount<<std::endl;
+            std::cout<<" - Total Iterations: "<<iterationCount<<std::endl;
         }
     }
     hasRun = true;
