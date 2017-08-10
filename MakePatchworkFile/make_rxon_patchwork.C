@@ -19,7 +19,7 @@ void make_patchwork()
     float center[3];
     float halfwidth[3];
     double rate = 0.0;
-    for(int i=0; i<46; ++i)
+    for(int i=0; i<52; ++i)
     {
         cout<<"Patch number: " << i <<endl;
         ostringstream namer;
