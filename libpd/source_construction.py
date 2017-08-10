@@ -8,28 +8,32 @@ import libpd.shell_sources as ss
 import libpd.low_dim_sources as lds
 
 
-WALL_CENTERS = [2.54*np.array([219.0, 69.0, 94.0], dtype=np.float64),
-                2.54*np.array([0.0, 69.0, 94.0], dtype=np.float64),
-                2.54*np.array([109.5, 69.0, -2.0], dtype=np.float64),
-                2.54*np.array([109.5, 69.0, 190.0], dtype=np.float64),
-                2.54*np.array([109.5, -12.0, 94.0], dtype=np.float64),
-                2.54*np.array([109.5, 150.0, 94.0], dtype=np.float64)]
+WALL_CENTERS = [2.54*np.array([500.0, 71.5, 62.75], dtype=np.float64),  # RxWall
+                2.54*np.array([-228.0, 71.5, 62.75], dtype=np.float64),  # MifWall
+                2.54*np.array([136.0, 71.5, -300.0], dtype=np.float64),  # floor
+                2.54*np.array([136.0, 71.5, 425.5], dtype=np.float64),  # ceil
+                2.54*np.array([136.0, -286.5, 62.75], dtype=np.float64),  # east
+                2.54*np.array([136.0, 429.5, 62.75], dtype=np.float64)]  # west
 
-WALL_EDGES1 = [2.54*np.array([0.0, 81.0, 0.0], dtype=np.float64),
-               2.54*np.array([0.0, 81.0, 0.0], dtype=np.float64),
-               2.54*np.array([0.0, 81.0, 0.0], dtype=np.float64),
-               2.54*np.array([0.0, 81.0, 0.0], dtype=np.float64),
-               2.54*np.array([0.0, 0.0, 96.0], dtype=np.float64),
-               2.54*np.array([0.0, 0.0, 96.0], dtype=np.float64)]
+WALL_EDGES1 = [2.54*np.array([0.0, 358.0, 0.0], dtype=np.float64),
+               2.54*np.array([0.0, 358.0, 0.0], dtype=np.float64),
+               2.54*np.array([0.0, 358.0, 0.0], dtype=np.float64),
+               2.54*np.array([0.0, 358.0, 0.0], dtype=np.float64),
+               2.54*np.array([0.0, 0.0, 362.75], dtype=np.float64),
+               2.54*np.array([0.0, 0.0, 362.75], dtype=np.float64)]
 
-WALL_EDGES2 = [2.54*np.array([0.0, 0.0, 96.0], dtype=np.float64), 
-               2.54*np.array([0.0, 0.0, 96.0], dtype=np.float64),
-               2.54*np.array([109.5, 0.0, 0.0], dtype=np.float64),
-               2.54*np.array([109.5, 0.0, 0.0], dtype=np.float64),
-               2.54*np.array([109.5, 0.0, 0.0], dtype=np.float64),
-               2.54*np.array([109.5, 0.0, 0.0], dtype=np.float64)]
+WALL_EDGES2 = [2.54*np.array([0.0, 0.0, 362.75], dtype=np.float64), 
+               2.54*np.array([0.0, 0.0, 362.75], dtype=np.float64),
+               2.54*np.array([364.0, 0.0, 0.0], dtype=np.float64),
+               2.54*np.array([364.0, 0.0, 0.0], dtype=np.float64),
+               2.54*np.array([364.0, 0.0, 0.0], dtype=np.float64),
+               2.54*np.array([364.0, 0.0, 0.0], dtype=np.float64)]
 
 WALL_NAMES = ["Rx_Wall", "MIF_Room_Wall", "Floor", "Ceiling", "East_Wall", "West_Wall"]
+
+PT_SOURCE_XVALS = [(500.0, "Front"), (136.0, "Midpoint"), (-228.0, "Back")]
+PT_SOURCE_YVALS = [(429.5, "Left"), (71.5, "Center"), (-286.5, "Right")]
+PT_SOURCE_ZVALS = [(425.5, "Top"), (62.75, "Middle"), (-300.0, "Bottom")]
 
 
 def set_up_all_sources():
@@ -45,7 +49,7 @@ def set_up_all_sources():
     src_list = []
     src_list.extend(make_cube_wall_sources())
     src_list.extend(make_point_sources())
-    src_list.extend(make_cube_edge_sources())
+    #src_list.extend(make_cube_edge_sources())
     src_list.extend(make_hot_patches())
     src_list.extend(make_vertical_cylinders())
     src_list.extend(make_beamlines())
@@ -266,9 +270,6 @@ def make_point_sources():
         list of square surface objects located at "Effective" walls
     """
     pt_list = []
-    xvals = [(219.0, "Front"), (109.5, "Midpoint"), (0.0, "Back")]
-    yvals = [(150.0, "Left"), (69.0, "Center"), (-12.0, "Right")]
-    zvals = [(190.0, "Top"), (94.0, "Middle"), (-2.0, "Bottom")]
     for xv, xn in xvals:
         for yv, yn in yvals:
             for zv, zn in zvals:
