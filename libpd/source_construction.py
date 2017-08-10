@@ -270,9 +270,9 @@ def make_point_sources():
         list of square surface objects located at "Effective" walls
     """
     pt_list = []
-    for xv, xn in xvals:
-        for yv, yn in yvals:
-            for zv, zn in zvals:
+    for xv, xn in PT_SOURCE_XVALS:
+        for yv, yn in PT_SOURCE_YVALS:
+            for zv, zn in PT_SOURCE_ZVALS:
                 if zn == "Middle" and yn == "Center" and xn == "Midpoint":
                     continue
                 else:
