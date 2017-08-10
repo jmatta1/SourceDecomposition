@@ -31,10 +31,32 @@ WALL_EDGES2 = [2.54*np.array([0.0, 0.0, 362.75], dtype=np.float64),
 
 WALL_NAMES = ["Rx_Wall", "MIF_Room_Wall", "Floor", "Ceiling", "East_Wall", "West_Wall"]
 
-PT_SOURCE_XVALS = [(500.0, "Front"), (136.0, "Midpoint"), (-228.0, "Back")]
-PT_SOURCE_YVALS = [(429.5, "Left"), (71.5, "Center"), (-286.5, "Right")]
-PT_SOURCE_ZVALS = [(425.5, "Top"), (62.75, "Middle"), (-300.0, "Bottom")]
+PT_SOURCE_XVALS = [(2.54*500.0, "Front"), (2.54*136.0, "Midpoint"), (-2.54*228.0, "Back")]
+PT_SOURCE_YVALS = [(2.54*429.5, "Left"), (2.54*71.5, "Center"), (-2.54*286.5, "Right")]
+PT_SOURCE_ZVALS = [(2.54*425.5, "Top"), (2.54*62.75, "Middle"), (-2.54*300.0, "Bottom")]
 
+
+CORNER_QUARTETS = [(2.54*np.array([500.0, 429.5, 425.5], dtype=np.float64),
+                    2.54*np.array([500.0, 429.5, -300.0], dtype=np.float64),
+                    2.54*np.array([500.0, -286.5, 425.5], dtype=np.float64),
+                    2.54*np.array([-228.0, 429.5, 425.5], dtype=np.float64)),
+                   (2.54*np.array([500.0, -286.5, -300.0], dtype=np.float64),
+                    2.54*np.array([500.0, -286.5, 425.5], dtype=np.float64),
+                    2.54*np.array([500.0, 429.5, -300.0], dtype=np.float64),
+                    2.54*np.array([-228.0, -286.5, -300.0], dtype=np.float64)),
+                   (2.54*np.array([-228.0, 429.5, -300.0], dtype=np.float64),
+                    2.54*np.array([-228.0, 429.5, 425.5], dtype=np.float64),
+                    2.54*np.array([-228.0, -286.5, -300.0], dtype=np.float64),
+                    2.54*np.array([500.0, 429.5, -300.0], dtype=np.float64)),
+                   (2.54*np.array([-228.0, -286.5, 425.5], dtype=np.float64),
+                    2.54*np.array([-228.0, -286.5, -300.0], dtype=np.float64),
+                    2.54*np.array([-228.0, 429.5, 425.5], dtype=np.float64),
+                    2.54*np.array([500.0, -286.5, 425.5], dtype=np.float64))]
+
+QUARTET_NAMES = [("Front_Left", "Front_Top", "Left_Top"),
+                 ("Front_Right", "Front_Bottom", "Right_Bottom"),
+                 ("Back_Left", "Back_Bottom", "Left_Bottom"),
+                 ("Back_Right", "Back_Top", "Right_Top")]
 
 def set_up_all_sources():
     """This function is what is used to generate the list of sources that the
@@ -49,7 +71,7 @@ def set_up_all_sources():
     src_list = []
     src_list.extend(make_cube_wall_sources())
     src_list.extend(make_point_sources())
-    #src_list.extend(make_cube_edge_sources())
+    src_list.extend(make_cube_edge_sources())
     src_list.extend(make_hot_patches())
     src_list.extend(make_vertical_cylinders())
     src_list.extend(make_beamlines())
@@ -292,44 +314,8 @@ def make_cube_edge_sources():
         list of line objects located at edges of the "Effective" walls
     """
     line_list = []
-    # front edges
-    pt1 = 2.54*np.array([219.0, -12.0, 190.0], dtype=np.float64)
-    pt2 = 2.54*np.array([219.0, 150.0, 190.0], dtype=np.float64)
-    line_list.append(lds.LineSource("Front_Top_Edge", pt1, pt2))
-    pt1 = 2.54*np.array([219.0, -12.0, 0.0], dtype=np.float64)
-    pt2 = 2.54*np.array([219.0, 150.0, 0.0], dtype=np.float64)
-    line_list.append(lds.LineSource("Front_Bottom_Edge", pt1, pt2))
-    pt1 = 2.54*np.array([219.0, -12.0, 0.0], dtype=np.float64)
-    pt2 = 2.54*np.array([219.0, -12.0, 190.0], dtype=np.float64)
-    line_list.append(lds.LineSource("Front_Right_Edge", pt1, pt2))
-    pt1 = 2.54*np.array([219.0, 150.0, 0.0], dtype=np.float64)
-    pt2 = 2.54*np.array([219.0, 150.0, 190.0], dtype=np.float64)
-    line_list.append(lds.LineSource("Front_Left_Edge", pt1, pt2))
-    # back edges
-    pt1 = 2.54*np.array([0.0, -12.0, 190.0], dtype=np.float64)
-    pt2 = 2.54*np.array([0.0, 150.0, 190.0], dtype=np.float64)
-    line_list.append(lds.LineSource("Back_Top_Edge", pt1, pt2))
-    pt1 = 2.54*np.array([0.0, -12.0, 0.0], dtype=np.float64)
-    pt2 = 2.54*np.array([219.0, 150.0, 0.0], dtype=np.float64)
-    line_list.append(lds.LineSource("Back_Bottom_Edge", pt1, pt2))
-    pt1 = 2.54*np.array([0.0, -12.0, 0.0], dtype=np.float64)
-    pt2 = 2.54*np.array([0.0, -12.0, 190.0], dtype=np.float64)
-    line_list.append(lds.LineSource("Back_Right_Edge", pt1, pt2))
-    pt1 = 2.54*np.array([0.0, 150.0, 0.0], dtype=np.float64)
-    pt2 = 2.54*np.array([0.0, 150.0, 190.0], dtype=np.float64)
-    line_list.append(lds.LineSource("Back_Left_Edge", pt1, pt2))
-    # right edges
-    pt1 = 2.54*np.array([0.0, -12.0, 190.0], dtype=np.float64)
-    pt2 = 2.54*np.array([219.0, -12.0, 190.0], dtype=np.float64)
-    line_list.append(lds.LineSource("Top_Right_Edge", pt1, pt2))
-    pt1 = 2.54*np.array([0.0, -12.0, 0.0], dtype=np.float64)
-    pt2 = 2.54*np.array([219.0, -12.0, 0.0], dtype=np.float64)
-    line_list.append(lds.LineSource("Bottom_Right_Edge", pt1, pt2))
-    # left edges
-    pt1 = 2.54*np.array([0.0, 150.0, 190.0], dtype=np.float64)
-    pt2 = 2.54*np.array([219.0, 150.0, 190.0], dtype=np.float64)
-    line_list.append(lds.LineSource("Top_Left_Edge", pt1, pt2))
-    pt1 = 2.54*np.array([0.0, 150.0, 0.0], dtype=np.float64)
-    pt2 = 2.54*np.array([219.0, 150.0, 0.0], dtype=np.float64)
-    line_list.append(lds.LineSource("Bottom_Left_Edge", pt1, pt2))
+    for i, quartet in enumerate(CORNER_QUARTETS):
+        pt1 = quartet[0]
+        for j, pt2 in enumerate(quartet[1:]):
+            line_list.append(lds.LineSource(QUARTET_NAMES[i][j], pt1, pt2))
     return line_list
