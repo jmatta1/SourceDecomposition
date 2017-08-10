@@ -33,6 +33,7 @@ void make_patchwork()
         halfwidth[0] = xwidth[i];
         halfwidth[1] = ywidth[i];
         halfwidth[2] = zwidth[i];
+        //normalize the spectra to the area of the patch
         temp->Multiply(unity, 1.0/areas[i]);
         BFT.AddPatch(temp, center, halfwidth);
         delete temp;
