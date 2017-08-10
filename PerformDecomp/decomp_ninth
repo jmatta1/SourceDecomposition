@@ -2,7 +2,7 @@
 NumPositions = 105
 NumEnergyBins = 1400
 ScanDataFileName = "./decomp.root"
-RespFuncFileName = "./RespFuncs.root"
+RespFuncFileName = "./NaI_Resp.root"
 OutputFileName = "./position_output.root"
 DirectoryName = "ninth_walls"
 FunctionList += "Rx_Wall_9_0"
