@@ -8,3 +8,5 @@ PositionDecomposer
 images
 calcs
 PerformDecomp/build
+ComputePatches/build
+PatchworkHistBuilder

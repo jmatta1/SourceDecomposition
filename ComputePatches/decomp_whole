@@ -1,0 +1,14 @@
+[StartConfig]
+NumPanels = 52
+NumEnergyBins = 1400
+SourceDataFileName = "./position_output.root"
+RespFuncFileName = "./NaI_Resp.root"
+OutputFileName = "./rx_on_patchwork1.root"
+DirectoryName = "whole_walls"
+FunctionList += "Rx_Wall"
+FunctionList += "MIF_Room_Wall"
+FunctionList += "East_Wall"
+FunctionList += "West_Wall"
+FunctionList += "Ceiling"
+FunctionList += "Floor"
+[EndConfig]
