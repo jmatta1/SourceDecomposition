@@ -432,7 +432,7 @@ def read_patches(fname):
         rdat = (int(elem[0]), int(elem[1]))
         center = 2.54*np.array([float(elem[2]), float(elem[3]), float(elem[4])],
                           dtype=np.float64)
-        norm = 2.54*np.array([float(elem[5]), float(elem[6]), float(elem[7])],
+        norm = np.array([float(elem[5]), float(elem[6]), float(elem[7])],
                         dtype=np.float64)
         extent_x = 2.54*float(elem[8])
         extent_y = 2.54*float(elem[9])
