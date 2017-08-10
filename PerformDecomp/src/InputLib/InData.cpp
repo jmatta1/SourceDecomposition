@@ -91,12 +91,13 @@ void InData::printValidationErrors()
 std::ostream& operator<<(std::ostream& os, InData const& id) 
 {
     os << "[StartPositionDecompInput]\n"
-    << "    Number of Positions   = " << id.numPositions          << "\n"
-    << "    Number of En Bins     = " << id.numEnergyBins         << "\n"
-    << "    Response Func File    = " << id.respFuncFileName      << "\n"
-    << "    Output File Name      = " << id.outputFileName        << "\n"
-    << "    TDirectory Name       = " << id.directoryName         << "\n"
-    << "    Resp Func List        = [ " << id.functionList[0];
+    << "    Number of Positions  = " << id.numPositions          << "\n"
+    << "    Number of En Bins    = " << id.numEnergyBins         << "\n"
+    << "    Scan Data Input File = " << id.scanDataFileName      << "\n"
+    << "    Response Func File   = " << id.respFuncFileName      << "\n"
+    << "    Output File Name     = " << id.outputFileName        << "\n"
+    << "    TDirectory Name      = " << id.directoryName         << "\n"
+    << "    Resp Func List       = [ " << id.functionList[0];
     for(int i=1; i<id.functionList.size(); ++i)
     {
         os << ",\n                              "<<id.functionList[i];
