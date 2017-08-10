@@ -44,11 +44,17 @@ Decomposer::Decomposer(const ResMatData& respDat, const ScanData& scanDat)
 void Decomposer::performDecomp()
 {
     // to do the serial decomposition we need to iterate over the data bins
+    unsigned long long int iterationCount = 0;
     for(int i=0; i<numEnergyBins; ++i)
     {
         if((i%Internal::DisplayChunk)==0) std::cout<<"Position decomp on data bin: "<<i+1<<"/"<<numEnergyBins;
         int temp = decomposeSingleBin(i);
-        if((i%Internal::DisplayChunk)==0) std::cout<<"  - Conveged at iteration: "<<temp<<std::endl;
+        iterationCount += temp;
+        if((i%Internal::DisplayChunk)==0)
+        {
+            std::cout<<"  - Conveged at iteration: "<<temp;
+            std::cout<<"\n        Total Iterations: "<<iterationCount<<std::endl;
+        }
     }
     hasRun = true;
 }
