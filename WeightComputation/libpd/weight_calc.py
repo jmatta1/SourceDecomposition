@@ -205,6 +205,7 @@ def calc_weight_opt(data_tuple):
     (lib, calc) = build_low_level_call(surface, source)
     # call the numerical integration
     # weight = spi.nquad(scp_call, ranges, args=(surface, source), opts=options)
+    print "Starting", pos_info
     weight = np.array(range(NUM_BACKEND_OUT_PARAMS), dtype=np.float64)
     lib.calcIntegral(ct.cast(calc, ct.c_void_p),
                      weight.ctypes.data_as(ct.POINTER(ct.c_double)))
