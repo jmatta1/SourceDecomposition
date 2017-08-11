@@ -2,13 +2,13 @@
 *.so
 *.o
 *.txt.user
-libpd/build
+WeightComputation/libpd/build
 *.root
 PositionDecomposer
 images
 calcs
+PatchSpectrumCalc/build
 PerformDecomp/build
-ComputePatches/build
 PatchworkHistBuilder
 AD1_Weights.csv
 NaI_Weights.csv
