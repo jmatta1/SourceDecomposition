@@ -8,55 +8,72 @@ import libpd.shell_sources as ss
 import libpd.low_dim_sources as lds
 
 
-WALL_CENTERS = [2.54*np.array([500.0, 71.5, 62.75], dtype=np.float64),  # RxWall
-                2.54*np.array([-228.0, 71.5, 62.75], dtype=np.float64),  # MifWall
-                2.54*np.array([136.0, 71.5, -300.0], dtype=np.float64),  # floor
-                2.54*np.array([136.0, 71.5, 425.5], dtype=np.float64),  # ceil
-                2.54*np.array([136.0, -286.5, 62.75], dtype=np.float64),  # east
-                2.54*np.array([136.0, 429.5, 62.75], dtype=np.float64)]  # west
+WALL_CENTERS = [2.54*np.array([800.0, 71.5, 62.75], dtype=np.float64),  # RxWall
+                2.54*np.array([-528.0, 71.5, 62.75], dtype=np.float64),  # MifWall
+                2.54*np.array([136.0, 71.5, -600.0], dtype=np.float64),  # floor
+                2.54*np.array([136.0, 71.5, 725.5], dtype=np.float64),  # ceil
+                2.54*np.array([136.0, -586.5, 62.75], dtype=np.float64),  # east
+                2.54*np.array([136.0, 729.5, 62.75], dtype=np.float64)]  # west
 
-WALL_EDGES1 = [2.54*np.array([0.0, 358.0, 0.0], dtype=np.float64),
-               2.54*np.array([0.0, 358.0, 0.0], dtype=np.float64),
-               2.54*np.array([0.0, 358.0, 0.0], dtype=np.float64),
-               2.54*np.array([0.0, 358.0, 0.0], dtype=np.float64),
-               2.54*np.array([0.0, 0.0, 362.75], dtype=np.float64),
-               2.54*np.array([0.0, 0.0, 362.75], dtype=np.float64)]
+WALL_EDGES1 = [2.54*np.array([0.0, 658.0, 0.0], dtype=np.float64),
+               2.54*np.array([0.0, 658.0, 0.0], dtype=np.float64),
+               2.54*np.array([0.0, 658.0, 0.0], dtype=np.float64),
+               2.54*np.array([0.0, 658.0, 0.0], dtype=np.float64),
+               2.54*np.array([0.0, 0.0, 662.75], dtype=np.float64),
+               2.54*np.array([0.0, 0.0, 662.75], dtype=np.float64)]
 
-WALL_EDGES2 = [2.54*np.array([0.0, 0.0, 362.75], dtype=np.float64), 
-               2.54*np.array([0.0, 0.0, 362.75], dtype=np.float64),
-               2.54*np.array([364.0, 0.0, 0.0], dtype=np.float64),
-               2.54*np.array([364.0, 0.0, 0.0], dtype=np.float64),
-               2.54*np.array([364.0, 0.0, 0.0], dtype=np.float64),
-               2.54*np.array([364.0, 0.0, 0.0], dtype=np.float64)]
+WALL_EDGES2 = [2.54*np.array([0.0, 0.0, 662.75], dtype=np.float64), 
+               2.54*np.array([0.0, 0.0, 662.75], dtype=np.float64),
+               2.54*np.array([664.0, 0.0, 0.0], dtype=np.float64),
+               2.54*np.array([664.0, 0.0, 0.0], dtype=np.float64),
+               2.54*np.array([664.0, 0.0, 0.0], dtype=np.float64),
+               2.54*np.array([664.0, 0.0, 0.0], dtype=np.float64)]
 
 WALL_NAMES = ["Rx_Wall", "MIF_Room_Wall", "Floor", "Ceiling", "East_Wall", "West_Wall"]
 
-PT_SOURCE_XVALS = [(2.54*500.0, "Front"), (2.54*136.0, "Midpoint"), (-2.54*228.0, "Back")]
-PT_SOURCE_YVALS = [(2.54*429.5, "Left"), (2.54*71.5, "Center"), (-2.54*286.5, "Right")]
-PT_SOURCE_ZVALS = [(2.54*425.5, "Top"), (2.54*62.75, "Middle"), (-2.54*300.0, "Bottom")]
+PT_SOURCE_XVALS = [(2.54*800.0, "Front"), (2.54*136.0, "Midpoint"), (-2.54*528.0, "Back")]
+PT_SOURCE_YVALS = [(2.54*729.5, "Left"), (2.54*71.5, "Center"), (-2.54*586.5, "Right")]
+PT_SOURCE_ZVALS = [(2.54*725.5, "Top"), (2.54*62.75, "Middle"), (-2.54*600.0, "Bottom")]
 
 
-CORNER_QUARTETS = [(2.54*np.array([500.0, 429.5, 425.5], dtype=np.float64),
-                    2.54*np.array([500.0, 429.5, -300.0], dtype=np.float64),
-                    2.54*np.array([500.0, -286.5, 425.5], dtype=np.float64),
-                    2.54*np.array([-228.0, 429.5, 425.5], dtype=np.float64)),
-                   (2.54*np.array([500.0, -286.5, -300.0], dtype=np.float64),
-                    2.54*np.array([500.0, -286.5, 425.5], dtype=np.float64),
-                    2.54*np.array([500.0, 429.5, -300.0], dtype=np.float64),
-                    2.54*np.array([-228.0, -286.5, -300.0], dtype=np.float64)),
-                   (2.54*np.array([-228.0, 429.5, -300.0], dtype=np.float64),
-                    2.54*np.array([-228.0, 429.5, 425.5], dtype=np.float64),
-                    2.54*np.array([-228.0, -286.5, -300.0], dtype=np.float64),
-                    2.54*np.array([500.0, 429.5, -300.0], dtype=np.float64)),
-                   (2.54*np.array([-228.0, -286.5, 425.5], dtype=np.float64),
-                    2.54*np.array([-228.0, -286.5, -300.0], dtype=np.float64),
-                    2.54*np.array([-228.0, 429.5, 425.5], dtype=np.float64),
-                    2.54*np.array([500.0, -286.5, 425.5], dtype=np.float64))]
+CORNER_QUARTETS = [(2.54*np.array([800.0, 729.5, 725.5], dtype=np.float64),
+                    2.54*np.array([800.0, 729.5, -600.0], dtype=np.float64),
+                    2.54*np.array([800.0, -586.5, 725.5], dtype=np.float64),
+                    2.54*np.array([-528.0, 729.5, 725.5], dtype=np.float64)),
+                   (2.54*np.array([800.0, -586.5, -600.0], dtype=np.float64),
+                    2.54*np.array([800.0, -586.5, 725.5], dtype=np.float64),
+                    2.54*np.array([800.0, 729.5, -600.0], dtype=np.float64),
+                    2.54*np.array([-528.0, -586.5, -600.0], dtype=np.float64)),
+                   (2.54*np.array([-528.0, 729.5, -600.0], dtype=np.float64),
+                    2.54*np.array([-528.0, 729.5, 725.5], dtype=np.float64),
+                    2.54*np.array([-528.0, -586.5, -600.0], dtype=np.float64),
+                    2.54*np.array([800.0, 729.5, -600.0], dtype=np.float64)),
+                   (2.54*np.array([-528.0, -586.5, 725.5], dtype=np.float64),
+                    2.54*np.array([-528.0, -586.5, -600.0], dtype=np.float64),
+                    2.54*np.array([-528.0, 729.5, 725.5], dtype=np.float64),
+                    2.54*np.array([800.0, -586.5, 725.5], dtype=np.float64))]
 
 QUARTET_NAMES = [("Front_Left", "Front_Top", "Left_Top"),
                  ("Front_Right", "Front_Bottom", "Right_Bottom"),
                  ("Back_Left", "Back_Bottom", "Left_Bottom"),
                  ("Back_Right", "Back_Top", "Right_Top")]
+
+SPHERE_THETA_PATCHES = [(0.177711, 0.177711), (0.430391, 0.0749697),
+                        (0.563864, 0.058504), (0.672551, 0.0501829),
+                        (0.767745, 0.0450107), (0.85421, 0.0414546),
+                        (0.934527, 0.0388626), (1.01029, 0.0369038),
+                        (1.08259, 0.0353911), (1.15219, 0.0342099),
+                        (1.21969, 0.0332865), (1.28554, 0.0325717),
+                        (1.35015, 0.0320319), (1.41382, 0.0316443),
+                        (1.47686, 0.0313935), (1.53953, 0.0312704),
+                        (1.60207, 0.0312704), (1.66473, 0.0313935),
+                        (1.72777, 0.0316443), (1.79144, 0.0320319),
+                        (1.85605, 0.0325717), (1.92191, 0.0332865),
+                        (1.9894, 0.0342099), (2.059, 0.0353911),
+                        (2.1313, 0.0369038), (2.20707, 0.0388626),
+                        (2.28738, 0.0414546), (2.37385, 0.0450107),
+                        (2.46904, 0.0501829), (2.57773, 0.058504),
+                        (2.7112, 0.0749697), (2.96388, 0.177711)]
 
 def set_up_all_sources():
     """This function is what is used to generate the list of sources that the
@@ -72,9 +89,9 @@ def set_up_all_sources():
     src_list.extend(make_cube_wall_sources())
     src_list.extend(make_point_sources())
     src_list.extend(make_cube_edge_sources())
-    src_list.extend(make_hot_patches())
-    src_list.extend(make_vertical_cylinders())
-    src_list.extend(make_beamlines())
+    # src_list.extend(make_hot_patches())
+    # src_list.extend(make_vertical_cylinders())
+    # src_list.extend(make_beamlines())
     return src_list
 
 
