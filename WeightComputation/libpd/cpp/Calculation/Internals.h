@@ -4,7 +4,7 @@
 namespace Internal
 {
 static const double InvFourPi = 0.079577471545947667884441881686257181;
-static const int MinDepth = 6;
+static const int MinDepth = 4;
 static const int MaxDepth = 60;
 static const double ConvergenceLimit = 1.0e-4;
 static const double ValueLimit = 1.0e-14;
