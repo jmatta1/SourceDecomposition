@@ -7,73 +7,65 @@ import libpd.flat_sources as fs
 import libpd.shell_sources as ss
 import libpd.low_dim_sources as lds
 
+#      [MAX VALUE   , CENTER VALUE,     MIN VALUE]
+WALX = [2.54 * 800.0, 2.54 * 136.0, -2.54 * 528.0]
+WALY = [2.54 * 729.5, 2.54 * 071.5, -2.54 * 586.5]
+WALZ = [2.54 * 725.5, 2.54 * 62.75, -2.54 * 600.0]
+WALHW = [(WALX[0]-WALX[2])/2.0, (WALY[0]-WALY[2])/2.0, (WALZ[0]-WALZ[2])/2.0]
 
-WALL_CENTERS = [2.54*np.array([800.0, 71.5, 62.75], dtype=np.float64),  # RxWall
-                2.54*np.array([-528.0, 71.5, 62.75], dtype=np.float64),  # MifWall
-                2.54*np.array([136.0, 71.5, -600.0], dtype=np.float64),  # floor
-                2.54*np.array([136.0, 71.5, 725.5], dtype=np.float64),  # ceil
-                2.54*np.array([136.0, -586.5, 62.75], dtype=np.float64),  # east
-                2.54*np.array([136.0, 729.5, 62.75], dtype=np.float64)]  # west
+WALL_CENTERS = [np.array([WALX[0], WALY[1], WALZ[1]], dtype=np.float64),  # RxWall
+                np.array([WALX[2], WALY[1], WALZ[1]], dtype=np.float64),  # MifWall
+                np.array([WALX[1], WALY[1], WALZ[0]], dtype=np.float64),  # ceil
+                np.array([WALX[1], WALY[1], WALZ[2]], dtype=np.float64),  # floor
+                np.array([WALX[1], WALY[0], WALZ[1]], dtype=np.float64),  # west
+                np.array([WALX[1], WALY[2], WALZ[0]], dtype=np.float64)]  # east
 
-WALL_EDGES1 = [2.54*np.array([0.0, 658.0, 0.0], dtype=np.float64),
-               2.54*np.array([0.0, 658.0, 0.0], dtype=np.float64),
-               2.54*np.array([0.0, 658.0, 0.0], dtype=np.float64),
-               2.54*np.array([0.0, 658.0, 0.0], dtype=np.float64),
-               2.54*np.array([0.0, 0.0, 662.75], dtype=np.float64),
-               2.54*np.array([0.0, 0.0, 662.75], dtype=np.float64)]
+WALL_EDGES1 = [np.array([0.0, WALHW[1], 0.0], dtype=np.float64),
+               np.array([0.0, WALHW[1], 0.0], dtype=np.float64),
+               np.array([0.0, WALHW[1], 0.0], dtype=np.float64),
+               np.array([0.0, WALHW[1], 0.0], dtype=np.float64),
+               np.array([0.0, 0.0, WALHW[2]], dtype=np.float64),
+               np.array([0.0, 0.0, WALHW[2]], dtype=np.float64)]
 
-WALL_EDGES2 = [2.54*np.array([0.0, 0.0, 662.75], dtype=np.float64), 
-               2.54*np.array([0.0, 0.0, 662.75], dtype=np.float64),
-               2.54*np.array([664.0, 0.0, 0.0], dtype=np.float64),
-               2.54*np.array([664.0, 0.0, 0.0], dtype=np.float64),
-               2.54*np.array([664.0, 0.0, 0.0], dtype=np.float64),
-               2.54*np.array([664.0, 0.0, 0.0], dtype=np.float64)]
+WALL_EDGES2 = [np.array([0.0, 0.0, WALHW[2]], dtype=np.float64), 
+               np.array([0.0, 0.0, WALHW[2]], dtype=np.float64),
+               np.array([WALHW[0], 0.0, 0.0], dtype=np.float64),
+               np.array([WALHW[0], 0.0, 0.0], dtype=np.float64),
+               np.array([WALHW[0], 0.0, 0.0], dtype=np.float64),
+               np.array([WALHW[0], 0.0, 0.0], dtype=np.float64)]
 
-WALL_NAMES = ["Rx_Wall", "MIF_Room_Wall", "Floor", "Ceiling", "East_Wall", "West_Wall"]
+WALL_NAMES = ["Rx_Wall", "MIF_Room_Wall", "Ceiling", "Floor", "West_Wall", "East_Wall"]
 
-PT_SOURCE_XVALS = [(2.54*800.0, "Front"), (2.54*136.0, "Midpoint"), (-2.54*528.0, "Back")]
-PT_SOURCE_YVALS = [(2.54*729.5, "Left"), (2.54*71.5, "Center"), (-2.54*586.5, "Right")]
-PT_SOURCE_ZVALS = [(2.54*725.5, "Top"), (2.54*62.75, "Middle"), (-2.54*600.0, "Bottom")]
+WALL_DATA = zip(WALL_NAMES, WALL_CENTERS, WALL_EDGES1, WALL_EDGES2)
+
+WALL_DIVS = 32
+
+PT_SOURCE_XVALS = zip(WALX, ["Front", "Midpoint", "Back"])
+PT_SOURCE_YVALS = zip(WALY, ["Left", "Center", "Right"]_
+PT_SOURCE_ZVALS = zip(WALZ, ["Top", "Middle", "Bottom"])
 
 
-CORNER_QUARTETS = [(2.54*np.array([800.0, 729.5, 725.5], dtype=np.float64),
-                    2.54*np.array([800.0, 729.5, -600.0], dtype=np.float64),
-                    2.54*np.array([800.0, -586.5, 725.5], dtype=np.float64),
-                    2.54*np.array([-528.0, 729.5, 725.5], dtype=np.float64)),
-                   (2.54*np.array([800.0, -586.5, -600.0], dtype=np.float64),
-                    2.54*np.array([800.0, -586.5, 725.5], dtype=np.float64),
-                    2.54*np.array([800.0, 729.5, -600.0], dtype=np.float64),
-                    2.54*np.array([-528.0, -586.5, -600.0], dtype=np.float64)),
-                   (2.54*np.array([-528.0, 729.5, -600.0], dtype=np.float64),
-                    2.54*np.array([-528.0, 729.5, 725.5], dtype=np.float64),
-                    2.54*np.array([-528.0, -586.5, -600.0], dtype=np.float64),
-                    2.54*np.array([800.0, 729.5, -600.0], dtype=np.float64)),
-                   (2.54*np.array([-528.0, -586.5, 725.5], dtype=np.float64),
-                    2.54*np.array([-528.0, -586.5, -600.0], dtype=np.float64),
-                    2.54*np.array([-528.0, 729.5, 725.5], dtype=np.float64),
-                    2.54*np.array([800.0, -586.5, 725.5], dtype=np.float64))]
+CORNER_QUARTETS = [(np.array([WALX[0], WALY[0], WALZ[0]], dtype=np.float64),
+                    np.array([WALX[0], WALY[0], WALZ[2]], dtype=np.float64),
+                    np.array([WALX[0], WALY[2], WALZ[0]], dtype=np.float64),
+                    np.array([WALX[2], WALY[0], WALZ[0]], dtype=np.float64)),
+                   (np.array([WALX[0], WALY[2], WALZ[2]], dtype=np.float64),
+                    np.array([WALX[0], WALY[2], WALZ[0]], dtype=np.float64),
+                    np.array([WALX[0], WALY[0], WALZ[2]], dtype=np.float64),
+                    np.array([WALX[2], WALY[2], WALZ[2]], dtype=np.float64)),
+                   (np.array([WALX[2], WALY[0], WALZ[2]], dtype=np.float64),
+                    np.array([WALX[2], WALY[0], WALZ[0]], dtype=np.float64),
+                    np.array([WALX[2], WALY[2], WALZ[2]], dtype=np.float64),
+                    np.array([WALX[0], WALY[0], WALZ[2]], dtype=np.float64)),
+                   (np.array([WALX[2], WALY[2], WALZ[0]], dtype=np.float64),
+                    np.array([WALX[2], WALY[2], WALZ[2]], dtype=np.float64),
+                    np.array([WALX[2], WALY[0], WALZ[0]], dtype=np.float64),
+                    np.array([WALX[0], WALY[2], WALZ[0]], dtype=np.float64))]
 
 QUARTET_NAMES = [("Front_Left", "Front_Top", "Left_Top"),
                  ("Front_Right", "Front_Bottom", "Right_Bottom"),
                  ("Back_Left", "Back_Bottom", "Left_Bottom"),
                  ("Back_Right", "Back_Top", "Right_Top")]
-
-SPHERE_THETA_PATCHES = [(0.177711, 0.177711), (0.430391, 0.0749697),
-                        (0.563864, 0.058504), (0.672551, 0.0501829),
-                        (0.767745, 0.0450107), (0.85421, 0.0414546),
-                        (0.934527, 0.0388626), (1.01029, 0.0369038),
-                        (1.08259, 0.0353911), (1.15219, 0.0342099),
-                        (1.21969, 0.0332865), (1.28554, 0.0325717),
-                        (1.35015, 0.0320319), (1.41382, 0.0316443),
-                        (1.47686, 0.0313935), (1.53953, 0.0312704),
-                        (1.60207, 0.0312704), (1.66473, 0.0313935),
-                        (1.72777, 0.0316443), (1.79144, 0.0320319),
-                        (1.85605, 0.0325717), (1.92191, 0.0332865),
-                        (1.9894, 0.0342099), (2.059, 0.0353911),
-                        (2.1313, 0.0369038), (2.20707, 0.0388626),
-                        (2.28738, 0.0414546), (2.37385, 0.0450107),
-                        (2.46904, 0.0501829), (2.57773, 0.058504),
-                        (2.7112, 0.0749697), (2.96388, 0.177711)]
 
 def set_up_all_sources():
     """This function is what is used to generate the list of sources that the
@@ -93,6 +85,221 @@ def set_up_all_sources():
     # src_list.extend(make_vertical_cylinders())
     # src_list.extend(make_beamlines())
     return src_list
+
+
+def make_cube_wall_sources():
+    """This function generates the sources that represent segments "walls"
+    around the AD1 and position scan area
+
+    Returns
+    -------
+    wall_list : list
+        list of square surface objects located at "Effective" walls
+    """
+    wall_list = []
+    wall_list.extend(make_sectioned_cube_wall_sources())
+    # wall_list.extend(make_whole_cube_wall_sources())
+    # wall_list.extend(make_quarter_cube_wall_sources())
+    # wall_list.extend(make_ninthed_cube_wall_sources())
+    # wall_list.extend(make_sixteenthed_cube_wall_sources())
+    return wall_list
+
+def make_sectioned_cube_wall_sources():
+    """This function generates the sectioned wall sources where each dimension
+    has the sectioning specified in WALL_DIVS
+
+    Returns
+    -------
+    wall_list : list
+        list of square surface objects located at "Effective" walls
+    """
+    wall_list = []
+    # creating a rotation matrix without adding rotations makes it just the
+    # identity matrix
+    no_rotate = gb.Rotation()
+    offset = float(WALL_DIVS-1)/float(WALL_DIVS)
+    # loop through each of the walls
+    for name, cent, edge1, edge2 in WALL_DATA:
+        div_edge1 = edge1/float(WALL_DIVS)
+        div_edge2 = edge2/float(WALL_DIVS)
+        area = np.linalg.norm(div_edge1) * np.linalg.norm(div_edge2)
+        # now that we have the wall data loop across the sub divisions,
+        # printing the inches locations of the wall segments as we go
+        for ind1 in range(WALL_DIVS):
+            axis1_shift = (offset - (float(ind1)*2.0/float(WALL_DIVS)))
+            for ind2 in range(WALL_DIVS):
+                axis2_shift(offset - (float(ind2)*2.0/float(WALL_DIVS)))
+                patch_name = name + "_{0:d}_{1:d}".format(ind1, ind2)
+                patch_center = cent + axis1_shift*edge1 + axis2_shift*edge2
+                print "Making patch centered at:", patch_center
+                print "    It is named: ", patch_name, "It has area:", area
+                wall_list.append(fs.Square(patch_name, patch_center, div_edge1,
+                                           div_edge2))
+
+
+def make_sixteenthed_cube_wall_sources():
+    """This function generates the sixteenthed sources that represent "walls"
+    around the AD1 and position scan area
+
+    Returns
+    -------
+    wall_list : list
+        list of square surface objects located at "Effective" walls
+    """
+    wall_list = []
+    # creating a rotation matrix without adding rotations makes it just the
+    # identity matrix
+    no_rotate = gb.Rotation()
+    for name, cent, edge1, edge2 in WALL_DATA:
+        wall_list.append(fs.Square(name+"_16_0", cent+3.0*edge1/4.0+3.0*edge2/4.0,
+                                   (edge1/4.0, edge2/4.0), no_rotate))
+        wall_list.append(fs.Square(name+"_16_1", cent+3.0*edge1/4.0+edge2/4.0,
+                                   (edge1/4.0, edge2/4.0), no_rotate))
+        wall_list.append(fs.Square(name+"_16_2", cent+3.0*edge1/4.0-edge2/4.0,
+                                   (edge1/4.0, edge2/4.0), no_rotate))
+        wall_list.append(fs.Square(name+"_16_3", cent+3.0*edge1/4.0-3.0*edge2/4.0,
+                                   (edge1/4.0, edge2/4.0), no_rotate))
+        wall_list.append(fs.Square(name+"_16_4", cent+edge1/4.0+3.0*edge2/4.0,
+                                   (edge1/4.0, edge2/4.0), no_rotate))
+        wall_list.append(fs.Square(name+"_16_5", cent+edge1/4.0+edge2/4.0,
+                                   (edge1/4.0, edge2/4.0), no_rotate))
+        wall_list.append(fs.Square(name+"_16_6", cent+edge1/4.0-edge2/4.0,
+                                   (edge1/4.0, edge2/4.0), no_rotate))
+        wall_list.append(fs.Square(name+"_16_7", cent+edge1/4.0-3.0*edge2/4.0,
+                                   (edge1/4.0, edge2/4.0), no_rotate))
+        wall_list.append(fs.Square(name+"_16_8", cent-edge1/4.0+3.0*edge2/4.0,
+                                   (edge1/4.0, edge2/4.0), no_rotate))
+        wall_list.append(fs.Square(name+"_16_9", cent-edge1/4.0+edge2/4.0,
+                                   (edge1/4.0, edge2/4.0), no_rotate))
+        wall_list.append(fs.Square(name+"_16_10", cent-edge1/4.0-edge2/4.0,
+                                   (edge1/4.0, edge2/4.0), no_rotate))
+        wall_list.append(fs.Square(name+"_16_11", cent-edge1/4.0-3.0*edge2/4.0,
+                                   (edge1/4.0, edge2/4.0), no_rotate))
+        wall_list.append(fs.Square(name+"_16_12", cent-3.0*edge1/4.0+3.0*edge2/4.0,
+                                   (edge1/4.0, edge2/4.0), no_rotate))
+        wall_list.append(fs.Square(name+"_16_13", cent-3.0*edge1/4.0+edge2/4.0,
+                                   (edge1/4.0, edge2/4.0), no_rotate))
+        wall_list.append(fs.Square(name+"_16_14", cent-3.0*edge1/4.0-edge2/4.0,
+                                   (edge1/4.0, edge2/4.0), no_rotate))
+        wall_list.append(fs.Square(name+"_16_15", cent-3.0*edge1/4.0-3.0*edge2/4.0,
+                                   (edge1/4.0, edge2/4.0), no_rotate))
+    return wall_list
+
+
+def make_ninthed_cube_wall_sources():
+    """This function generates the ninthed sources that represent "walls"
+    around the AD1 and position scan area
+
+    Returns
+    -------
+    wall_list : list
+        list of square surface objects located at "Effective" walls
+    """
+    wall_list = []
+    # creating a rotation matrix without adding rotations makes it just the
+    # identity matrix
+    no_rotate = gb.Rotation()
+    for name, cent, edge1, edge2 in WALL_DATA:
+        wall_list.append(fs.Square(name+"_9_0", cent+2.0*edge1/3.0+2.0*edge2/3.0,
+                                   (edge1/3.0, edge2/3.0), no_rotate))
+        wall_list.append(fs.Square(name+"_9_1", cent+2.0*edge1/3.0,
+                                   (edge1/3.0, edge2/3.0), no_rotate))
+        wall_list.append(fs.Square(name+"_9_2", cent+2.0*edge1/3.0-2.0*edge2/3.0,
+                                   (edge1/3.0, edge2/3.0), no_rotate))
+        wall_list.append(fs.Square(name+"_9_3", cent+2.0*edge2/3.0,
+                                   (edge1/3.0, edge2/3.0), no_rotate))
+        wall_list.append(fs.Square(name+"_9_4", cent,
+                                   (edge1/3.0, edge2/3.0), no_rotate))
+        wall_list.append(fs.Square(name+"_9_5", cent-2.0*edge2/3.0,
+                                   (edge1/3.0, edge2/3.0), no_rotate))
+        wall_list.append(fs.Square(name+"_9_6", cent-2.0*edge1/3.0+2.0*edge2/3.0,
+                                   (edge1/3.0, edge2/3.0), no_rotate))
+        wall_list.append(fs.Square(name+"_9_7", cent-2.0*edge1/3.0,
+                                   (edge1/3.0, edge2/3.0), no_rotate))
+        wall_list.append(fs.Square(name+"_9_8", cent-2.0*edge1/3.0-2.0*edge2/3.0,
+                                   (edge1/3.0, edge2/3.0), no_rotate))
+    return wall_list
+
+
+def make_quarter_cube_wall_sources():
+    """This function generates the quarted sources that represent "walls"
+    around the AD1 and position scan area
+
+    Returns
+    -------
+    wall_list : list
+        list of square surface objects located at "Effective" walls
+    """
+    wall_list = []
+    # creating a rotation matrix without adding rotations makes it just the
+    # identity matrix
+    no_rotate = gb.Rotation()
+    for name, cent, edge1, edge2 in WALL_DATA:
+        wall_list.append(fs.Square(name+"_4_0", cent+edge1/2.0+edge2/2.0,
+                                   (edge1/2.0, edge2/2.0), no_rotate))
+        wall_list.append(fs.Square(name+"_4_1", cent+edge1/2.0-edge2/2.0,
+                                   (edge1/2.0, edge2/2.0), no_rotate))
+        wall_list.append(fs.Square(name+"_4_2", cent-edge1/2.0+edge2/2.0,
+                                   (edge1/2.0, edge2/2.0), no_rotate))
+        wall_list.append(fs.Square(name+"_4_3", cent-edge1/2.0-edge2/2.0,
+                                   (edge1/2.0, edge2/2.0), no_rotate))
+    return wall_list
+
+
+def make_whole_cube_wall_sources():
+    """This function generates the sources that represent "walls" around the
+    AD1 and position scan area
+
+    Returns
+    -------
+    wall_list : list
+        list of square surface objects located at "Effective" walls
+    """
+    wall_list = []
+    # creating a rotation matrix without adding rotations makes it just the
+    # identity matrix
+    no_rotate = gb.Rotation()
+    for name, cent, edge1, edge2 in WALL_DATA:
+        wall_list.append(fs.Square(name, cent, (edge1, edge2), no_rotate))
+    return wall_list
+
+
+def make_point_sources():
+    """This function generates the various point sources that we will try using
+
+    Returns
+    -------
+    pt_list : list
+        list of square surface objects located at "Effective" walls
+    """
+    pt_list = []
+    for xv, xn in PT_SOURCE_XVALS:
+        for yv, yn in PT_SOURCE_YVALS:
+            for zv, zn in PT_SOURCE_ZVALS:
+                if zn == "Middle" and yn == "Center" and xn == "Midpoint":
+                    continue
+                else:
+                    name = "{0:s}_{1:s}_{2:s}".format(xn, yn, zn)
+                    center = 2.54*np.array([xv, yv, zv], dtype=np.float64)
+                    pt_list.append(lds.PointSource(name, center))
+    return pt_list
+
+
+def make_cube_edge_sources():
+    """This function generates the sources that represent corners of the walls
+    that surround the AD1 area
+
+    Returns
+    -------
+    line_list : list
+        list of line objects located at edges of the "Effective" walls
+    """
+    line_list = []
+    for i, quartet in enumerate(CORNER_QUARTETS):
+        pt1 = quartet[0]
+        for j, pt2 in enumerate(quartet[1:]):
+            line_list.append(lds.LineSource(QUARTET_NAMES[i][j], pt1, pt2))
+    return line_list
 
 
 def make_beamlines():
@@ -150,189 +357,3 @@ def make_hot_patches():
     center = 2.54*np.array([228.0, 105.0, 11.0], dtype=np.float64)
     patch_list.append(fs.CircleYZ("EF4_Cover", center, 20.0))
     return patch_list
-
-
-def make_cube_wall_sources():
-    """This function generates the sources that represent segments "walls"
-    around the AD1 and position scan area
-
-    Returns
-    -------
-    wall_list : list
-        list of square surface objects located at "Effective" walls
-    """
-    wall_list = []
-    wall_list.extend(make_whole_cube_wall_sources())
-    wall_list.extend(make_quarter_cube_wall_sources())
-    wall_list.extend(make_ninthed_cube_wall_sources())
-    wall_list.extend(make_sixteenthed_cube_wall_sources())
-    return wall_list
-
-
-def make_sixteenthed_cube_wall_sources():
-    """This function generates the sixteenthed sources that represent "walls"
-    around the AD1 and position scan area
-
-    Returns
-    -------
-    wall_list : list
-        list of square surface objects located at "Effective" walls
-    """
-    wall_list = []
-    # creating a rotation matrix without adding rotations makes it just the
-    # identity matrix
-    no_rotate = gb.Rotation()
-    for name, cent, edge1, edge2 in zip(WALL_NAMES, WALL_CENTERS, WALL_EDGES1,
-                                        WALL_EDGES2):
-        wall_list.append(fs.Square(name+"_16_0", cent+3.0*edge1/4.0+3.0*edge2/4.0,
-                                   (edge1/4.0, edge2/4.0), no_rotate))
-        wall_list.append(fs.Square(name+"_16_1", cent+3.0*edge1/4.0+edge2/4.0,
-                                   (edge1/4.0, edge2/4.0), no_rotate))
-        wall_list.append(fs.Square(name+"_16_2", cent+3.0*edge1/4.0-edge2/4.0,
-                                   (edge1/4.0, edge2/4.0), no_rotate))
-        wall_list.append(fs.Square(name+"_16_3", cent+3.0*edge1/4.0-3.0*edge2/4.0,
-                                   (edge1/4.0, edge2/4.0), no_rotate))
-        wall_list.append(fs.Square(name+"_16_4", cent+edge1/4.0+3.0*edge2/4.0,
-                                   (edge1/4.0, edge2/4.0), no_rotate))
-        wall_list.append(fs.Square(name+"_16_5", cent+edge1/4.0+edge2/4.0,
-                                   (edge1/4.0, edge2/4.0), no_rotate))
-        wall_list.append(fs.Square(name+"_16_6", cent+edge1/4.0-edge2/4.0,
-                                   (edge1/4.0, edge2/4.0), no_rotate))
-        wall_list.append(fs.Square(name+"_16_7", cent+edge1/4.0-3.0*edge2/4.0,
-                                   (edge1/4.0, edge2/4.0), no_rotate))
-        wall_list.append(fs.Square(name+"_16_8", cent-edge1/4.0+3.0*edge2/4.0,
-                                   (edge1/4.0, edge2/4.0), no_rotate))
-        wall_list.append(fs.Square(name+"_16_9", cent-edge1/4.0+edge2/4.0,
-                                   (edge1/4.0, edge2/4.0), no_rotate))
-        wall_list.append(fs.Square(name+"_16_10", cent-edge1/4.0-edge2/4.0,
-                                   (edge1/4.0, edge2/4.0), no_rotate))
-        wall_list.append(fs.Square(name+"_16_11", cent-edge1/4.0-3.0*edge2/4.0,
-                                   (edge1/4.0, edge2/4.0), no_rotate))
-        wall_list.append(fs.Square(name+"_16_12", cent-3.0*edge1/4.0+3.0*edge2/4.0,
-                                   (edge1/4.0, edge2/4.0), no_rotate))
-        wall_list.append(fs.Square(name+"_16_13", cent-3.0*edge1/4.0+edge2/4.0,
-                                   (edge1/4.0, edge2/4.0), no_rotate))
-        wall_list.append(fs.Square(name+"_16_14", cent-3.0*edge1/4.0-edge2/4.0,
-                                   (edge1/4.0, edge2/4.0), no_rotate))
-        wall_list.append(fs.Square(name+"_16_15", cent-3.0*edge1/4.0-3.0*edge2/4.0,
-                                   (edge1/4.0, edge2/4.0), no_rotate))
-    return wall_list
-
-
-def make_ninthed_cube_wall_sources():
-    """This function generates the ninthed sources that represent "walls"
-    around the AD1 and position scan area
-
-    Returns
-    -------
-    wall_list : list
-        list of square surface objects located at "Effective" walls
-    """
-    wall_list = []
-    # creating a rotation matrix without adding rotations makes it just the
-    # identity matrix
-    no_rotate = gb.Rotation()
-    for name, cent, edge1, edge2 in zip(WALL_NAMES, WALL_CENTERS, WALL_EDGES1,
-                                        WALL_EDGES2):
-        wall_list.append(fs.Square(name+"_9_0", cent+2.0*edge1/3.0+2.0*edge2/3.0,
-                                   (edge1/3.0, edge2/3.0), no_rotate))
-        wall_list.append(fs.Square(name+"_9_1", cent+2.0*edge1/3.0,
-                                   (edge1/3.0, edge2/3.0), no_rotate))
-        wall_list.append(fs.Square(name+"_9_2", cent+2.0*edge1/3.0-2.0*edge2/3.0,
-                                   (edge1/3.0, edge2/3.0), no_rotate))
-        wall_list.append(fs.Square(name+"_9_3", cent+2.0*edge2/3.0,
-                                   (edge1/3.0, edge2/3.0), no_rotate))
-        wall_list.append(fs.Square(name+"_9_4", cent,
-                                   (edge1/3.0, edge2/3.0), no_rotate))
-        wall_list.append(fs.Square(name+"_9_5", cent-2.0*edge2/3.0,
-                                   (edge1/3.0, edge2/3.0), no_rotate))
-        wall_list.append(fs.Square(name+"_9_6", cent-2.0*edge1/3.0+2.0*edge2/3.0,
-                                   (edge1/3.0, edge2/3.0), no_rotate))
-        wall_list.append(fs.Square(name+"_9_7", cent-2.0*edge1/3.0,
-                                   (edge1/3.0, edge2/3.0), no_rotate))
-        wall_list.append(fs.Square(name+"_9_8", cent-2.0*edge1/3.0-2.0*edge2/3.0,
-                                   (edge1/3.0, edge2/3.0), no_rotate))
-    return wall_list
-
-
-def make_quarter_cube_wall_sources():
-    """This function generates the quarted sources that represent "walls"
-    around the AD1 and position scan area
-
-    Returns
-    -------
-    wall_list : list
-        list of square surface objects located at "Effective" walls
-    """
-    wall_list = []
-    # creating a rotation matrix without adding rotations makes it just the
-    # identity matrix
-    no_rotate = gb.Rotation()
-    for name, cent, edge1, edge2 in zip(WALL_NAMES, WALL_CENTERS, WALL_EDGES1,
-                                        WALL_EDGES2):
-        wall_list.append(fs.Square(name+"_4_0", cent+edge1/2.0+edge2/2.0,
-                                   (edge1/2.0, edge2/2.0), no_rotate))
-        wall_list.append(fs.Square(name+"_4_1", cent+edge1/2.0-edge2/2.0,
-                                   (edge1/2.0, edge2/2.0), no_rotate))
-        wall_list.append(fs.Square(name+"_4_2", cent-edge1/2.0+edge2/2.0,
-                                   (edge1/2.0, edge2/2.0), no_rotate))
-        wall_list.append(fs.Square(name+"_4_3", cent-edge1/2.0-edge2/2.0,
-                                   (edge1/2.0, edge2/2.0), no_rotate))
-    return wall_list
-
-
-def make_whole_cube_wall_sources():
-    """This function generates the sources that represent "walls" around the
-    AD1 and position scan area
-
-    Returns
-    -------
-    wall_list : list
-        list of square surface objects located at "Effective" walls
-    """
-    wall_list = []
-    # creating a rotation matrix without adding rotations makes it just the
-    # identity matrix
-    no_rotate = gb.Rotation()
-    for name, cent, edge1, edge2 in zip(WALL_NAMES, WALL_CENTERS, WALL_EDGES1,
-                                        WALL_EDGES2):
-        wall_list.append(fs.Square(name, cent, (edge1, edge2), no_rotate))
-    return wall_list
-
-
-def make_point_sources():
-    """This function generates the various point sources that we will try using
-
-    Returns
-    -------
-    pt_list : list
-        list of square surface objects located at "Effective" walls
-    """
-    pt_list = []
-    for xv, xn in PT_SOURCE_XVALS:
-        for yv, yn in PT_SOURCE_YVALS:
-            for zv, zn in PT_SOURCE_ZVALS:
-                if zn == "Middle" and yn == "Center" and xn == "Midpoint":
-                    continue
-                else:
-                    name = "{0:s}_{1:s}_{2:s}".format(xn, yn, zn)
-                    center = 2.54*np.array([xv, yv, zv], dtype=np.float64)
-                    pt_list.append(lds.PointSource(name, center))
-    return pt_list
-
-
-def make_cube_edge_sources():
-    """This function generates the sources that represent corners of the walls
-    that surround the AD1 area
-
-    Returns
-    -------
-    line_list : list
-        list of line objects located at edges of the "Effective" walls
-    """
-    line_list = []
-    for i, quartet in enumerate(CORNER_QUARTETS):
-        pt1 = quartet[0]
-        for j, pt2 in enumerate(quartet[1:]):
-            line_list.append(lds.LineSource(QUARTET_NAMES[i][j], pt1, pt2))
-    return line_list
