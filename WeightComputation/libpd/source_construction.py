@@ -41,7 +41,7 @@ WALL_DATA = zip(WALL_NAMES, WALL_CENTERS, WALL_EDGES1, WALL_EDGES2)
 WALL_DIVS = 32
 
 PT_SOURCE_XVALS = zip(WALX, ["Front", "Midpoint", "Back"])
-PT_SOURCE_YVALS = zip(WALY, ["Left", "Center", "Right"]_
+PT_SOURCE_YVALS = zip(WALY, ["Left", "Center", "Right"])
 PT_SOURCE_ZVALS = zip(WALZ, ["Top", "Middle", "Bottom"])
 
 
@@ -125,16 +125,18 @@ def make_sectioned_cube_wall_sources():
         area = np.linalg.norm(div_edge1) * np.linalg.norm(div_edge2)
         # now that we have the wall data loop across the sub divisions,
         # printing the inches locations of the wall segments as we go
+        print "Making wall patches for:", name
         for ind1 in range(WALL_DIVS):
             axis1_shift = (offset - (float(ind1)*2.0/float(WALL_DIVS)))
             for ind2 in range(WALL_DIVS):
-                axis2_shift(offset - (float(ind2)*2.0/float(WALL_DIVS)))
+                axis2_shift = (offset - (float(ind2)*2.0/float(WALL_DIVS)))
                 patch_name = name + "_{0:d}_{1:d}".format(ind1, ind2)
                 patch_center = cent + axis1_shift*edge1 + axis2_shift*edge2
-                print "Making patch centered at:", patch_center
-                print "    It is named: ", patch_name, "It has area:", area
-                wall_list.append(fs.Square(patch_name, patch_center, div_edge1,
-                                           div_edge2))
+                # print "Making patch ", patch_name, "with area", area, "cm^2"
+                # print "    It is centered at:", patch_center
+                wall_list.append(fs.Square(patch_name, patch_center, 
+                                           (div_edge1, div_edge2), no_rotate))
+    return wall_list
 
 
 def make_sixteenthed_cube_wall_sources():
