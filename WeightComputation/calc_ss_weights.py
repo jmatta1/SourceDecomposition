@@ -22,6 +22,7 @@ def main(patch_info_path, core_count, out_name):
     """
     detectors = dt.read_patches(patch_info_path)
     sources = sc.set_up_all_sources()
+    print "There are {0:d} sources in this run".format(len(sources))
     weights = wc.calculate_weights(detectors, sources, core_count)
     out_file = open(out_name, 'w')
     fmt_str = "{0:d}, {1:d}, {2:s}, {3:10.8e}\n"
