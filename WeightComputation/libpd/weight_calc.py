@@ -40,10 +40,21 @@ def calculate_weights(detectors, sources, num_cores):
         The "Response Matrix" each sub list is the weights for a given source
         at every detector position
     """
+    # first generate the list of detecting surface and source pairs
+    # (because for each NaI detector there are 6 surfaces, whereas for each
+    # AD1 'detector' there is only one surface)
+    input_list = []
+    for det in detectors:
+        rdat = det.get_run_data()
+        print "Making det surface - source pairs for:", rdat
+        for i, det_surf in enumerate(det.get_detecting_surfaces()):
+            temp = [((rdat[0], rdat[1], i, src.name), det_surf, src)
+                    for src in sources]
+            input_list.extend(temp)
     if num_cores == 1:
-        return calculate_weights_single(detectors, sources)
+        return calculate_weights_single(input_list)
     else:
-        return calculate_weights_multi(detectors, sources, num_cores)
+        return calculate_weights_multi(input_list, num_cores)
 
 
 def calculate_weights_single(detectors, sources):
@@ -53,10 +64,8 @@ def calculate_weights_single(detectors, sources):
 
     Parameters
     ----------
-    detectors : list of libpd.detector.Detector classes
-        List of detectors for weights to be calculated at
-    sources : list of source classes derived from libpd.Shape
-        List of sources for weights at each detector to be calculated for
+    input_list : list of tuples
+        The list of detecting surface source pairs and their associated data
 
     Returns
     -------
@@ -64,17 +73,6 @@ def calculate_weights_single(detectors, sources):
         The "Response Matrix" each sub list is the weights for a given source
         at every detector position
     """
-    # first generate the list of detecting surface and source pairs
-    # (because for each NaI detector there are 6 surfaces, whereas for each
-    # AD1 'detector' there is only one surface)
-    input_list = []
-    for det in detectors:
-        rdat = det.get_run_data()
-        for src in sources:
-            for i, det_surf in enumerate(det.get_detecting_surfaces()):
-                sdat = (rdat[0], rdat[1], i, src.name)
-                input_list.append((sdat, cp.deepcopy(det_surf),
-                                   cp.deepcopy(src)))
     print "Commencing Single Threaded Integration!"
     print "There are", len(input_list), "integrals to calculate"
     print HEADINGS
@@ -84,17 +82,15 @@ def calculate_weights_single(detectors, sources):
     return sort_and_sum(weight_list)
 
 
-def calculate_weights_multi(detectors, sources, num_cores):
+def calculate_weights_multi(input_list, num_cores):
     """This function calculates the weights for each source and detector
     surface pair in the detectors and sources arrays passed to it in a single
     threaded fashion, using the standard map function for easy debugging
 
     Parameters
     ----------
-    detectors : list of libpd.detector.Detector classes
-        List of detectors for weights to be calculated at
-    sources : list of source classes derived from libpd.Shape
-        List of sources for weights at each detector to be calculated for
+    input_list : list of tuples
+        The list of detecting surface source pairs and their associated data
     num_cores : int
         Number of cores to spread the computation across
 
@@ -104,17 +100,6 @@ def calculate_weights_multi(detectors, sources, num_cores):
         The "Response Matrix" each sub list is the weights for a given source
         at every detector position
     """
-    # first generate the list of detecting surface and source pairs
-    # (because for each NaI detector there are 6 surfaces, whereas for each
-    # AD1 'detector' there is only one surface)
-    input_list = []
-    for det in detectors:
-        rdat = det.get_run_data()
-        for src in sources:
-            for i, det_surf in enumerate(det.get_detecting_surfaces()):
-                sdat = (rdat[0], rdat[1], i, src.name)
-                input_list.append((sdat, cp.deepcopy(det_surf),
-                                   cp.deepcopy(src)))
     # now calculate the weight at every position using multiple cores
     # first restrict the number of cores to whatever is available
     if num_cores > multiprocessing.cpu_count():
