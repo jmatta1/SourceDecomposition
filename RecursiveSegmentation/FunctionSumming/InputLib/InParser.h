@@ -28,6 +28,7 @@ public:
         using qi::lexeme;
         using qi::int_;
         using Utility::eol_;
+        using Utility::boolSymbols_;
         using qi::fail;
         using qi::on_error;
         using Utility::separator;
@@ -36,11 +37,11 @@ public:
         inputFileName  = (lexeme["InputFileName"]    >> '='          > quotedString [phoenix::bind(&InData::setInputFileName,   ptr, qi::_1)] > separator);
         outputFileName = (lexeme["RespFuncFileName"] >> '='          > quotedString [phoenix::bind(&InData::setOutputFileName,  ptr, qi::_1)] > separator);
         sumFuncName    = (lexeme["FunctionSumName"]  >> '='          > quotedString [phoenix::bind(&InData::setSumFunctionName, ptr, qi::_1)] > separator);
-        funcList       = (lexeme["FunctionList"]     >> lexeme["+="] > quotedString [phoenix::bind(&InData::addFunction,        ptr, qi::_1)] > separator);
+        funcListAdd    = (lexeme["FunctionList"]     >> lexeme["+="] > quotedString [phoenix::bind(&InData::addFunction,        ptr, qi::_1)] > separator);
+        funcList = (+funcListAdd);
         // define the start rule which holds the whole monstrosity and set the rule to skip blanks
         // if we skipped spaces we could not parse newlines as separators
         startRule = skip(blank) [configDataRule];
-        funcList = (+funcListAdd);
         configDataRule = *eol_ > lexeme["[StartConfig]"] > *eol_
             > (
                 resetFile ^ inputFileName ^ outputFileName ^
@@ -65,7 +66,7 @@ private:
     
     // parameters
     qi::rule<Iterator, qi::blank_type> resetFile, inputFileName, outputFileName;
-    qi::rule<Iterator, qi::blank_type> sumFuncName, funcList;
+    qi::rule<Iterator, qi::blank_type> sumFuncName, funcListAdd, funcList;
     
     // hold the pointer that we are going to bind to
     InData* ptr;

@@ -10,7 +10,7 @@ int main(int argc, char* argv[])
     if(argc != 2)
     {
         std::cout << "Usage: \n    ";
-        std::cout << argv[0] << "<Input File Name>" << std::endl;
+        std::cout << argv[0] << " <Input File Name>" << std::endl;
         return 1;
     }
     //read the input from the file given on the command line
