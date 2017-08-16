@@ -2,6 +2,8 @@ CMAKE_MINIMUM_REQUIRED(VERSION 2.8)
 
 project(PositionDecomposer)
 
+# force the existence of the BOOST library package
+find_package(Boost COMPONENTS system thread REQUIRED)
 list(APPEND CMAKE_PREFIX_PATH $ENV{ROOTSYS})
 find_package(ROOT COMPONENTS Core RIO Hist Tree REQUIRED)
 
@@ -14,7 +16,7 @@ include(./CMakeFlagDefs.txt)
 include_directories(".")
 
 # flags that *always* apply to the executable
-add_definitions(-m64 -std=c++11)
+add_definitions(-m64 -std=c++11 -D_FILE_OFFSET_BITS=64 -lpthread)
 
 # check for each supported build type and add the appropriate g++ flags
 if(BUILD_TYPE STREQUAL "Release")
@@ -40,4 +42,5 @@ file(GLOB_RECURSE HDRS *.h)
 
 # Set the executable and what it depends on
 add_executable(PositionDecomposer ${SRCS} ${HDRS})
+target_link_libraries(PositionDecomposer ${Boost_LIBRARIES})
 target_link_libraries(PositionDecomposer ${ROOT_LIBRARIES})
