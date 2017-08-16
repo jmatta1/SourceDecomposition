@@ -1,4 +1,5 @@
 [StartConfig]
+NumThreads = 4
 NumPositions = 105
 NumEnergyBins = 1400
 ScanDataFileName = "./decomp.root"
