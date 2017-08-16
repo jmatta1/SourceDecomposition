@@ -6,7 +6,7 @@ WeightComputation/libpd/build
 *.root
 PositionDecomposer
 images
-calcs
+WeightComputation/calcs
 PatchSpectrumCalc/build
 PerformDecomp/build
 PatchworkHistBuilder
