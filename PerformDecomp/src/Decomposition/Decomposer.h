@@ -4,7 +4,7 @@
 #include"RootInterface/ResponseMatrixBuilder.h"
 
 #include<atomic>
-#include<boost/lockfree/stack.hpp>
+#include<boost/lockfree/queue.hpp>
 
 class Decomposer
 {
@@ -39,7 +39,7 @@ private:
     int numEnergyBins;
     
     //stack used to provide data points to decomp thread
-    boost::lockfree::stack<int> dataStack;
+    boost::lockfree::queue<int, boost::lockfree::capacity<1600> > dataQueue;
     std::atomic_ullong iterationCount;
 };
 

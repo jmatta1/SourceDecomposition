@@ -47,11 +47,11 @@ Decomposer::Decomposer(const ResMatData& respDat, const ScanData& scanDat, int n
 
 void Decomposer::performDecomp()
 {
-    // fill the stack with the data we need to manage the threads
-    // do this in inverse order so that the processiong goes in forward order
-    for(int i=(numEnergyBins-1); i>-1;)
+    // fill the queue with the data we need to manage the threads
+    std::cout<<"Pushing queue information for threads" << std::endl;
+    for(int i=0; i<numEnergyBins; ++i)
     {
-        dataStack.push(i);
+        dataQueue.push(i);
     }
     std::cout<<"Creating threads for decomposition"<<std::endl;
     //make the array of callable objects for threads
@@ -81,7 +81,7 @@ void Decomposer::performDecomp()
 bool Decomposer::decompSingleBin(int threadNum)
 {
     int index = 0;
-    bool gotData = dataStack.pop(index);
+    bool gotData = dataQueue.pop(index);
     if(!gotData)
     {
         return false;

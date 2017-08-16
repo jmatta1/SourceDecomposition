@@ -31,8 +31,8 @@ int main(int argc, char* argv[])
     ResponseMatrixBuilder respMat(inputData.functionList,
                                   inputData.respFuncFileName,
                                   inputData.numPositions);
-    std::cout << "Performaing decomposition" << std::endl;
     Decomposer calc(respMat.getMatrixInfo(), scanData.getScanData(), inputData.numThreads);
+    std::cout << "Performing decomposition" << std::endl;
     calc.performDecomp();
     //dump the data out to the specified root file
     std::cout << "Dumping results to: " << inputData.outputFileName << std::endl;
