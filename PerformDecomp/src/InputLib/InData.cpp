@@ -46,7 +46,7 @@ bool InData::validate()
 {
     return (setNumPositions_&& setNumEnergyBins_ && setDirectoryName_ &&
             setOutputFileName_ && setRespFuncFileName_ && setScanDataFileName_ &&
-            (functionList.size() > 0) && (functionList.size() <= numPositions));
+            (functionList.size() > 0));
 }
 
 void InData::printValidationErrors()
@@ -79,10 +79,6 @@ void InData::printValidationErrors()
     if(functionList.size() < 2)
     {
         std::cout << "    There must be at least 2 response functions used" << std::endl;
-    }
-    if(functionList.size() > numPositions)
-    {
-        std::cout << "    The number of sources must be less than or equal to the nummber of scan positions" << std::endl;
     }
     std::cout << "End Position Decomposer Input Validation" << std::endl;
 }

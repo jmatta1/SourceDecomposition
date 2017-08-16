@@ -4,7 +4,7 @@
 
 namespace Internal
 {
-static const int DisplayChunk = 50;
+static const int DisplayChunk = 1;
 
 static const double ValueThreshold = 1.0e-10;
 
