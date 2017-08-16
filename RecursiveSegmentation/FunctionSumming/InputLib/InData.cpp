@@ -1,25 +1,25 @@
 #include"InData.h"
 #include<iostream>
 
-void setResetFile(bool input)
+void InData::setResetFile(bool input)
 {
     this->resetFile = input;
     this->setResetFile_ = true;
 }
 
-void setInputFileName(const std::string& input)
+void InData::setInputFileName(const std::string& input)
 {
     this->inputFileName = input;
     this->setInputFileName_ = true;
 }
 
-void setOutputFileName(const std::string& input)
+void InData::setOutputFileName(const std::string& input)
 {
     this->outputFileName = input;
     this->setOutputFileName_ = true;
 }
 
-void setSumFunctionName(const std::string& input)
+void InData::setSumFunctionName(const std::string& input)
 {
     this->sumFunctionName = input;
     this->setSumFunctionName_ = true;

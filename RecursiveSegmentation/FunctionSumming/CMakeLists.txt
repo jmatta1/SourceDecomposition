@@ -39,5 +39,5 @@ file(GLOB_RECURSE SRCS *.cpp)
 file(GLOB_RECURSE HDRS *.h)
 
 # Set the executable and what it depends on
-add_executable(FunctionSumming ${SRCS} ${HDRS})
-target_link_libraries(FunctionSumming ${ROOT_LIBRARIES})
+add_executable(funcSummer ${SRCS} ${HDRS})
+target_link_libraries(funcSummer ${ROOT_LIBRARIES})
