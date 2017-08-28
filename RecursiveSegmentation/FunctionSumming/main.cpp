@@ -34,7 +34,7 @@ int main(int argc, char* argv[])
     {
         outFile = new TFile(inputData.outputFileName.c_str(), "UPDATE");
     }
-    //now open the first resposne function to clone it
+    //now open the first response function to clone it
     TH1D* temp = (TH1D*)inFile->Get(inputData.functionList[0].c_str());
     outFile->cd();
     TH1D* sumHist = (TH1D*)temp->Clone();
