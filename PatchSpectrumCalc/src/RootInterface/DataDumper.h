@@ -8,7 +8,8 @@
 class DataDumper
 {
 public:
-    DataDumper(const std::string& fileName, const ResMatDump& resData, const FullResultData& srcDat);
+    DataDumper(const std::string& fileName, const std::string& dirName,
+               const ResMatDump& resData, const FullResultData& srcDat);
     ~DataDumper();
     
     void writeOutput();
@@ -22,6 +23,7 @@ private:
     
     //data that we own and should delete
     TFile* outFile = nullptr;
+    TDirectory* baseDir = nullptr;
     int numSources = 0;
     int numPanels = 0;
     int numEnergyBins = 0;

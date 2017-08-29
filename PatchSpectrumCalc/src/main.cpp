@@ -30,7 +30,9 @@ int main(int argc, char* argv[])
     ResponseMatrixBuilder respMat(inputData.functionList,
                                   inputData.respFuncFileName,
                                   inputData.numPanels);
-    DataDumper dumper(inputData.outputFileName, respMat.getMatrixDump(), decompData.getFullSrcData());
+    std::cout << "Dumping output" << std::endl;
+    DataDumper dumper(inputData.outputFileName, inputData.outDirName,
+                      respMat.getMatrixDump(), decompData.getFullSrcData());
     dumper.writeOutput();
     std::cout << "Done!" << std::endl;
     return 0;

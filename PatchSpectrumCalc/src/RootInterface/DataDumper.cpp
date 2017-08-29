@@ -4,8 +4,8 @@
 #include<TH1.h>
 #include<TH2.h>
 
-DataDumper::DataDumper(const std::string& fileName, const ResMatDump& resData,
-                       const FullResultData& srcDat)
+DataDumper::DataDumper(const std::string& fileName, const std::string& dirName,
+                       const ResMatDump& resData, const FullResultData& srcDat)
 {
     //grab the pointers into arrays and the like
     std::tie(respMat, respMatTr, numPanels, numSources) = resData;
@@ -14,16 +14,21 @@ DataDumper::DataDumper(const std::string& fileName, const ResMatDump& resData,
     //now open the TFile for writing
     outFile = new TFile(fileName.c_str(), "UPDATE");
     outFile->cd();
+    //now create the base directory
+    baseDir = outFile->mkdir(dirName.c_str());
+    baseDir->cd();
 }
 
 DataDumper::~DataDumper()
 {
     outFile->Flush();
+    delete baseDir;
     delete outFile;
 }
 
 void DataDumper::writeOutput()
 {
+    baseDir->cd();
     TH2D* bigHist = new TH2D("allPanels", "All Panels Histogram", numEnergyBins,
                              minEnEdge, maxEnEdge, numPanels, -0.5, static_cast<double>(numPanels)-0.5);
     //for each panel, calculate the input spectrum and save it
@@ -33,6 +38,7 @@ void DataDumper::writeOutput()
         namer << "Panel_" << i;
         std::ostringstream titler;
         titler << "Spectrum Incident on Panel " << i;
+        baseDir->cd();
         TH1D* hist = new TH1D(namer.str().c_str(), titler.str().c_str(),
                               numEnergyBins, minEnEdge, maxEnEdge);
         for(int j=0; j<numEnergyBins; ++j)
@@ -52,6 +58,8 @@ void DataDumper::writeOutput()
         delete hist;
     }
     bigHist->Write();
+    delete bigHist;
+    outFile->Write();
     outFile->Flush();
 }
 
