@@ -27,9 +27,9 @@ public:
         using qi::blank;
         using qi::lexeme;
         using qi::int_;
-        using Utility::eol_;
-        using qi::fail;
         using qi::on_error;
+        using qi::fail;
+        using Utility::eol_;
         using Utility::separator;
         //define the rules to parse the parameters
         numPan      = (lexeme["NumPanels"]          >> '='          > int_         [phoenix::bind(&InData::setNumPanels,     ptr, qi::_1)] > separator);
@@ -38,6 +38,7 @@ public:
         respFile    = (lexeme["RespFuncFileName"]   >> '='          > quotedString [phoenix::bind(&InData::setRespFile,      ptr, qi::_1)] > separator);
         outFile     = (lexeme["OutputFileName"]     >> '='          > quotedString [phoenix::bind(&InData::setOutputFile,    ptr, qi::_1)] > separator);
         dirName     = (lexeme["DirectoryName"]      >> '='          > quotedString [phoenix::bind(&InData::setDirectoryName, ptr, qi::_1)] > separator);
+        outDirName  = (lexeme["OutDirectoryName"]   >> '='          > quotedString [phoenix::bind(&InData::setOutDirName,    ptr, qi::_1)] > separator);
         funcListAdd = (lexeme["FunctionList"]       >> lexeme["+="] > quotedString [phoenix::bind(&InData::addFunction,      ptr, qi::_1)] > separator);
         // define the start rule which holds the whole monstrosity and set the rule to skip blanks
         // if we skipped spaces we could not parse newlines as separators
@@ -46,7 +47,8 @@ public:
         configDataRule = *eol_ > lexeme["[StartConfig]"] > *eol_
             > (
                 numPan ^ numSrc ^ respFile ^ sourceFile ^
-                outFile ^ dirName ^ dirName ^ funcList
+                outFile ^ dirName ^ dirName ^ outDirName ^
+                funcList
             ) > lexeme["[EndConfig]"];
         
         on_error<fail>(startRule,
@@ -68,7 +70,7 @@ private:
     // parameters
     qi::rule<Iterator, qi::blank_type> numPan, numSrc, respFile, outFile;
     qi::rule<Iterator, qi::blank_type> sourceFile, dirName, funcListAdd;
-    qi::rule<Iterator, qi::blank_type> funcList;
+    qi::rule<Iterator, qi::blank_type> outDirName, funcList;
     
     // hold the pointer that we are going to bind to
     InData* ptr;

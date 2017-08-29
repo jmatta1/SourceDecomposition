@@ -1,10 +1,8 @@
 [StartConfig]
-NumPositions = 105
-NumEnergyBins = 1400
-ScanDataFileName = "./decomp.root"
-RespFuncFileName = "./NaIResp.root"
-OutputFileName = "./position_output.root"
-DirectoryName = "mega_decomp"
+ResetFile = True
+InputFileName = "./PanelResp.root"
+OutputFileName = "./panelHists.root"
+FunctionSumName = "FullSum"
 FunctionList += "Rx_Wall_3_9"
 FunctionList += "Rx_Wall_3_8"
 FunctionList += "Rx_Wall_3_5"

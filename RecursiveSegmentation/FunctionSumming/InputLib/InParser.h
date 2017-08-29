@@ -35,7 +35,7 @@ public:
         //define the rules to parse the parameters
         resetFile      = (lexeme["ResetFile"]        >> '='          > boolSymbols_ [phoenix::bind(&InData::setResetFile,       ptr, qi::_1)] > separator);
         inputFileName  = (lexeme["InputFileName"]    >> '='          > quotedString [phoenix::bind(&InData::setInputFileName,   ptr, qi::_1)] > separator);
-        outputFileName = (lexeme["RespFuncFileName"] >> '='          > quotedString [phoenix::bind(&InData::setOutputFileName,  ptr, qi::_1)] > separator);
+        outputFileName = (lexeme["OutputFileName"]   >> '='          > quotedString [phoenix::bind(&InData::setOutputFileName,  ptr, qi::_1)] > separator);
         sumFuncName    = (lexeme["FunctionSumName"]  >> '='          > quotedString [phoenix::bind(&InData::setSumFunctionName, ptr, qi::_1)] > separator);
         funcListAdd    = (lexeme["FunctionList"]     >> lexeme["+="] > quotedString [phoenix::bind(&InData::addFunction,        ptr, qi::_1)] > separator);
         funcList = (+funcListAdd);
@@ -66,7 +66,7 @@ private:
     
     // parameters
     qi::rule<Iterator, qi::blank_type> resetFile, inputFileName, outputFileName;
-    qi::rule<Iterator, qi::blank_type> sumFuncName, funcListAdd, funcList;
+    qi::rule<Iterator, qi::blank_type> sumFuncName, funcList, funcListAdd;
     
     // hold the pointer that we are going to bind to
     InData* ptr;

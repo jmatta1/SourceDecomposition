@@ -14,3 +14,6 @@ AD1_Weights.csv
 NaI_Weights.csv
 *_C.d
 *.pcm
+RecursiveSegmentation/build-*
+funcSummer
+resCheck
