@@ -4,7 +4,7 @@ SRC1_DIR=FunctionSumming
 EXE1_NAME=funcSummer
 OBJ2_DIR=build-checker
 SRC2_DIR=ResultChecker
-EXE2_NAME=resChecker
+EXE2_NAME=resCheck
 
 #this builds the project with no flags but those absolutely necessary
 .PHONY: plain
@@ -34,7 +34,7 @@ opt_debug:
 	@mkdir -p $(OBJ1_DIR)/opt_debug
 	@cd $(OBJ1_DIR)/opt_debug; cmake -DBUILD_TYPE=Opt_Debug ../../$(SRC1_DIR); make
 	@mv $(OBJ1_DIR)/opt_debug/$(EXE1_NAME) ./$(EXE1_NAME)
-	@mkdir -p $(OBJ2_DIR)/debug
+	@mkdir -p $(OBJ2_DIR)/opt_debug
 	@cd $(OBJ2_DIR)/opt_debug; cmake -DBUILD_TYPE=Opt_Debug ../../$(SRC2_DIR); make
 	@mv $(OBJ2_DIR)/opt_debug/$(EXE2_NAME) ./$(EXE2_NAME)
 	
