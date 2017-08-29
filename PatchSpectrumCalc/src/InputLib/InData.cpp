@@ -37,6 +37,12 @@ void InData::setDirectoryName(const std::string& input)
     this->setDirectoryName_ = true;
 }
 
+void InData::setOutDirName(const std::string& input)
+{
+    this->outDirName = input;
+    this->setOutDirName_ = true;
+}
+
 void InData::addFunction(const std::string& input)
 {
     this->functionList.push_back(input);
@@ -45,8 +51,8 @@ void InData::addFunction(const std::string& input)
 bool InData::validate()
 {
     return (setNumPanels_&& setNumEnergyBins_ && setDirectoryName_ &&
-            setOutputFileName_ && setRespFuncFileName_ && setSourceDataFileName_ &&
-            (functionList.size() > 0));
+            setOutputFileName_ && setRespFuncFileName_ && setSourceDataFileName_
+            && setOutDirName_ && (functionList.size() > 0));
 }
 
 void InData::printValidationErrors()
@@ -76,6 +82,10 @@ void InData::printValidationErrors()
     {
         std::cout << "    The output ROOT file name was not set" <<std::endl;
     }
+    if(!setOutDirName_)
+    {
+        std::cout << "    The output TDirectory name was not set" <<std::endl;
+    }
     if(functionList.size() < 2)
     {
         std::cout << "    There must be at least 2 response functions used" << std::endl;
@@ -92,7 +102,8 @@ std::ostream& operator<<(std::ostream& os, InData const& id)
     << "    Source Input File     = " << id.sourceDataFileName    << "\n"
     << "    Response Func File    = " << id.respFuncFileName      << "\n"
     << "    Output File Name      = " << id.outputFileName        << "\n"
-    << "    TDirectory Name       = " << id.directoryName         << "\n"
+    << "    In TDirectory Name    = " << id.directoryName         << "\n"
+    << "    Out TDirectory Name   = " << id.outDirName            << "\n"
     << "    Resp Func List        = [ " << id.functionList[0];
     for(int i=1; i<id.functionList.size(); ++i)
     {

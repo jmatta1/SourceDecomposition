@@ -15,6 +15,7 @@ public:
     std::string respFuncFileName = "";
     std::string outputFileName = "";
     std::string directoryName = "";
+    std::string outDirName = "";
     std::vector<std::string> functionList;
     
     void setNumPanels(int input);
@@ -23,6 +24,7 @@ public:
     void setRespFile(const std::string& input);
     void setOutputFile(const std::string& input);
     void setDirectoryName(const std::string& input);
+    void setOutDirName(const std::string& input);
     void addFunction(const std::string& input);
 
     bool validate();
@@ -36,6 +38,7 @@ private:
     bool setRespFuncFileName_ = false;
     bool setOutputFileName_ = false;
     bool setDirectoryName_ = false;
+    bool setOutDirName_ = false;
 };
 
 #endif //POSITIONDECOMPOSER_SRC_INPUTLIB_INDATA_H
