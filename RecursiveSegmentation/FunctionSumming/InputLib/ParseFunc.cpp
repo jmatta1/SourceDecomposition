@@ -28,7 +28,7 @@ bool parseAndPrintInputData(InData* inParams, const std::string& inputFileName, 
     bool parseSuccess = parseInputFile(inParams, inputFileName);
     if(!parseSuccess)
     {
-        os<<"\nCould not parse "<<inputFileName<<std::endl;
+        os<<"Could not parse "<<inputFileName<<std::endl;
         return false;
     }
     
@@ -39,6 +39,6 @@ bool parseAndPrintInputData(InData* inParams, const std::string& inputFileName, 
         return false;
     }
     
-    os << '\n' << *inParams << std::endl;
+    os << *inParams << std::endl;
     return true;
 }
