@@ -5,6 +5,8 @@ of the PROSPECT AD"""
 
 import sys
 
+# TODO: Add docstrings
+
 def main(numSegments, numThreads):
     pass
 
