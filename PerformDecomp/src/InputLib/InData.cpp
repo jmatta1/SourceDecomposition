@@ -1,11 +1,6 @@
 #include"InData.h"
 #include<iostream>
 
-void InData::setNumThreads(int input)
-{
-    this->numThreads = input;
-}
-
 void InData::setNumPositions(int input)
 {
     this->numPositions = input;
@@ -51,7 +46,7 @@ bool InData::validate()
 {
     return (setNumPositions_&& setNumEnergyBins_ && setDirectoryName_ &&
             setOutputFileName_ && setRespFuncFileName_ && setScanDataFileName_ &&
-            (functionList.size() > 0));
+            (functionList.size() > 0) && (functionList.size() <= numPositions));
 }
 
 void InData::printValidationErrors()
@@ -84,6 +79,10 @@ void InData::printValidationErrors()
     if(functionList.size() < 2)
     {
         std::cout << "    There must be at least 2 response functions used" << std::endl;
+    }
+    if(functionList.size() > numPositions)
+    {
+        std::cout << "    The number of sources must be less than or equal to the nummber of scan positions" << std::endl;
     }
     std::cout << "End Position Decomposer Input Validation" << std::endl;
 }

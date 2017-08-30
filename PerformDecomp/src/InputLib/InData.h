@@ -9,7 +9,6 @@ public:
     InData() : functionList(0) {}
     ~InData(){}
     
-    int numThreads = 1;
     int numPositions = 0;
     int numEnergyBins = 0;
     std::string scanDataFileName = "";
@@ -18,7 +17,6 @@ public:
     std::string directoryName = "";
     std::vector<std::string> functionList;
     
-    void setNumThreads(int input);
     void setNumPositions(int input);
     void setNumEnergyBins(int input);
     void setScanFile(const std::string& input);

@@ -32,7 +32,6 @@ public:
         using qi::on_error;
         using Utility::separator;
         //define the rules to parse the parameters
-        numThreads  = (lexeme["NumThreads"]       >> '='          > int_         [phoenix::bind(&InData::setNumThreads,    ptr, qi::_1)] > separator);
         numPos      = (lexeme["NumPositions"]     >> '='          > int_         [phoenix::bind(&InData::setNumPositions,  ptr, qi::_1)] > separator);
         numSrc      = (lexeme["NumEnergyBins"]    >> '='          > int_         [phoenix::bind(&InData::setNumEnergyBins, ptr, qi::_1)] > separator);
         scanFile    = (lexeme["ScanDataFileName"] >> '='          > quotedString [phoenix::bind(&InData::setScanFile,      ptr, qi::_1)] > separator);
@@ -46,9 +45,8 @@ public:
         funcList = (+funcListAdd);
         configDataRule = *eol_ > lexeme["[StartConfig]"] > *eol_
             > (
-                numThreads ^ numPos  ^ numSrc  ^ respFile ^
-                scanFile   ^ outFile ^ dirName ^ dirName  ^
-                funcList
+                numPos ^ numSrc ^ respFile ^ scanFile ^
+                outFile ^ dirName ^ dirName ^ funcList
             ) > lexeme["[EndConfig]"];
         
         on_error<fail>(startRule,
@@ -70,7 +68,7 @@ private:
     // parameters
     qi::rule<Iterator, qi::blank_type> numPos, numSrc, respFile, outFile;
     qi::rule<Iterator, qi::blank_type> scanFile, dirName, funcListAdd;
-    qi::rule<Iterator, qi::blank_type> funcList, numThreads;
+    qi::rule<Iterator, qi::blank_type> funcList;
     
     // hold the pointer that we are going to bind to
     InData* ptr;
