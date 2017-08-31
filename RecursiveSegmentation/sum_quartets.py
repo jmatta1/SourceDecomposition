@@ -8,7 +8,7 @@ import math
 import subprocess as sp
 
 CONFIG_STR1 = """[StartConfig]
-ResetFile = {reset:s}
+ResetFile = False
 InputFileName = "./data/NaIResp.root"
 OutputFileName = "./data/AllNaIResp.root"
 FunctionSumName = "{out_name:s}"
@@ -26,11 +26,11 @@ FunctionSumName = "{out_name:s}"
 FUNC_ADD = """FunctionList += "{0:s}"
 """
 
-IN_NAMES = ["Floor_{0:d}_{1:d}", "Ceiling_{0:d}_{1:d}",
+IN_NAMES = ["Ceiling_{0:d}_{1:d}", "Floor_{0:d}_{1:d}",
             "East_Wall_{0:d}_{1:d}", "West_Wall_{0:d}_{1:d}",
             "Rx_Wall_{0:d}_{1:d}", "MIF_Room_Wall_{0:d}_{1:d}"]
 
-OUT_NAMES = ["Floor_{0:d}_{1:d}_{2:d}", "Ceiling_{0:d}_{1:d}_{2:d}",
+OUT_NAMES = ["Ceiling_{0:d}_{1:d}_{2:d}", "Floor_{0:d}_{1:d}_{2:d}",
              "East_Wall_{0:d}_{1:d}_{2:d}", "West_Wall_{0:d}_{1:d}_{2:d}",
              "Rx_Wall_{0:d}_{1:d}_{2:d}", "MIF_Room_Wall_{0:d}_{1:d}_{2:d}"]
 
@@ -45,18 +45,7 @@ def main(num_segs, num_divs):
     fmt_dict = {}
     for cfg in [CONFIG_STR1, CONFIG_STR2]:
         for inname, outname in zip(IN_NAMES, OUT_NAMES):
-            # first do a simple transfer of the base functions
-            for i in range(num_segs):
-                for j in range(num_segs):
-                    fmt_dict["func_list"] = FUNC_ADD.format(inname.format(i, j))
-                    fmt_dict["out_name"] = outname.format(num_segs, i, j)
-                    fmt_dict["reset"] = "True" if doreset else "False"
-                    cfg_file = open("temp_cfg", 'w')
-                    cfg_file.write(cfg.format(**fmt_dict))
-                    cfg_file.close()
-                    sp.call(["./funcSummer","temp_cfg"])
-                    doreset = False
-            # then do a summing into various lesser sub_divisions
+            # do a summing into various lesser sub_divisions
             for divs in range(num_divs-1, -1, -1):
                 gen_sums(2**divs, num_segs, inname, outname, cfg)
     os.remove("temp_cfg")
