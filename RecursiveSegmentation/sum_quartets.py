@@ -16,7 +16,7 @@ FunctionSumName = "{out_name:s}"
 """
 
 CONFIG_STR2 = """[StartConfig]
-ResetFile = {reset:s}
+ResetFile = False
 InputFileName = "./data/PanelResp.root"
 OutputFileName = "./data/AllPanelResp.root"
 FunctionSumName = "{out_name:s}"
@@ -56,7 +56,6 @@ def gen_sums(curr_seg, orig_seg, inname, outname, cfg):
     the original segmentation response functions"""
     ratio = orig_seg / curr_seg
     fmt_dict = {}
-    fmt_dict["reset"] = "False"
     for i in range(curr_seg):
         for j in range(curr_seg):
             fmt_dict["out_name"] = outname.format(curr_seg, i, j)
