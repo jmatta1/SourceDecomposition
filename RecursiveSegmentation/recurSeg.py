@@ -3,55 +3,27 @@
 to find the best segmentation scheme of walls that are 50 feet from the sides
 of the PROSPECT AD"""
 
-import sys
-
-# TODO: Add docstrings
-
-def main(numSegments, numThreads):
-    pass
+from librecseg.utility import parse_and_validate_cmd_line
+from librecseg import segment_tree as st
 
 
-USAGE_STR = """Usage:
-    {0:s} <Number of Axial Pieces> <Number of Threads>
-"""
+def main(num_segments, num_threads):
+    """The primary function that sets up and runs the decomposition and
+    minimization
 
-NUMSEG_ERR = """  Error:
-    Could not parse <Number of Axial Pieces> as a valid integer
-    <Number of Axial Pieces> must be an integer greater than or equal to 2
+    Parameters
+    ----------
+    num_segments : int
+        The number of segments per axis at the lowest level of division
+    num_threads : int
+        The number of threads that can be used in execution of decomps
+    """
+    temp = st.SegmentTree("East_Wall", num_segments)
+    temp.print_tree()
 
-    It describes the number of pieces the walls have been divided into on each
-    of the two axes.
-"""
-
-NUMTHREAD_ERR = """  Error:
-    Could not parse <Number of Threads> as a valid integer
-    <Number of Threads> must be an integer greater than or equal to 1
-
-    It is the maximum number of simultaneous decompositions it can perform
-"""
 
 if __name__ == "__main__":
-    if len(sys.argv) != 3:
-        print USAGE_STR.format(sys.argv[0])
-        sys.exit()
-    # attempt to parse the parameters tell the user and exit if we can't
-    numSegments = 0
-    try:
-        numSegments = int(sys.argv[1])
-        if numSegments < 2:
-            raise ValueError("<Number of Axial Pieces> is less than 2")
-    except:
-        print USAGE_STR.format(sys.argv[0])
-        print NUMSEG_ERR
-        sys.exit()
-    numThreads = 0
-    try:
-        numThreads = int(sys.argv[2])
-        if numThreads < 1:
-            raise ValueError("<Number of Threads> is less than 1")
-    except:
-        print USAGE_STR.format(sys.argv[0])
-        print NUMTHREAD_ERR
-        sys.exit() 
-    # the parameters parsed well and were in the correct range
-    main(numSegments, numThreads)
+    num_segments, num_threads = parse_and_validate_cmd_line()
+    # the parameters parsed and were in the correct range
+    # therefore we call the main function
+    main(num_segments, num_threads)
