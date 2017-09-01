@@ -49,6 +49,18 @@ class SegmentTreeNode(object):
         """
         return len(self.comps) == 0
 
+    def print_self_and_children(self, line_str, base_str):
+        """Prints this node and its children in a visually reasonable manner
+        via recursion"""
+        # construct the output string
+        print (line_str + self.function_name)
+        for i, comp in enumerate(self.comps):
+            print (base_str + "|-Composition# {0:d}".format(i))
+            for seg in comp:
+                seg.print_self_and_children(base_str + "|--",
+                                            base_str + "|  ")
+            
+
 
 class SegmentInfo(object):
     """Class to hold information about the segment for the segment dictionary
@@ -100,3 +112,31 @@ class SegmentInfo(object):
             segments, false otherwise
         """
         return self.is_simple
+
+
+def gen_quartet_names(fmt_str, curr_segs, inds):
+    """This function generates the 1 level of divisions down from what is
+    passed to it
+
+    Parameters
+    ----------
+    fmt_str : str
+        The name generating format string
+    curr_segs : int
+        The segmentation at the current level
+    inds : tuple
+        A tuple of two integers holding the two current segment indices
+
+    Returns
+    -------
+    seg_name_list : list of strings
+        list of names of the 4 segments comprising the one passed to this func
+    """
+    seg_name_list = []
+    off1 = 2*inds[0]
+    off2 = 2*inds[1]
+    for i in range(2):
+        for j in range(2):
+            seg_name_list.append(fmt_str.format(curr_segs*2,
+                                                off1 + i, off2 + j))
+    return seg_name_list
