@@ -1,11 +1,14 @@
 """This file holds segment tree support classes
 """
 
+LEAF_COMP_ERR = "New composition's leaf composition is not the same as the " \
+                "nodes leaf composition"
+
 
 class SegmentTreeNode(object):
     """Simple class to hold the necessary information for a node of the segment
     tree"""
-    def __init__(self, func_name, is_simple=False, segment_indices=None):
+    def __init__(self, func_name, is_simple, is_leaf):
         """Initialize the segment tree node with the name for the segment
 
         Parameters
@@ -14,20 +17,28 @@ class SegmentTreeNode(object):
             Is this one of the leafs or sums of quartets or a custom sum
         func_name : str
             Name of the function in the root file
-        segment_indices : None or 3-tuple
-            None if is_simple is false, otherwise must be a 3-tuple containing
-            axis_segmentation, axis_index_1, axis_index_2
-        """        
-        if is_simple and segment_indices is None:
-            raise TypeError("'segment_indices' is None when is_simple is true")
+        """
         # each composition is a full set of nodes that add together to make
         # this particular segment. If this is a leaf node the compositions list
         # is left empty
         self.comps = []
+        self.leaf_comp = set() if not is_leaf else set([func_name])
         self.parent = []
+        self.adjacent_nodes = set()
         self.is_simple = is_simple
-        self.indices = segment_indices
         self.function_name = func_name
+
+    def add_adjacent_node(self, node):
+        """Adds a node to the node list
+
+        Parameters
+        ----------
+        node : SegmentTreeNode
+            The tree node that is adjacent to this node
+        """
+        if len(node.leaf_comp) == 0:
+            raise ValueError("Cannot add non-leaf node with no composition")
+        self.adjacent_nodes |= node.leaf_comp
 
     def is_adjacent(self, test_node):
         """Checks if test_node is adjacent to, or contains any segments that
@@ -46,20 +57,39 @@ class SegmentTreeNode(object):
             this node.
             False otherwise
         """
-        # TODO: implement this, I am thinking basic checks then use a set
+        if not self.adjacent_nodes.isdisjoint(test_node.leaf_comp):
+            return True
         return False
+
+    def build_adjacency(self):
+        """Takes the given composition and builds its adjacency set from the
+        adjacencies of the nodes that compose it minus the nodes that compose
+        this node
+        """
+        for node in self.comps:
+            self.adjacent_nodes |= node.adjacent_nodes
+        self.adjacent_nodes -= self.leaf_comp
 
     def print_self_and_children(self, line_str, base_str):
         """Prints this node and its children in a visually reasonable manner
-        via recursion"""
-        # write the output
+        via recursion
+
+        Parameters
+        ----------
+        line_str : str
+            string to prefix to the line for this node
+        base_str : str
+            string to prefix children compositions
+        """
+        # write the output for this node
         print (line_str +
                "{0:s}--^[{1:s}]".format(self.function_name,
                                         ",".join([x.function_name
                                                   for x in self.parent])))
+        # write the output for the child compositions
         for i, comp in enumerate(self.comps):
-            print (base_str + "|-Composition# {0:d}".format(i))
-            for seg in comp:
+            print base_str + "|-Composition# {0:d}".format(i)
+            for seg in comp[0]:
                 seg.print_self_and_children(base_str + "|---",
                                             base_str + "|   ")
 
@@ -72,7 +102,17 @@ class SegmentTreeNode(object):
         func_list : list
             list of SegmentTreeNodes
         """
-        self.comps.append(func_list)
+        test_comp = set()
+        for node in func_list:
+            test_comp |= node.leaf_comp
+        if len(self.leaf_comp) == 0:
+            self.leaf_comp = test_comp
+            self.comps.append(func_list)
+        else:
+            if self.leaf_comp != test_comp:
+                raise ValueError(LEAF_COMP_ERR)
+            else:
+                self.comps.append(func_list)
 
     def add_parent(self, par_node):
         """Add the parent node for the node

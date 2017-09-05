@@ -6,6 +6,11 @@ from librecseg.segment_tree_support import SegmentTreeNode, SegmentInfo, \
 
 NAME_SUFFIX = "_{0:d}_{1:d}_{2:d}"
 
+ADJ_OFFS = [[((1, 0), (0, 1)), ((-1, 0), (1, 0), (0, 1)), ((-1, 0), (0, 1))],
+            [((1, 0), (0, -1), (0, 1)), ((-1, 0), (1, 0), (0, -1), (0, 1)),
+             ((-1, 0), (0, -1), (0, 1))],
+            [((1, 0), (0, -1)), ((-1, 0), (1, 0), (0, -1)), ((-1, 0), (0, -1))]]
+
 
 class SegmentTree(object):
     """Class to hold a tree comprised of SegmentTreeNodes, initializes itself
@@ -19,7 +24,6 @@ class SegmentTree(object):
         ----------
         base : str
             The base name of functions in the root file
-
         divs : int
             The number of divisions per axis of the wall, must be a power of 2
         """
@@ -27,52 +31,99 @@ class SegmentTree(object):
         self.max_segs = divs
         self.head = None
         self.seg_dict = {}
-        fmt_str = base + NAME_SUFFIX
         # First make a list of the leaf segments
-        for i in range(divs):
-            for j in range(divs):
-                name = fmt_str.format(divs, i, j)
-                node = SegmentTreeNode(name, True, (divs, i, j))
-                info = SegmentInfo(True, node)
-                self.seg_dict[name] = info
+        self.build_leaves(base, divs)
         # Now, for each level above the leaves make the quartet summed segments
+        self.build_branches(base, divs)
+        # set the head node
+        fmt_str = base + NAME_SUFFIX
+        self.head = self.seg_dict[fmt_str.format(1, 0, 0)].get_node()
+
+    def build_branches(self, base, divs):
+        """Build the branch nodes of the SegmentTree
+
+        Parameters
+        ----------
+        base : str
+            The base name of functions in the root file
+        divs : int
+            The number of divisions per axis of the wall, must be a power of 2
+        """
+        fmt_str = base + NAME_SUFFIX
         curr_segs = divs/2
         while curr_segs > 0:
+            # for each set of segment combo in the curr_segs subdivision of the
+            # wall, construct the segment and add it
             for i in range(curr_segs):
                 for j in range(curr_segs):
+                    # make the name
                     name = fmt_str.format(curr_segs, i, j)
+                    # make the composition
                     comp = [self.seg_dict[cname].get_node() for cname in
                             gen_quartet_names(fmt_str, curr_segs, (i, j))]
-                    node = SegmentTreeNode(name, True, (curr_segs, i, j))
+                    # make the node
+                    node = SegmentTreeNode(name, True, False)
+                    # add the composition
                     node.add_composition(comp)
+                    # since we are not a leaf node, make the node generate its
+                    # own adjacency list
+                    node.build_adjacency()
+                    # add the node as the parent to the nodes it is made of
                     for child_node in comp:
                         child_node.add_parent(node)
+                    # make the segment info structure
                     info = SegmentInfo(True, node)
+                    # insert the segment info into the segment dictionary
                     self.seg_dict[name] = info
             curr_segs /= 2
-        self.head = self.seg_dict[fmt_str.format(1,0,0)].get_node()
+        fmt_str = base + NAME_SUFFIX
+
+    def build_leaves(self, base, divs):
+        """Build the leaf nodes of the SegmentTree
+
+        Parameters
+        ----------
+        base : str
+            The base name of functions in the root file
+        divs : int
+            The number of divisions per axis of the wall, must be a power of 2
+        """
+        fmt_str = base + NAME_SUFFIX
+        lookup = [0] + [1]*(divs-2) + [2]
+        for i in range(divs):
+            for j in range(divs):
+                # make the name
+                name = fmt_str.format(divs, i, j)
+                # create the node
+                node = SegmentTreeNode(name, True, True)
+                # make the adjacency list
+                adjacents = [self.seg_dict[nm].get_node() for nm in
+                             [fmt_str.format(divs, i + x[0], j + x[1])
+                              for x in ADJ_OFFS[lookup[i]][lookup[j]]]]
+                for adj in adjacents:
+                    node.add_adjacent_node(adj)
+                # add the node to the node list
+                info = SegmentInfo(True, node)
+                self.seg_dict[name] = info
 
     def print_tree(self):
         """Prints the tree structure in some visually reasonable manner"""
         self.head.print_self_and_children("", "")
 
-    def test_adjacency(self, func1, func2):
-        """Takes two function names and tests if they are adjacent to each
-        other
+    def get_node(self, func_name):
+        """Returns the node corresponding to the function name
 
         Parameters
         ----------
-        func1 : str
-            Name of the first function to be tested
-        func2 : str
-            Name of the second function to be tested
+        func_name : str
+            Name of the function string whose node is to be looked up
 
         Returns
         -------
-        are_adjacent : bool
-            True if the two functions have at least one segment or sub-segment
-            adjacent to eachother, False otherwise
+        func_node : SegmentTreeNode
+            Node object that represents the given string
         """
-        node1 = self.seg_dict[func1].get_node()
-        node2 = self.seg_dict[func2].get_node()
-        return node1.is_adjacent(node2)
+        try:
+            return self.seg_dict[func_name]
+        except KeyError:
+            return None
