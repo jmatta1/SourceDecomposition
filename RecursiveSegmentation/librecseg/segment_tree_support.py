@@ -66,7 +66,7 @@ class SegmentTreeNode(object):
         adjacencies of the nodes that compose it minus the nodes that compose
         this node
         """
-        for node in self.comps:
+        for node in self.comps[0]:
             self.adjacent_nodes |= node.adjacent_nodes
         self.adjacent_nodes -= self.leaf_comp
 
@@ -88,8 +88,7 @@ class SegmentTreeNode(object):
                                                   for x in self.parent])))
         # write the output for the child compositions
         for i, comp in enumerate(self.comps):
-            print base_str + "|-Composition# {0:d}".format(i)
-            for seg in comp[0]:
+            for seg in comp:
                 seg.print_self_and_children(base_str + "|---",
                                             base_str + "|   ")
 
