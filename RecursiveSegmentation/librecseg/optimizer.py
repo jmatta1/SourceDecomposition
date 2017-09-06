@@ -50,8 +50,8 @@ class DecompOptimizer(object):
 
     def get_best_fit(self):
         """This function checks if the optimization has been run, if not it
-        runs the optimization and returns the best fit function list, if it has
-        been run then it simply returns the best fit optimization list
+        returns None, if it has been run then it returns the best fit
+        optimization list
 
         Returns
         -------
@@ -60,5 +60,5 @@ class DecompOptimizer(object):
             in the reproduction of the data
         """
         if len(self.best_fit_list) == 0:
-            self.perform_optimization()
-        return self.best_filt_list
+            return None
+        return self.best_fit_list
