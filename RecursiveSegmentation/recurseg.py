@@ -21,14 +21,11 @@ def main(num_segments, num_threads, data_dir):
     data_dir : str
         The path to the directory with the needed input files
     """
-    tree_builder =  = tb.TreeBuilder(num_segments)
+    tree_builder = tb.TreeBuilder(num_segments)
     wall_list = tree_builder.get_top_panels()
     decomp_optimizer = opt.DecompOptimizer(num_threads, data_dir)
     decomp_optimizer.perform_optimization(wall_list)
 
 
 if __name__ == "__main__":
-    num_segments, num_threads, data_dir = parse_and_validate_cmd_line()
-    # the parameters parsed and were in the correct range
-    # therefore we call the main function
-    main(num_segments, num_threads, data_dir)
+    main(*parse_and_validate_cmd_line())
