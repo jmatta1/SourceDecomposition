@@ -88,6 +88,7 @@ class SegmentTreeNode(object):
                                                   for x in self.parent])))
         # write the output for the child compositions
         for i, comp in enumerate(self.comps):
+            print base_str + "|-Composition# {0:d}".format(i)
             for seg in comp:
                 seg.print_self_and_children(base_str + "|---",
                                             base_str + "|   ")
