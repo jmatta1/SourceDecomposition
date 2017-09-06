@@ -1,10 +1,10 @@
-"""This file contains the classes that manage segments and their sub segments
+"""This file contains the class that builds the segment trees for initial use
 """
 
 from librecseg.segment_tree import SegmentTree
 from librecseg.node_list import SegmentNodeList
 
-class SegmentManager(object):
+class TreeBuilder(object):
     names = ["Floor", "Ceiling", "East_Wall", "West_Wall", "Rx_Wall",
              "MIF_Room_Wall"]
     """This class is the object that manages the segment trees and allow
