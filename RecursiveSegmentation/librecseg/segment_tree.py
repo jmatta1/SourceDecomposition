@@ -104,12 +104,10 @@ class SegmentTree(object):
         for i in range(divs):
             for j in range(divs):
                 node = self.seg_dict[fmt_str.format(divs, i, j)].get_node()
-                adjacents = []
                 for ioff, joff in ADJ_OFFS[lookup[j]][lookup[i]]:
                     adj_name = fmt_str.format(divs, i + ioff, j + joff)
                     adj = self.seg_dict[adj_name].get_node()
                     node.add_adjacent_node(adj)
-                
 
     def print_tree(self):
         """Prints the tree structure in some visually reasonable manner"""

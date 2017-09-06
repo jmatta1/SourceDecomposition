@@ -50,10 +50,65 @@ def parse_and_validate_cmd_line():
         print "Needs different arguments"
         sys.exit()
     # attempt to parse the parameters tell the user and exit if we can't
+    num_segments = parse_and_validate_num_segs(sys.argv[1])
+    # try to parse numThreads
+    num_threads = parse_and_validate_num_threads(sys.argv[2])
+    return num_segments, num_threads
+
+
+def parse_and_validate_num_threads(thread_str):
+    """Attempts to parse the number of threads passed in on the command line
+
+    Parameters
+    ----------
+    thread_str : str
+        A string that should represent the number of threads to use
+
+    Returns
+    -------
+    num_threads : int
+        The integer representation of the number of threads to use
+    """
+    num_threads = 0
+    try:
+        num_threads = int(thread_str)
+        if num_threads < 1:
+            raise ValidationError("<Number of Threads> is less than 1")
+    except ValidationError as err:
+        print USAGE_STR.format(sys.argv[0])
+        print NUMSEG_ERR.format(NUMTHREAD_ERR_SMALL_VAL)
+        sys.exit()
+    except ValueError:
+        print USAGE_STR.format(sys.argv[0])
+        print NUMTHREAD_ERR.format(NUMTHREAD_ERR_BAD_PARSE)
+        sys.exit()
+    except BaseException as err:
+        print USAGE_STR.format(sys.argv[0])
+        print "Unexpected error reading <Number of Threads>"
+        print "Error was:\n\t", err
+        sys.exit()
+    return num_threads
+
+
+def parse_and_validate_num_segs(segment_str):
+    """Attempts to parse the number of segments passed in on the command line
+
+    Parameters
+    ----------
+    segment_str : str
+        A string that should represent the number of segments each axis of the
+        walls was divided into
+
+    Returns
+    -------
+    num_segments : int
+        The integer representation of the number of segments each axis was
+        divided into
+    """
     # try to parse numSegments
     num_segments = 0
     try:
-        num_segments = int(sys.argv[1])
+        num_segments = int(segment_str)
         divs = math.log(num_segments, 2)
         if num_segments < 2:
             raise ValidationError("Small Value")
@@ -75,23 +130,6 @@ def parse_and_validate_cmd_line():
     except BaseException as err:
         print USAGE_STR.format(sys.argv[0])
         print "Unexpected error reading <Number of Axial Pieces>"
+        print "Error was:\n\t", err
         sys.exit()
-    # try to parse numThreads
-    num_threads = 0
-    try:
-        num_threads = int(sys.argv[2])
-        if num_threads < 1:
-            raise ValidationError("<Number of Threads> is less than 1")
-    except ValidationError as err:
-        print USAGE_STR.format(sys.argv[0])
-        print NUMSEG_ERR.format(NUMTHREAD_ERR_SMALL_VAL)
-        sys.exit()
-    except ValueError:
-        print USAGE_STR.format(sys.argv[0])
-        print NUMTHREAD_ERR.format(NUMTHREAD_ERR_BAD_PARSE)
-        sys.exit()
-    except:
-        print USAGE_STR.format(sys.argv[0])
-        print "Unexpected error reading <Number of Threads>"
-        sys.exit()
-    return num_segments, num_threads
+    return num_segments
