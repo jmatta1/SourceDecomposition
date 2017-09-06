@@ -2,7 +2,7 @@
 """
 
 from librecseg.segment_tree import SegmentTree
-from librecseg.segment_manager_support import SegmentNodeList
+from librecseg.node_list import SegmentNodeList
 
 class SegmentManager(object):
     names = ["Floor", "Ceiling", "East_Wall", "West_Wall", "Rx_Wall",
