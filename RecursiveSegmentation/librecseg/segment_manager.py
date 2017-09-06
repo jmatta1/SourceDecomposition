@@ -2,18 +2,42 @@
 """
 
 from librecseg.segment_tree import SegmentTree
-
-WALL_SEGMENT_NAMES = ["Floor", "Ceiling", "East_Wall",
-                      "West_Wall", "Rx_Wall", "MIF_Room_Wall"]
-
+from librecseg.segment_manager_support import SegmentNodeList
 
 class SegmentManager(object):
-    """This class is the object that manages the determining segment adjacency
-    for the summing of segments and running the function summing code to
-    generate new functions"""
+    names = ["Floor", "Ceiling", "East_Wall", "West_Wall", "Rx_Wall",
+             "MIF_Room_Wall"]
+    """This class is the object that manages the segment trees and allow
+    the optimizer to easily find subdivisions and sums, etc"""
     def __init__(self, num_segments):
-        self.nseg = num_segments
-        # segments that are part of the standard splitting each segment in half
-        # on both axes, these are stored as a tree structure for each wall
-        self.std_segs = []
+        """Initializes the segment manager.
 
+        Parameters
+        ----------
+        num_segments : int
+            The number of segments each of the two axes of the panels are
+            divided into
+        """
+        self.nseg = num_segments
+        self.trees = [SegmentTree(name, num_segments) for name in self.names]
+
+    def get_top_panels(self):
+        """Returns the roots of the 6 trees that SegmentManager created
+
+        Returns
+        -------
+        panel_list : list of SegmentNodeLists
+            Each element of this list is a SegmentNodeList containing just the
+            top level nodes of the trees in question
+        """
+        return [SegmentNodeList(tree) for tree in self.trees]
+
+    def get_num_segs(self):
+        """Returns the number of segments each axis was divided into
+
+        Returns
+        -------
+        num_segs : int
+            The number of segments for each axis
+        """
+        return self.nseg
