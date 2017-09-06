@@ -55,7 +55,7 @@ DATA_DIR_ERR = """  Error:
 """
 
 FILE_NAMES = ["NaIResp.root", "AllNaIResp.root", "PanelResp.root",
-                  "AllPanelResp.root", "ScanData.root"]
+              "AllPanelResp.root", "ScanData.root"]
 
 class ValidationError(StandardError):
     """Simple custom exception class for sanity sake"""
@@ -109,10 +109,11 @@ def parse_and_validate_data_dir(data_dir):
         for path, exist in exists:
             if not exist:
                 raise ValidationError(path)
-    except ValidationError as err
+    except ValidationError as err:
         print USAGE_STR.format(sys.argv[0])
         print DATA_DIR_ERR.format(err.args[0])
         sys.exit()
+    return data_dir
 
 
 def parse_and_validate_num_threads(thread_str):
@@ -133,7 +134,7 @@ def parse_and_validate_num_threads(thread_str):
         num_threads = int(thread_str)
         if num_threads < 1:
             raise ValidationError(NUMTHREAD_ERR_SMALL_VAL)
-        elif num_threads > mp.cpu_count()
+        elif num_threads > mp.cpu_count():
             err_str = NUMMTHREAD_ERR_BIG_VAL.format(mp.cpu_count())
             raise ValidationError(err_str)
     except ValidationError as err:
