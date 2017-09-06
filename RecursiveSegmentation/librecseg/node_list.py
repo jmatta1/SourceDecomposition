@@ -1,5 +1,6 @@
 """This file contains classes needed by the segment manager"""
 
+
 class SegmentNodeList(object):
     """This class allows the storage and tracking of a list of nodes whose
     segments are to be used in the current calculation(s)"""
