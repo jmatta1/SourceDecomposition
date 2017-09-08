@@ -25,16 +25,13 @@ class DecompOptimizer(object):
         for i in range(num_threads):
             out_fn = "decomp_out_{0:d}.root".format(i)
             self.out_queue.put(os.path.join(data_dir, out_fn))
-        self.file_list = {}
-        self.file_list["BaseNaIResp"] = os.path.join(data_dir, "NaIResp.root")
-        self.file_list["AllNaIResp"] = os.path.join(data_dir,
-                                                    "AllNaIResp.root")
-        self.file_list["BasePanelResp"] = os.path.join(data_dir,
-                                                       "PanelResp.root")
-        self.file_list["AllPanelResp"] = os.path.join(data_dir,
-                                                      "AllPanelResp.root")
-        self.file_list["RawData"] = os.path.join(data_dir,
-                                                 "ScanData.root")
+        self.files = {}
+        self.files["BaseNaIResp"] = os.path.join(data_dir, "NaIResp.root")
+        self.files["AllNaIResp"] = os.path.join(data_dir, "AllNaIResp.root")
+        self.files["BasePanelResp"] = os.path.join(data_dir, "PanelResp.root")
+        self.files["AllPanelResp"] = os.path.join(data_dir,
+                                                  "AllPanelResp.root")
+        self.files["RawData"] = os.path.join(data_dir, "ScanData.root")
         self.best_fit_list = []
 
     def perform_optimization(self, wall_list):
